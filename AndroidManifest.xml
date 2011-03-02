@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="de.antonwolf.agendawidget" android:versionCode="2"
+	android:versionName="1.0.1">
+	<uses-sdk android:minSdkVersion="8" />
+	<permission android:name="android.permission.READ_CALENDAR"></permission>
+	
+	<application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="false">
+		<receiver android:name="Widget4x2" android:label="@string/label_4x2">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/agenda_widget_4x2" />
+		</receiver>
+		<receiver android:name="Widget4x1" android:label="@string/label_4x1">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/agenda_widget_4x1" />
+		</receiver>
+
+		
+		<receiver android:name="Widget3x1" android:label="@string/label_3x1">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/agenda_widget_3x1" />
+		</receiver>
+		<receiver android:name="Widget3x2" android:label="@string/label_3x2">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/agenda_widget_3x2" />
+		</receiver>
+		<receiver android:name="Widget3x3" android:label="@string/label_3x3">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/agenda_widget_3x3" />
+		</receiver>
+		
+		<receiver android:name="Widget2x1" android:label="@string/label_2x1">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/agenda_widget_2x1" />
+		</receiver>
+		<receiver android:name="Widget2x2" android:label="@string/label_2x2">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/agenda_widget_2x2" />
+		</receiver>
+	</application>
+	
+	
+</manifest>

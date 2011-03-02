@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="format_this_year">%d/%m</string>
+    <string name="format_other">%-d/%-m/%y</string>
+    <string name="format_time">%-H.%M</string>
+</resources>

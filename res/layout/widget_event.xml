@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent" android:layout_height="wrap_content"
+	android:orientation="horizontal" android:gravity="left|center_vertical">
+	<!-- <ImageView android:id="@+id/color" android:layout_width="10sp" android:layout_height="10sp" 
+		android:scaleType="fitXY" android:layout_marginRight="2dp"></ImageView> -->
+	<TextView android:textSize="13sp" android:singleLine="true"
+		android:layout_width="wrap_content" android:text="■"
+		android:ellipsize="marquee" android:layout_height="wrap_content"
+		android:shadowColor="#6fff" android:shadowRadius="2.5" android:id="@+id/event_color"
+		android:textColor="#ffff" android:paddingRight="2dp"></TextView>
+	<TextView android:textSize="13sp" android:singleLine="true"
+		android:layout_width="wrap_content" android:text="time"
+		android:shadowColor="#0000" android:shadowRadius="1.5"
+		android:ellipsize="marquee" android:layout_height="wrap_content"
+		android:id="@+id/event_time" android:textColor="#afff"
+		android:paddingRight="2dp"></TextView>
+	<TextView android:textSize="13sp" android:singleLine="true"
+		android:layout_width="wrap_content" android:text="title"
+		android:ellipsize="marquee" android:layout_height="wrap_content"
+		android:shadowColor="#0000" android:shadowRadius="1.5" android:id="@+id/event_title"
+		android:textColor="#fff"></TextView>
+	<TextView android:textSize="13sp" android:singleLine="true"
+		android:layout_width="wrap_content" android:text=", "
+		android:ellipsize="marquee" android:layout_height="wrap_content"
+		android:shadowColor="#0000" android:shadowRadius="1.5" android:id="@+id/event_comma"
+		android:textColor="#8fff"></TextView>
+	<TextView android:textSize="13sp" android:singleLine="true"
+		android:layout_width="wrap_content" android:text="location"
+		android:ellipsize="marquee" android:layout_height="wrap_content"
+		android:shadowColor="#0000" android:shadowRadius="1.5" android:id="@+id/event_location"
+		android:textColor="#afff"></TextView>
+	<ImageView android:id="@+id/alert" android:layout_width="wrap_content"
+		android:layout_height="wrap_content"></ImageView>
+</LinearLayout>
