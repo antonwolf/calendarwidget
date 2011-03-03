@@ -62,15 +62,12 @@ public abstract class WidgetBase extends AppWidgetProvider {
 		private Time dayStart;
 		private Time dayEnd;
 		private Time oneWeekFromNow;
-		private Time monthStart;
-		private Time monthEnd;
 		private Time yearStart;
 		private Time yearEnd;
 
 		private String formatToday;
 		private String formatThisWeek;
 		private boolean formatThisWeekRemoveDot;
-		private String formatThisMonth;
 		private String formatThisYear;
 		private String formatOther;
 
@@ -87,10 +84,10 @@ public abstract class WidgetBase extends AppWidgetProvider {
 
 		public CursorManager(Context context) {
 			// Cursor
-			long nowMillis = new Date().getTime();
+			long now = new Date().getTime();
 			String formatString = "content://com.android.calendar/instances/when/%1$s/%2$s";
-			String uriString = String.format(formatString, nowMillis, nowMillis
-					+ 2 * DateUtils.YEAR_IN_MILLIS);
+			String uriString = String.format(formatString, now, now + 2
+					* DateUtils.YEAR_IN_MILLIS);
 			cursor = context.getContentResolver().query(Uri.parse(uriString),
 					null, null, null, "startDay ASC, startMinute ASC");
 			// Birthday Patterns
@@ -106,7 +103,6 @@ public abstract class WidgetBase extends AppWidgetProvider {
 			formatThisWeek = res.getString(R.string.format_this_week);
 			formatThisWeekRemoveDot = res
 					.getBoolean(R.bool.format_this_week_remove_dot);
-			formatThisMonth = res.getString(R.string.format_this_month);
 			formatThisYear = res.getString(R.string.format_this_year);
 			formatOther = res.getString(R.string.format_other);
 
@@ -123,12 +119,6 @@ public abstract class WidgetBase extends AppWidgetProvider {
 			oneWeekFromNow = new Time(dayEnd);
 			oneWeekFromNow.monthDay += 7;
 			oneWeekFromNow.normalize(false);
-
-			monthEnd = new Time(dayEnd);
-			monthEnd.monthDay = monthEnd.getActualMaximum(Time.MONTH_DAY);
-
-			monthStart = new Time(dayStart);
-			monthStart.monthDay = 1;
 
 			yearEnd = new Time(dayEnd);
 			yearEnd.month = 11;
@@ -199,8 +189,6 @@ public abstract class WidgetBase extends AppWidgetProvider {
 				startDay = formatThisWeekRemoveDot ? start.format(
 						formatThisWeek).replace(".", "") : start
 						.format(formatThisWeek);
-			else if (isThisMonth(start))
-				startDay = start.format(formatThisMonth);
 			else if (isThisYear(start))
 				startDay = start.format(formatThisYear);
 			else
@@ -228,8 +216,6 @@ public abstract class WidgetBase extends AppWidgetProvider {
 					endDay = formatThisWeekRemoveDot ? end.format(
 							formatThisWeek).replace(".", "") : end
 							.format(formatThisWeek);
-				else if (isThisMonth(end))
-					endDay = end.format(formatThisMonth);
 				else if (isThisYear(end))
 					endDay = end.format(formatThisYear);
 				else
@@ -259,11 +245,6 @@ public abstract class WidgetBase extends AppWidgetProvider {
 		private boolean isThisWeek(Time time) {
 			return Time.compare(time, oneWeekFromNow) <= 0
 					&& Time.compare(dayStart, time) <= 0;
-		}
-
-		private boolean isThisMonth(Time time) {
-			return Time.compare(time, monthEnd) <= 0
-					&& Time.compare(monthStart, time) <= 0;
 		}
 
 		private boolean isThisYear(Time time) {

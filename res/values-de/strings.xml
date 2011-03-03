@@ -2,8 +2,7 @@
 <resources>
 	<string name="format_today">heute</string>
 	<string name="app_name">Agenda Widget</string>
-	<string name="format_this_month">%-d.</string>
-	<string name="format_this_year">%-d.%-m</string>
+	<string name="format_this_year">%-d.%m.</string>
 	<string name="format_other">%-d.%-m.%y</string>
 	<string name="format_time">%-H:%M</string>
 	<string name="label_2x1">Antons Agenda Widget (2x1)</string>

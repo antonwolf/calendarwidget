@@ -4,7 +4,6 @@
     
     <string name="format_today">today</string>
     <string name="format_this_week">%a</string>
-    <string name="format_this_month">%-d</string>
     <string name="format_this_year">%-m/%-d</string>
     <string name="format_other">%-m/%-d/%y</string>
     <string name="format_time">%-I:%M %P</string>
