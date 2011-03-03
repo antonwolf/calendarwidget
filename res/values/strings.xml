@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Anton\'s Agenda Widget</string>
-    <string name="calendar_instances_uri_format">content://com.android.calendar/instances/when/%1$s/%2$s</string>
-    <string name="calendar_instances_uri">content://com.android.calendar/instances</string>
     
     <string name="format_today">today</string>
     <string name="format_this_week">%a</string>

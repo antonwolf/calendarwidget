@@ -88,8 +88,7 @@ public abstract class WidgetBase extends AppWidgetProvider {
 		public CursorManager(Context context) {
 			// Cursor
 			long nowMillis = new Date().getTime();
-			String formatString = context.getResources().getString(
-					R.string.calendar_instances_uri_format);
+			String formatString = "content://com.android.calendar/instances/when/%1$s/%2$s";
 			String uriString = String.format(formatString, nowMillis, nowMillis
 					+ 2 * DateUtils.YEAR_IN_MILLIS);
 			cursor = context.getContentResolver().query(Uri.parse(uriString),
@@ -319,8 +318,7 @@ public abstract class WidgetBase extends AppWidgetProvider {
 			};
 		}
 		Log.d(TAG, "WidgetProvider.registerContentObserver()");
-		String uriString = context.getResources().getString(
-				R.string.calendar_instances_uri);
+		String uriString = "content://com.android.calendar/instances";
 		Uri instancesUri = Uri.parse(uriString);
 		context.getContentResolver().registerContentObserver(instancesUri,
 				true, calendarInstancesObserver);
