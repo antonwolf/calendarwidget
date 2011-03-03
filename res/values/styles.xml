@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="WidgetPaddingLeft">11sp</dimen>
+	<style name="WidgetText">
+		<item name="android:ellipsize">marquee</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:singleLine">true</item>
+		<item name="android:shadowColor">#f000</item>
+		<item name="android:shadowRadius">1.5</item>
+		<item name="android:textSize">13sp</item>
+	</style>
+	<style name="WidgetTitle" parent="@style/WidgetText">
+		<item name="android:textColor">#fff</item>
+	</style>
+	<style name="WidgetBirthdayTitle" parent="@style/WidgetTitle">
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_weight">1</item>
+	</style>
+	<style name="WidgetGrey" parent="@style/WidgetText">
+		<item name="android:textColor">#afff</item>
+	</style>
+	<style name="WidgetTime" parent="@style/WidgetGrey">
+		<item name="android:paddingRight">2dp</item>
+	</style>
+	<style name="WidgetDot" parent="@style/WidgetText">
+		<item name="android:layout_width">@dimen/WidgetPaddingLeft</item>
+	</style>
+
+
+</resources>
