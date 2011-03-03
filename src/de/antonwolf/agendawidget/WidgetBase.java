@@ -1,16 +1,40 @@
+/*
+ * Copyright (C) 2011 by Anton Wolf
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *  
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package de.antonwolf.agendawidget;
 
 import java.util.Date;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.format.DateUtils;
@@ -22,10 +46,15 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * @author Anton Wolf
+ * 
+ * Base class for each widget
+ */
 public abstract class WidgetBase extends AppWidgetProvider {
 	private ContentObserver calendarInstancesObserver;
 	static final String TAG = "AgendaWidget";
-	private Handler handler = new Handler();
 
 	private class CursorManager {
 		private Cursor cursor;
@@ -345,20 +374,13 @@ public abstract class WidgetBase extends AppWidgetProvider {
 
 		manager.updateAppWidget(id, widget);
 
-		Time now = new Time();
-		now.setToNow();
-
-		long delay = nextUpdate.toMillis(false) - now.toMillis(false) + 1000;
-		Log.d(TAG, "Next update will be in " + delay + " millis...");
-
-		handler.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				Log.d(TAG, "Updating Widget because it is outdated...");
-				updateWidget(context, manager, id);
-			}
-		}, delay);
+		Intent intent = new Intent();
+		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		intent.setComponent(new ComponentName(context,this.getClass()));
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{id});
+		PendingIntent pendingintent = PendingIntent.getBroadcast(context, 0, intent, 0);
+		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC, nextUpdate.toMillis(false) + 600, pendingintent);
 	}
 
 }
