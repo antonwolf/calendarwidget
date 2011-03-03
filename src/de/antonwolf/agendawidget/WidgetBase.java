@@ -342,6 +342,7 @@ public abstract class WidgetBase extends AppWidgetProvider {
 				widgetInfo.initialLayout);
 
 		widget.removeAllViews(R.id.events);
+		widget.removeAllViews(R.id.birthdays);
 
 		CursorManager cursor = new CursorManager(context);
 
