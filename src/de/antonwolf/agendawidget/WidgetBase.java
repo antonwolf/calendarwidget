@@ -46,11 +46,10 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * @author Anton Wolf
  * 
- * Base class for each widget
+ *         Base class for each widget
  */
 public abstract class WidgetBase extends AppWidgetProvider {
 	private ContentObserver calendarInstancesObserver;
@@ -342,45 +341,64 @@ public abstract class WidgetBase extends AppWidgetProvider {
 		RemoteViews widget = new RemoteViews(context.getPackageName(),
 				widgetInfo.initialLayout);
 
-		widget.removeAllViews(R.id.list);
+		widget.removeAllViews(R.id.events);
 
 		CursorManager cursor = new CursorManager(context);
 
-		int lines = getLineCount();
+		boolean birthdayLeft = true;
+		int birthdayLines = 0;
+		int eventLines = 0;
+		int maxLines = getLineCount();
+		RemoteViews birthdayView = null;
 
-		for (int j = 0; j < lines && cursor.moveToNext(); j++) {
-			RemoteViews event = new RemoteViews(context.getPackageName(),
-					R.layout.widget_event);
+		for (int position = 0; position < (maxLines * 4); position++) {
+			cursor.moveToNext();
+			if (cursor.isBirthday) {
+				if (birthdayLeft) {
+					birthdayView = new RemoteViews(context.getPackageName(),
+							R.layout.widget_two_birthdays);
+					widget.addView(R.id.birthdays, birthdayView);
+					birthdayLines++;
+				}
+				birthdayView.setTextViewText(birthdayLeft ? R.id.birthday1_time
+						: R.id.birthday2_time, cursor.time);
+				birthdayView.setTextViewText(
+						birthdayLeft ? R.id.birthday1_title
+								: R.id.birthday2_title, cursor.title);
 
-			event.setTextViewText(R.id.event_title, cursor.title);
+				if (!birthdayLeft && eventLines + birthdayLines >= maxLines)
+					break;
+				birthdayLeft = !birthdayLeft;
+			} else if (eventLines + birthdayLines < maxLines) {
+				eventLines++;
+				RemoteViews event = new RemoteViews(context.getPackageName(),
+						R.layout.widget_event);
 
-			if (cursor.eventLocation == null)
-				event.setViewVisibility(R.id.event_comma, View.GONE);
+				event.setTextViewText(R.id.event_title, cursor.title);
+				if (cursor.eventLocation == null)
+					event.setViewVisibility(R.id.event_comma, View.GONE);
 
-			event.setTextViewText(R.id.event_location, cursor.eventLocation);
-
-			event.setTextViewText(R.id.event_time, cursor.time);
-
-			if (!cursor.allDay && cursor.end.before(nextUpdate))
-				nextUpdate = cursor.end;
-
-			if (cursor.isBirthday)
-				event.setTextViewText(R.id.event_color, "*");
-			else
+				event.setTextViewText(R.id.event_location, cursor.eventLocation);
+				event.setTextViewText(R.id.event_time, cursor.time);
+				if (!cursor.allDay && cursor.end.before(nextUpdate))
+					nextUpdate = cursor.end;
 				event.setTextColor(R.id.event_color, cursor.color);
-
-			widget.addView(R.id.list, event);
+				widget.addView(R.id.events, event);
+			}
 		}
 
 		manager.updateAppWidget(id, widget);
 
 		Intent intent = new Intent();
 		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-		intent.setComponent(new ComponentName(context,this.getClass()));
-		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{id});
-		PendingIntent pendingintent = PendingIntent.getBroadcast(context, 0, intent, 0);
-		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		alarmManager.set(AlarmManager.RTC, nextUpdate.toMillis(false) + 600, pendingintent);
+		intent.setComponent(new ComponentName(context, this.getClass()));
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { id });
+		PendingIntent pendingintent = PendingIntent.getBroadcast(context, 0,
+				intent, 0);
+		AlarmManager alarmManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC, nextUpdate.toMillis(false) + 600,
+				pendingintent);
 	}
 
 }
