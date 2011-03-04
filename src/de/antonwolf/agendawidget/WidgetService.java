@@ -15,8 +15,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.text.format.DateUtils;
 import android.text.format.Time;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RemoteViews;
 
 public final class WidgetService extends IntentService {
@@ -55,7 +57,7 @@ public final class WidgetService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.d(TAG, "Handling intent " + intent);
+		Log.d(TAG, "Handling " + intent);
 
 		int id = Integer.parseInt(intent.getData().getHost());
 		AppWidgetManager manager = AppWidgetManager
@@ -77,12 +79,16 @@ public final class WidgetService extends IntentService {
 			LinkedList<RemoteViews> events = new LinkedList<RemoteViews>();
 			LinkedList<RemoteViews> birthdays = new LinkedList<RemoteViews>();
 
-			boolean birthdayLeft = true;
-			int maxLines = 11; // TODO update
+			boolean bdayLeft = true;
+			
+			WindowManager winManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+			DisplayMetrics metrics = new DisplayMetrics();
+			winManager.getDefaultDisplay().getMetrics(metrics);
+			int heightInCells = (int) (widgetInfo.minHeight/metrics.density + 2) / 74;
+			int maxLines = 5 + (int) ((heightInCells - 1) * 6.6);
 
 			for (int position = 0; position < (maxLines * 4); position++) {
-				if (birthdayLeft
-						&& events.size() + birthdays.size() >= maxLines)
+				if (bdayLeft && events.size() + birthdays.size() >= maxLines)
 					break;
 				if (!cursor.moveToNext())
 					break;
@@ -93,25 +99,25 @@ public final class WidgetService extends IntentService {
 						1 == cursor.getInt(COLUMN_ALL_DAY));
 
 				if (bdayTitle != null) {
-					if (birthdayLeft)
+					if (bdayLeft)
 						birthdays.addLast(new RemoteViews(getPackageName(),
 								R.layout.widget_two_birthdays));
-					int timeView = birthdayLeft ? R.id.birthday1_time
+					int timeView = bdayLeft ? R.id.birthday1_time
 							: R.id.birthday2_time;
 					birthdays.getLast().setTextViewText(timeView, time);
-					int titleView = birthdayLeft ? R.id.birthday1_title
+					int titleView = bdayLeft ? R.id.birthday1_title
 							: R.id.birthday2_title;
 					birthdays.getLast().setTextViewText(titleView, bdayTitle);
 
-					birthdayLeft = !birthdayLeft;
+					bdayLeft = !bdayLeft;
 				} else if (events.size() + birthdays.size() < maxLines) {
 					RemoteViews event = new RemoteViews(getPackageName(),
 							R.layout.widget_event);
 					events.addLast(event);
 
 					event.setTextViewText(R.id.event_title, title);
-					int commaFlag = cursor.getString(COLUMN_LOCATION) == null ? View.VISIBLE
-							: View.GONE;
+					int commaFlag = cursor.getString(COLUMN_LOCATION) == null ? View.GONE
+							: View.VISIBLE;
 					event.setViewVisibility(R.id.event_comma, commaFlag);
 
 					event.setTextViewText(R.id.event_location,

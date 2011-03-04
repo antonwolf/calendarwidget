@@ -57,19 +57,19 @@ public abstract class WidgetBase extends AppWidgetProvider {
 
 	@Override
 	public void onEnabled(Context context) {
-		Log.d(TAG, "WidgetProvider.onEnabled()");
+		Log.d(TAG, "WidgetBase.onEnabled()");
 		registerContentObserver(context);
 	}
 
 	@Override
 	public void onDisabled(Context context) {
-		Log.d(TAG, "WidgetProvider.onDisabled()");
+		Log.d(TAG, "WidgetBase.onDisabled()");
 		unregisterContentObserver(context);
 	}
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
-		Log.d(TAG, "WidgetProvider.onUpdate(" + Arrays.toString(ids) + ")");
+		Log.d(TAG, "WidgetBase.onUpdate(" + Arrays.toString(ids) + ")");
 
 		unregisterContentObserver(context);
 		registerContentObserver(context);
@@ -77,15 +77,13 @@ public abstract class WidgetBase extends AppWidgetProvider {
 		for (int appWidgetId : ids) {
 			Intent intent = new Intent("update", Uri.parse("widget://"
 					+ appWidgetId), context, WidgetService.class);
-			Log.d(TAG, "sending " + intent);
+			Log.d(TAG, "Sending " + intent);
 			context.startService(intent);
 		}
 	}
 
-	protected abstract int getLineCount();
-
 	private void unregisterContentObserver(Context context) {
-		Log.d(TAG, "WidgetProvider.unregisterContentObserver()");
+		Log.d(TAG, "WidgetBase.unregisterContentObserver()");
 		if (calendarInstancesObserver != null)
 			context.getContentResolver().unregisterContentObserver(
 					calendarInstancesObserver);
@@ -106,7 +104,7 @@ public abstract class WidgetBase extends AppWidgetProvider {
 				}
 			};
 		}
-		Log.d(TAG, "WidgetProvider.registerContentObserver()");
+		Log.d(TAG, "WidgetBase.registerContentObserver()");
 		String uriString = "content://com.android.calendar/instances";
 		Uri instancesUri = Uri.parse(uriString);
 		context.getContentResolver().registerContentObserver(instancesUri,
