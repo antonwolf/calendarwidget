@@ -33,7 +33,7 @@ public final class WidgetService extends IntentService {
 
 	private final static String CURSOR_FORMAT = "content://com.android.calendar/instances/when/%1$s/%2$s";
 	private final static long SEARCH_DURATION = 2 * DateUtils.YEAR_IN_MILLIS;
-	private final static String CURSOR_SORT = "startDay ASC, allDay DESC, begin ASC";
+	private final static String CURSOR_SORT = "startDay ASC, allDay DESC, begin ASC, Instances._id ASC";
 	private final static String[] CURSOR_PROJECTION = new String[] { "title",
 			"color", "eventLocation", "allDay", "startDay", "startMinute",
 			"endDay", "endMinute", "eventTimezone", "end" };
@@ -154,19 +154,6 @@ public final class WidgetService extends IntentService {
 				CURSOR_PROJECTION, null, null, CURSOR_SORT);
 	}
 
-	private synchronized Pattern[] getBirthdayPatterns() {
-		if (birthdayPatterns == null) {
-			String[] strings = getResources().getStringArray(
-					R.array.birthday_patterns);
-			birthdayPatterns = new Pattern[strings.length];
-			for (int i = 0; i < strings.length; i++) {
-				birthdayPatterns[i] = Pattern.compile(strings[i]);
-			}
-		}
-
-		return birthdayPatterns;
-	}
-
 	private synchronized void updateTimeRanges() {
 		if (null != dayEnd
 				&& dayEnd.toMillis(false) < System.currentTimeMillis())
@@ -191,6 +178,19 @@ public final class WidgetService extends IntentService {
 		yearStart = new Time(dayStart);
 		yearStart.month = 0;
 		yearStart.monthDay = 1;
+	}
+	
+	private synchronized Pattern[] getBirthdayPatterns() {
+		if (birthdayPatterns == null) {
+			String[] strings = getResources().getStringArray(
+					R.array.birthday_patterns);
+			birthdayPatterns = new Pattern[strings.length];
+			for (int i = 0; i < strings.length; i++) {
+				birthdayPatterns[i] = Pattern.compile(strings[i]);
+			}
+		}
+
+		return birthdayPatterns;
 	}
 
 	private String getBirthday(String title) {
