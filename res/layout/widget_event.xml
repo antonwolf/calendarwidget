@@ -2,11 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent" android:layout_height="wrap_content"
 	android:orientation="horizontal" android:gravity="left|center_vertical">
-	<TextView style="@style/WidgetDot" android:text="■"
-		android:id="@+id/event_color" />
-	<TextView style="@style/WidgetTime" android:id="@+id/event_time" />
-	<TextView style="@style/WidgetTitle" android:id="@+id/event_title" />
-	<TextView style="@style/WidgetGrey" android:text=", "
-		android:id="@+id/event_comma" />
-	<TextView style="@style/WidgetGrey" android:id="@+id/event_location" />
+	<LinearLayout android:layout_width="0dp"
+		android:layout_weight="1" android:layout_height="wrap_content"
+		android:orientation="horizontal">
+		<TextView style="@style/WidgetDot" android:text="■"
+			android:id="@+id/event_color" />
+		<TextView style="@style/WidgetTime" android:id="@+id/event_time" />
+		<TextView style="@style/WidgetTitle" android:id="@+id/event_title" />
+		<TextView style="@style/WidgetGrey" android:text=", "
+			android:id="@+id/event_comma" />
+		<TextView style="@style/WidgetGrey" android:id="@+id/event_location" />
+	</LinearLayout>
+	<ImageView android:id="@+id/event_alarm" android:src="@drawable/alert"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 </LinearLayout>

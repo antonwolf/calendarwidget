@@ -36,7 +36,7 @@ public final class WidgetService extends IntentService {
 	private final static String CURSOR_SORT = "startDay ASC, allDay DESC, begin ASC, Instances._id ASC";
 	private final static String[] CURSOR_PROJECTION = new String[] { "title",
 			"color", "eventLocation", "allDay", "startDay", "startMinute",
-			"endDay", "endMinute", "eventTimezone", "end" };
+			"endDay", "endMinute", "eventTimezone", "end", "hasAlarm" };
 	private final static int COLUMN_TITLE = 0;
 	private final static int COLUMN_COLOR = 1;
 	private final static int COLUMN_LOCATION = 2;
@@ -47,6 +47,7 @@ public final class WidgetService extends IntentService {
 	private final static int COLUMN_END_MINUTE = 7;
 	private final static int COLUMN_TIMEZONE = 8;
 	private final static int COLUMN_END = 9;
+	private final static int COLUMN_HAS_ALARM = 10;
 
 	public WidgetService() {
 		super(THEAD_NAME);
@@ -87,21 +88,20 @@ public final class WidgetService extends IntentService {
 					break;
 
 				String title = cursor.getString(COLUMN_TITLE);
-				String birthdayTitle = getBirthday(title);
+				String bdayTitle = getBirthday(title);
 				String time = formatTime(getStart(cursor), getEnd(cursor),
 						1 == cursor.getInt(COLUMN_ALL_DAY));
 
-				if (birthdayTitle != null) {
+				if (bdayTitle != null) {
 					if (birthdayLeft)
 						birthdays.addLast(new RemoteViews(getPackageName(),
 								R.layout.widget_two_birthdays));
-
-					birthdays.getLast().setTextViewText(
-							birthdayLeft ? R.id.birthday1_time
-									: R.id.birthday2_time, time);
-					birthdays.getLast().setTextViewText(
-							birthdayLeft ? R.id.birthday1_title
-									: R.id.birthday2_title, birthdayTitle);
+					int timeView = birthdayLeft ? R.id.birthday1_time
+							: R.id.birthday2_time;
+					birthdays.getLast().setTextViewText(timeView, time);
+					int titleView = birthdayLeft ? R.id.birthday1_title
+							: R.id.birthday2_title;
+					birthdays.getLast().setTextViewText(titleView, bdayTitle);
 
 					birthdayLeft = !birthdayLeft;
 				} else if (events.size() + birthdays.size() < maxLines) {
@@ -110,8 +110,9 @@ public final class WidgetService extends IntentService {
 					events.addLast(event);
 
 					event.setTextViewText(R.id.event_title, title);
-					if (cursor.getString(COLUMN_LOCATION) == null)
-						event.setViewVisibility(R.id.event_comma, View.GONE);
+					int commaFlag = cursor.getString(COLUMN_LOCATION) == null ? View.VISIBLE
+							: View.GONE;
+					event.setViewVisibility(R.id.event_comma, commaFlag);
 
 					event.setTextViewText(R.id.event_location,
 							cursor.getString(COLUMN_LOCATION));
@@ -121,6 +122,10 @@ public final class WidgetService extends IntentService {
 						nextUpdate = cursor.getLong(COLUMN_END);
 					event.setTextColor(R.id.event_color,
 							cursor.getInt(COLUMN_COLOR));
+
+					int alarmFlag = cursor.getInt(COLUMN_HAS_ALARM) == 1 ? View.VISIBLE
+							: View.GONE;
+					event.setViewVisibility(R.id.event_alarm, alarmFlag);
 				}
 			}
 
@@ -134,12 +139,11 @@ public final class WidgetService extends IntentService {
 				widget.addView(R.id.events, view);
 			manager.updateAppWidget(id, widget);
 
-			PendingIntent pendingintent = PendingIntent.getService(
+			PendingIntent pending = PendingIntent.getService(
 					getApplicationContext(), 0, intent, 0);
 			AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-			alarmManager.cancel(pendingintent);
-			alarmManager
-					.set(AlarmManager.RTC, nextUpdate + 1000, pendingintent);
+			alarmManager.cancel(pending);
+			alarmManager.set(AlarmManager.RTC, nextUpdate + 1000, pending);
 		} finally {
 			if (cursor != null)
 				cursor.close();
@@ -179,7 +183,7 @@ public final class WidgetService extends IntentService {
 		yearStart.month = 0;
 		yearStart.monthDay = 1;
 	}
-	
+
 	private synchronized Pattern[] getBirthdayPatterns() {
 		if (birthdayPatterns == null) {
 			String[] strings = getResources().getStringArray(
