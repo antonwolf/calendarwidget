@@ -57,6 +57,22 @@ public abstract class WidgetBase extends AppWidgetProvider {
 	static final String TAG = "AgendaWidget";
 
 	private class CursorManager {
+		private final String CURSOR_FORMAT = "content://com.android.calendar/instances/when/%1$s/%2$s";
+		private final long SEARCH_DURATION = 2 * DateUtils.YEAR_IN_MILLIS;
+		private final String CURSOR_SORT = "startDay ASC, allDay DESC, begin ASC";
+		private final String[] CURSOR_PROJECTION = new String[] { "title",
+				"color", "eventLocation", "allDay", "startDay", "startMinute",
+				"endDay", "endMinute", "eventTimezone" };
+		private final int COLUMN_TITLE = 0;
+		private final int COLUMN_COLOR = 1;
+		private final int COLUMN_LOCATION = 2;
+		private final int COLUMN_ALL_DAY = 3;
+		private final int COLUMN_START_DAY = 4;
+		private final int COLUMN_START_MINUTE = 5;
+		private final int COLUMN_END_DAY = 6;
+		private final int COLUMN_END_MINUTE = 7;
+		private final int COLUMN_TIMEZONE = 8;
+
 		private Cursor cursor;
 		private Pattern[] birthayPatterns;
 
@@ -86,11 +102,10 @@ public abstract class WidgetBase extends AppWidgetProvider {
 		public CursorManager(Context context) {
 			// Cursor
 			long now = new Date().getTime();
-			String formatString = "content://com.android.calendar/instances/when/%1$s/%2$s";
-			String uriString = String.format(formatString, now, now + 2
-					* DateUtils.YEAR_IN_MILLIS);
+			String uriString = String.format(CURSOR_FORMAT, now, now
+					+ SEARCH_DURATION);
 			cursor = context.getContentResolver().query(Uri.parse(uriString),
-					null, null, null, "startDay ASC, startMinute ASC");
+					CURSOR_PROJECTION, null, null, CURSOR_SORT);
 			// Birthday Patterns
 			String[] birthdayPatternStrings = context.getResources()
 					.getStringArray(R.array.birthday_patterns);
@@ -136,9 +151,9 @@ public abstract class WidgetBase extends AppWidgetProvider {
 				return false;
 			}
 
-			color = cursor.getInt(cursor.getColumnIndex("color"));
+			color = cursor.getInt(COLUMN_COLOR);
 
-			title = cursor.getString(cursor.getColumnIndex("title"));
+			title = cursor.getString(COLUMN_TITLE);
 
 			isBirthday = false;
 			for (Pattern pattern : birthayPatterns) {
@@ -150,26 +165,23 @@ public abstract class WidgetBase extends AppWidgetProvider {
 				break;
 			}
 
-			eventLocation = cursor.getString(cursor
-					.getColumnIndex("eventLocation"));
+			eventLocation = cursor.getString(COLUMN_LOCATION);
 			if (eventLocation != null && eventLocation.trim().length() == 0)
 				eventLocation = null;
 
-			allDay = (1 == cursor.getInt(cursor.getColumnIndex("allDay")));
+			allDay = (1 == cursor.getInt(COLUMN_ALL_DAY));
 
 			start = new Time();
 			end = new Time();
-			String eventTimezone = cursor.getString(cursor
-					.getColumnIndex("eventTimezone"));
+			String eventTimezone = cursor.getString(COLUMN_TIMEZONE);
 			if (null != eventTimezone)
 				start.timezone = end.timezone = eventTimezone;
-			start.setJulianDay(cursor.getInt(cursor.getColumnIndex("startDay")));
-			end.setJulianDay(cursor.getInt(cursor.getColumnIndex("endDay")));
+			start.setJulianDay(cursor.getInt(COLUMN_START_DAY));
+			end.setJulianDay(cursor.getInt(COLUMN_END_DAY));
 
 			if (!allDay) {
-				start.minute = cursor.getInt(cursor
-						.getColumnIndex("startMinute"));
-				end.minute = cursor.getInt(cursor.getColumnIndex("endMinute"));
+				start.minute = cursor.getInt(COLUMN_START_MINUTE);
+				end.minute = cursor.getInt(COLUMN_END_MINUTE);
 			}
 			start.normalize(true);
 			end.normalize(true);
