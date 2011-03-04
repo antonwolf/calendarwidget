@@ -13,10 +13,6 @@
 	<style name="WidgetTitle" parent="@style/WidgetText">
 		<item name="android:textColor">#fff</item>
 	</style>
-	<style name="WidgetBirthdayTitle" parent="@style/WidgetTitle">
-		<item name="android:layout_width">0dp</item>
-		<item name="android:layout_weight">1</item>
-	</style>
 	<style name="WidgetGrey" parent="@style/WidgetText">
 		<item name="android:textColor">#afff</item>
 	</style>

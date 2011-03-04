@@ -2,8 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent" android:layout_height="wrap_content"
 	android:orientation="horizontal" android:layout_marginLeft="@dimen/WidgetPaddingLeft">
-	<TextView style="@style/WidgetTime" android:id="@+id/birthday1_time" />
-	<TextView style="@style/WidgetBirthdayTitle" android:id="@+id/birthday1_title" />
-	<TextView style="@style/WidgetTime" android:id="@+id/birthday2_time" />
-	<TextView style="@style/WidgetBirthdayTitle" android:id="@+id/birthday2_title" />
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="0dp" android:layout_height="wrap_content"
+		android:layout_weight="1">
+		<TextView style="@style/WidgetTime" android:id="@+id/birthday1_time" />
+		<TextView style="@style/WidgetTitle" android:id="@+id/birthday1_title" />
+	</LinearLayout>
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="0dp" android:layout_height="wrap_content"
+		android:layout_weight="1">
+		<TextView style="@style/WidgetTime" android:id="@+id/birthday2_time" />
+		<TextView style="@style/WidgetTitle" android:id="@+id/birthday2_title" />
+	</LinearLayout>
 </LinearLayout>

@@ -58,11 +58,10 @@ public final class R {
         public static final int label_4x2=0x7f050007;
     }
     public static final class style {
-        public static final int WidgetBirthdayTitle=0x7f090002;
-        public static final int WidgetDot=0x7f090005;
-        public static final int WidgetGrey=0x7f090003;
+        public static final int WidgetDot=0x7f090004;
+        public static final int WidgetGrey=0x7f090002;
         public static final int WidgetText=0x7f090000;
-        public static final int WidgetTime=0x7f090004;
+        public static final int WidgetTime=0x7f090003;
         public static final int WidgetTitle=0x7f090001;
     }
     public static final class xml {
