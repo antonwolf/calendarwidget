@@ -281,10 +281,10 @@ public abstract class WidgetBase extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
 		Log.d(TAG, "WidgetProvider.onUpdate(" + Arrays.toString(ids) + ")");
-		
+
 		unregisterContentObserver(context);
 		registerContentObserver(context);
-		
+
 		for (int appWidgetId : ids)
 			updateWidget(context, manager, appWidgetId);
 	}
@@ -340,6 +340,9 @@ public abstract class WidgetBase extends AppWidgetProvider {
 		int maxLines = getLineCount();
 
 		for (int position = 0; position < (maxLines * 4); position++) {
+			if (birthdayLeft && events.size() + birthdays.size() >= maxLines)
+				break;
+
 			cursor.moveToNext();
 			if (cursor.isBirthday) {
 				if (birthdayLeft)
@@ -353,9 +356,6 @@ public abstract class WidgetBase extends AppWidgetProvider {
 						birthdayLeft ? R.id.birthday1_title
 								: R.id.birthday2_title, cursor.title);
 
-				if (!birthdayLeft
-						&& events.size() + birthdays.size() >= maxLines)
-					break;
 				birthdayLeft = !birthdayLeft;
 			} else if (events.size() + birthdays.size() < maxLines) {
 				RemoteViews event = new RemoteViews(context.getPackageName(),
