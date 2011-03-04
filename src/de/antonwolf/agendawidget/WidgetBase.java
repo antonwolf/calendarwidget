@@ -23,6 +23,7 @@
 package de.antonwolf.agendawidget;
 
 import java.util.Date;
+import java.util.LinkedList;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -254,6 +255,18 @@ public abstract class WidgetBase extends AppWidgetProvider {
 	}
 
 	@Override
+	public void onReceive(Context context, Intent intent) {
+		if (!intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
+				&& intent.getAction() == AppWidgetManager.ACTION_APPWIDGET_UPDATE) {
+			ComponentName name = new ComponentName(context, this.getClass());
+			AppWidgetManager m = AppWidgetManager.getInstance(context);
+			int[] ids = m.getAppWidgetIds(name);
+			onUpdate(context, m, ids);
+		} else
+			super.onReceive(context, intent);
+	}
+
+	@Override
 	public void onEnabled(Context context) {
 		Log.d(TAG, "WidgetProvider.onEnabled()");
 		registerContentObserver(context);
@@ -268,8 +281,10 @@ public abstract class WidgetBase extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
 		Log.d(TAG, "WidgetProvider.onUpdate(" + Arrays.toString(ids) + ")");
+		
 		unregisterContentObserver(context);
 		registerContentObserver(context);
+		
 		for (int appWidgetId : ids)
 			updateWidget(context, manager, appWidgetId);
 	}
@@ -312,47 +327,40 @@ public abstract class WidgetBase extends AppWidgetProvider {
 
 		Time nextUpdate = new Time();
 		nextUpdate.setToNow();
-		nextUpdate.monthDay += 1;
+		nextUpdate.monthDay++;
 		nextUpdate.hour = nextUpdate.minute = nextUpdate.second = 0;
 		nextUpdate.normalize(false);
 
-		AppWidgetProviderInfo widgetInfo = manager.getAppWidgetInfo(id);
-		RemoteViews widget = new RemoteViews(context.getPackageName(),
-				widgetInfo.initialLayout);
-
-		widget.removeAllViews(R.id.events);
-		widget.removeAllViews(R.id.birthdays);
-
 		CursorManager cursor = new CursorManager(context);
 
+		LinkedList<RemoteViews> events = new LinkedList<RemoteViews>();
+		LinkedList<RemoteViews> birthdays = new LinkedList<RemoteViews>();
+
 		boolean birthdayLeft = true;
-		int birthdayLines = 0;
-		int eventLines = 0;
 		int maxLines = getLineCount();
-		RemoteViews birthdayView = null;
 
 		for (int position = 0; position < (maxLines * 4); position++) {
 			cursor.moveToNext();
 			if (cursor.isBirthday) {
-				if (birthdayLeft) {
-					birthdayView = new RemoteViews(context.getPackageName(),
-							R.layout.widget_two_birthdays);
-					widget.addView(R.id.birthdays, birthdayView);
-					birthdayLines++;
-				}
-				birthdayView.setTextViewText(birthdayLeft ? R.id.birthday1_time
-						: R.id.birthday2_time, cursor.time);
-				birthdayView.setTextViewText(
+				if (birthdayLeft)
+					birthdays.addLast(new RemoteViews(context.getPackageName(),
+							R.layout.widget_two_birthdays));
+
+				birthdays.getLast().setTextViewText(
+						birthdayLeft ? R.id.birthday1_time
+								: R.id.birthday2_time, cursor.time);
+				birthdays.getLast().setTextViewText(
 						birthdayLeft ? R.id.birthday1_title
 								: R.id.birthday2_title, cursor.title);
 
-				if (!birthdayLeft && eventLines + birthdayLines >= maxLines)
+				if (!birthdayLeft
+						&& events.size() + birthdays.size() >= maxLines)
 					break;
 				birthdayLeft = !birthdayLeft;
-			} else if (eventLines + birthdayLines < maxLines) {
-				eventLines++;
+			} else if (events.size() + birthdays.size() < maxLines) {
 				RemoteViews event = new RemoteViews(context.getPackageName(),
 						R.layout.widget_event);
+				events.addLast(event);
 
 				event.setTextViewText(R.id.event_title, cursor.title);
 				if (cursor.eventLocation == null)
@@ -363,22 +371,33 @@ public abstract class WidgetBase extends AppWidgetProvider {
 				if (!cursor.allDay && cursor.end.before(nextUpdate))
 					nextUpdate = cursor.end;
 				event.setTextColor(R.id.event_color, cursor.color);
-				widget.addView(R.id.events, event);
 			}
 		}
 
+		AppWidgetProviderInfo widgetInfo = manager.getAppWidgetInfo(id);
+		if (null == widgetInfo) {
+			Log.d(TAG, "Invalid widget ID: " + id);
+			return;
+		}
+		RemoteViews widget = new RemoteViews(context.getPackageName(),
+				widgetInfo.initialLayout);
+		widget.removeAllViews(R.id.birthdays);
+		for (RemoteViews view : birthdays)
+			widget.addView(R.id.birthdays, view);
+		widget.removeAllViews(R.id.events);
+		for (RemoteViews view : events)
+			widget.addView(R.id.events, view);
 		manager.updateAppWidget(id, widget);
 
 		Intent intent = new Intent();
 		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 		intent.setComponent(new ComponentName(context, this.getClass()));
-		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { id });
 		PendingIntent pendingintent = PendingIntent.getBroadcast(context, 0,
 				intent, 0);
 		AlarmManager alarmManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		alarmManager.set(AlarmManager.RTC, nextUpdate.toMillis(false) + 600,
+		alarmManager.cancel(pendingintent);
+		alarmManager.set(AlarmManager.RTC, nextUpdate.toMillis(false) + 1000,
 				pendingintent);
 	}
-
 }
