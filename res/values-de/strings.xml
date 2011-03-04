@@ -13,6 +13,7 @@
 	<string name="label_4x1">Antons Agenda Widget (4x1)</string>
 	<string name="label_4x2">Antons Agenda Widget (4x2)</string>
 	<bool name="format_this_week_remove_dot">true</bool>
+	<string name="open_calendar">Kalender öffnen</string>
 	<string-array name="birthday_patterns">
     	<item>(.+)\'s Birthday</item>
     	<item>(.+)s Geburtstag</item>

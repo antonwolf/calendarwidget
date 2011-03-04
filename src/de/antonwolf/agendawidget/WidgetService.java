@@ -80,11 +80,11 @@ public final class WidgetService extends IntentService {
 			LinkedList<RemoteViews> birthdays = new LinkedList<RemoteViews>();
 
 			boolean bdayLeft = true;
-			
+
 			WindowManager winManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 			DisplayMetrics metrics = new DisplayMetrics();
 			winManager.getDefaultDisplay().getMetrics(metrics);
-			int heightInCells = (int) (widgetInfo.minHeight/metrics.density + 2) / 74;
+			int heightInCells = (int) (widgetInfo.minHeight / metrics.density + 2) / 74;
 			int maxLines = 5 + (int) ((heightInCells - 1) * 6.6);
 
 			for (int position = 0; position < (maxLines * 4); position++) {
@@ -143,6 +143,10 @@ public final class WidgetService extends IntentService {
 			widget.removeAllViews(R.id.events);
 			for (RemoteViews view : events)
 				widget.addView(R.id.events, view);
+			widget.setOnClickPendingIntent(R.id.widget, PendingIntent
+					.getActivity(getApplicationContext(), 0, new Intent(
+							getApplicationContext(), PickActionActivity.class),
+							0));
 			manager.updateAppWidget(id, widget);
 
 			PendingIntent pending = PendingIntent.getService(
