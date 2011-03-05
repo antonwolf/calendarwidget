@@ -40,7 +40,8 @@ public final class WidgetService extends IntentService {
 	private final static String CURSOR_SORT = "startDay ASC, allDay DESC, begin ASC, Instances._id ASC";
 	private final static String[] CURSOR_PROJECTION = new String[] { "title",
 			"color", "eventLocation", "allDay", "startDay", "startMinute",
-			"endDay", "endMinute", "eventTimezone", "end", "hasAlarm", "calendar_id" };
+			"endDay", "endMinute", "eventTimezone", "end", "hasAlarm",
+			"calendar_id" };
 	private final static int COLUMN_TITLE = 0;
 	private final static int COLUMN_COLOR = 1;
 	private final static int COLUMN_LOCATION = 2;
@@ -72,7 +73,8 @@ public final class WidgetService extends IntentService {
 
 		updateTimeRanges();
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
 
 		long nextUpdate = dayEnd.toMillis(false);
 
@@ -97,7 +99,9 @@ public final class WidgetService extends IntentService {
 					break;
 				if (!cursor.moveToNext())
 					break;
-				if (!prefs.getBoolean(widgetId + "calendar" + cursor.getInt(COLUMN_CALENDAR), true)) {
+				if (!prefs.getBoolean(
+						widgetId + "calendar" + cursor.getInt(COLUMN_CALENDAR),
+						true)) {
 					position--;
 					continue;
 				}
@@ -116,10 +120,11 @@ public final class WidgetService extends IntentService {
 
 				String time = formatTime(start, end, allDay);
 
-				if (prefs.getBoolean(widgetId + "bDayRecognition", true) && bdayTitle != null) {
+				if (prefs.getBoolean(widgetId + "bDayRecognition", true)
+						&& bdayTitle != null) {
 					if (!prefs.getBoolean(widgetId + "bDayDisplay", true))
 						continue;
-					
+
 					if (bdayLeft)
 						birthdays.addLast(new RemoteViews(getPackageName(),
 								R.layout.widget_two_birthdays));
@@ -165,12 +170,11 @@ public final class WidgetService extends IntentService {
 			for (RemoteViews view : events)
 				widget.addView(R.id.events, view);
 
-			Intent callPickAction = new Intent(this, PickActionActivity.class);
-			callPickAction.putExtra(PickActionActivity.EXTRA_WIDGET_ID,
-					widgetId);
-			widget.setOnClickPendingIntent(R.id.widget, PendingIntent
-					.getActivity(this, 0, callPickAction,
-							Intent.FLAG_ACTIVITY_NEW_TASK));
+			Intent pickAction = new Intent(this, PickActionActivity.class);
+			pickAction.putExtra(PickActionActivity.EXTRA_WIDGET_ID, widgetId);
+			PendingIntent pickPending = PendingIntent.getActivity(this, 0,
+					pickAction, 0);
+			widget.setOnClickPendingIntent(R.id.widget, pickPending);
 
 			manager.updateAppWidget(widgetId, widget);
 

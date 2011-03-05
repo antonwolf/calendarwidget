@@ -17,8 +17,10 @@ public class PickActionActivity extends Activity {
 
 		Log.d(TAG, "PickActionActivity.onCreate()");
 		final int widgetId = getIntent().getIntExtra(EXTRA_WIDGET_ID, -1);
-		if (widgetId == -1)
+		if (widgetId == -1) {
+			Log.d(TAG, "No widget id!");
 			return;
+		}
 
 		setContentView(R.layout.pick_action);
 

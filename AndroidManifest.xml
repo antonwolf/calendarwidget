@@ -60,8 +60,6 @@
 			<meta-data android:name="android.appwidget.provider"
 				android:resource="@xml/agenda_widget_3x3" />
 		</receiver>
-		<activity android:name=".PickActionActivity" android:theme="@style/PickAction"
-			android:noHistory="true" />
 
 		<receiver android:name="Widget2x1" android:label="@string/label_2x1">
 			<intent-filter>
@@ -70,6 +68,9 @@
 			<meta-data android:name="android.appwidget.provider"
 				android:resource="@xml/agenda_widget_2x1" />
 		</receiver>
+
+		<activity android:name=".PickActionActivity" android:theme="@style/PickAction"
+			android:noHistory="true" android:launchMode="singleInstance" />
 
 		<activity android:name=".SettingsActivity" />
 	</application>
