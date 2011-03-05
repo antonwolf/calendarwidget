@@ -11,8 +11,10 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
@@ -38,7 +40,7 @@ public final class WidgetService extends IntentService {
 	private final static String CURSOR_SORT = "startDay ASC, allDay DESC, begin ASC, Instances._id ASC";
 	private final static String[] CURSOR_PROJECTION = new String[] { "title",
 			"color", "eventLocation", "allDay", "startDay", "startMinute",
-			"endDay", "endMinute", "eventTimezone", "end", "hasAlarm" };
+			"endDay", "endMinute", "eventTimezone", "end", "hasAlarm", "calendar_id" };
 	private final static int COLUMN_TITLE = 0;
 	private final static int COLUMN_COLOR = 1;
 	private final static int COLUMN_LOCATION = 2;
@@ -50,6 +52,7 @@ public final class WidgetService extends IntentService {
 	private final static int COLUMN_TIMEZONE = 8;
 	private final static int COLUMN_END = 9;
 	private final static int COLUMN_HAS_ALARM = 10;
+	private final static int COLUMN_CALENDAR = 11;
 
 	public WidgetService() {
 		super(THEAD_NAME);
@@ -59,39 +62,45 @@ public final class WidgetService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG, "Handling " + intent);
 
-		int id = Integer.parseInt(intent.getData().getHost());
-		AppWidgetManager manager = AppWidgetManager
-				.getInstance(getApplicationContext());
-		AppWidgetProviderInfo widgetInfo = manager.getAppWidgetInfo(id);
+		int widgetId = Integer.parseInt(intent.getData().getHost());
+		AppWidgetManager manager = AppWidgetManager.getInstance(this);
+		AppWidgetProviderInfo widgetInfo = manager.getAppWidgetInfo(widgetId);
 		if (null == widgetInfo) {
-			Log.d(TAG, "Invalid widget ID: " + id);
+			Log.d(TAG, "Invalid widget ID: " + widgetId);
 			return;
 		}
+
+		updateTimeRanges();
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		long nextUpdate = dayEnd.toMillis(false);
+
+		LinkedList<RemoteViews> events = new LinkedList<RemoteViews>();
+		LinkedList<RemoteViews> birthdays = new LinkedList<RemoteViews>();
+
+		boolean bdayLeft = true;
+
+		WindowManager winManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+		DisplayMetrics metrics = new DisplayMetrics();
+		winManager.getDefaultDisplay().getMetrics(metrics);
+		int heightInCells = (int) (widgetInfo.minHeight / metrics.density + 2) / 74;
+		int maxLines = 5 + (int) ((heightInCells - 1) * 6.6);
+
 		Cursor cursor = null;
 
 		try {
 			cursor = getCursor();
-
-			updateTimeRanges();
-
-			long nextUpdate = dayEnd.toMillis(false);
-
-			LinkedList<RemoteViews> events = new LinkedList<RemoteViews>();
-			LinkedList<RemoteViews> birthdays = new LinkedList<RemoteViews>();
-
-			boolean bdayLeft = true;
-
-			WindowManager winManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-			DisplayMetrics metrics = new DisplayMetrics();
-			winManager.getDefaultDisplay().getMetrics(metrics);
-			int heightInCells = (int) (widgetInfo.minHeight / metrics.density + 2) / 74;
-			int maxLines = 5 + (int) ((heightInCells - 1) * 6.6);
 
 			for (int position = 0; position < (maxLines * 4); position++) {
 				if (bdayLeft && events.size() + birthdays.size() >= maxLines)
 					break;
 				if (!cursor.moveToNext())
 					break;
+				if (!prefs.getBoolean(widgetId + "calendar" + cursor.getInt(COLUMN_CALENDAR), true)) {
+					position--;
+					continue;
+				}
 
 				Time end = getEnd(cursor);
 				boolean allDay = 1 == cursor.getInt(COLUMN_ALL_DAY);
@@ -107,7 +116,10 @@ public final class WidgetService extends IntentService {
 
 				String time = formatTime(start, end, allDay);
 
-				if (bdayTitle != null) {
+				if (prefs.getBoolean(widgetId + "bDayRecognition", true) && bdayTitle != null) {
+					if (!prefs.getBoolean(widgetId + "bDayDisplay", true))
+						continue;
+					
 					if (bdayLeft)
 						birthdays.addLast(new RemoteViews(getPackageName(),
 								R.layout.widget_two_birthdays));
@@ -144,22 +156,26 @@ public final class WidgetService extends IntentService {
 				}
 			}
 
-			RemoteViews widget = new RemoteViews(getApplicationContext()
-					.getPackageName(), widgetInfo.initialLayout);
+			RemoteViews widget = new RemoteViews(getPackageName(),
+					widgetInfo.initialLayout);
 			widget.removeAllViews(R.id.birthdays);
 			for (RemoteViews view : birthdays)
 				widget.addView(R.id.birthdays, view);
 			widget.removeAllViews(R.id.events);
 			for (RemoteViews view : events)
 				widget.addView(R.id.events, view);
-			widget.setOnClickPendingIntent(R.id.widget, PendingIntent
-					.getActivity(getApplicationContext(), 0, new Intent(
-							getApplicationContext(), PickActionActivity.class),
-							0));
-			manager.updateAppWidget(id, widget);
 
-			PendingIntent pending = PendingIntent.getService(
-					getApplicationContext(), 0, intent, 0);
+			Intent callPickAction = new Intent(this, PickActionActivity.class);
+			callPickAction.putExtra(PickActionActivity.EXTRA_WIDGET_ID,
+					widgetId);
+			widget.setOnClickPendingIntent(R.id.widget, PendingIntent
+					.getActivity(this, 0, callPickAction,
+							Intent.FLAG_ACTIVITY_NEW_TASK));
+
+			manager.updateAppWidget(widgetId, widget);
+
+			PendingIntent pending = PendingIntent
+					.getService(this, 0, intent, 0);
 			AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 			alarmManager.cancel(pending);
 			alarmManager.set(AlarmManager.RTC, nextUpdate + 1000, pending);
@@ -228,10 +244,10 @@ public final class WidgetService extends IntentService {
 
 	private Time getStart(Cursor cursor) {
 		String timezone = cursor.getString(COLUMN_TIMEZONE);
-		
+
 		if (null == timezone)
 			timezone = Time.getCurrentTimezone();
-		
+
 		Time value = new Time(timezone);
 		value.setJulianDay(cursor.getInt(COLUMN_START_DAY));
 		if (cursor.getInt(COLUMN_ALL_DAY) != 1)
@@ -242,10 +258,10 @@ public final class WidgetService extends IntentService {
 
 	private Time getEnd(Cursor cursor) {
 		String timezone = cursor.getString(COLUMN_TIMEZONE);
-		
+
 		if (null == timezone)
 			timezone = Time.getCurrentTimezone();
-		
+
 		Time value = new Time(timezone);
 		value.setJulianDay(cursor.getInt(COLUMN_END_DAY));
 		if (cursor.getInt(COLUMN_ALL_DAY) != 1)

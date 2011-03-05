@@ -16,8 +16,10 @@
 			android:singleLine="true" android:textAppearance="?android:attr/textAppearanceLarge"
 			android:ellipsize="marquee" android:fadingEdge="horizontal" />
 	</LinearLayout>
-	<!-- 
-	<View android:layout_height="1dip" android:background="#FF909090" android:layout_width="match_parent" />
+
+	<View android:layout_height="1dip" android:background="#FF909090"
+		android:layout_width="match_parent" />
+		
 	<LinearLayout android:layout_width="match_parent"
 		android:focusable="true" android:layout_height="wrap_content"
 		android:gravity="center_vertical|left" android:clickable="true"
@@ -38,5 +40,4 @@
 				android:maxLines="2" android:textColor="?android:attr/textColorSecondary" />
 		</LinearLayout>
 	</LinearLayout>
-	 -->
 </LinearLayout>

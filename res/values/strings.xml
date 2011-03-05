@@ -1,20 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Anton\'s Agenda Widget</string>
-    
-    <string name="format_today">today</string>
-    <string name="format_this_week">%a</string>
-    <string name="format_this_year">%-m/%-d</string>
-    <string name="format_other">%-m/%-d/%y</string>
-    <string name="format_time">%-I:%M %P</string>
-    <string name="label_4x1">Anton\'s Agenda Widget (4x1)</string>
-   	<string name="label_4x2">Anton\'s Agenda Widget (4x2)</string>
-   	<string name="label_3x1">Anton\'s Agenda Widget (3x1)</string>
-    <string name="label_3x2">Anton\'s Agenda Widget (3x2)</string>
-    <string name="label_3x3">Anton\'s Agenda Widget (3x3)</string>
-    <string name="open_calendar">Open calendar</string>
-    <bool name="format_this_week_remove_dot">false</bool>
-    <string-array name="birthday_patterns">
-    	<item>(.+)\'s Birthday</item>
-    </string-array>
+	<string name="app_name">Anton\'s Agenda Widget</string>
+
+	<string name="format_today">today</string>
+	<string name="format_this_week">%a</string>
+	<string name="format_this_year">%-m/%-d</string>
+	<string name="format_other">%-m/%-d/%y</string>
+	<string name="format_time">%-I:%M %P</string>
+	<string name="label_4x1">Anton\'s Agenda Widget (4x1)</string>
+	<string name="label_4x2">Anton\'s Agenda Widget (4x2)</string>
+	<string name="label_3x1">Anton\'s Agenda Widget (3x1)</string>
+	<string name="label_3x2">Anton\'s Agenda Widget (3x2)</string>
+	<string name="label_3x3">Anton\'s Agenda Widget (3x3)</string>
+	<string name="open_calendar">Open calendar</string>
+	<bool name="format_this_week_remove_dot">false</bool>
+	<string-array name="birthday_patterns">
+		<item>(.+)\'s Birthday</item>
+	</string-array>
+
+	<string name="settings_birthdays">Birthdays</string>
+
+	<string name="settings_birthdays_recognition">Recognition</string>
+	<string name="settings_birthdays_recognition_special">Treat birthday events specially</string>
+	<string name="settings_birthdays_recognition_normal">Birthdays are normal events</string>
+
+	<string name="settings_birthdays_display">Display</string>
+	<string name="settings_birthdays_display_show">Show birthday events</string>
+	<string name="settings_birthdays_display_hide">Hide birthday events</string>
+
+	<string name="settings_calendars">Calendars</string>
+	<string name="settings_calendars_show">Show this calendar</string>
+	<string name="settings_calendars_hide">Hide this calendar</string>
 </resources>

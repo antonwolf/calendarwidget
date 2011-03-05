@@ -8,21 +8,38 @@ import android.util.Log;
 import android.view.View;
 
 public class PickActionActivity extends Activity {
-	static final String TAG = "AgendaWidget";
+	public final static String EXTRA_WIDGET_ID = "widgetId";
+	private final static String TAG = "AgendaWidget";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		Log.d(TAG, "PickActionActivity.onCreate()");
+		final int widgetId = getIntent().getIntExtra(EXTRA_WIDGET_ID, -1);
+		if (widgetId == -1)
+			return;
+
 		setContentView(R.layout.pick_action);
+
+		final Intent calendar = new Intent(Intent.ACTION_VIEW,
+				Uri.parse("content://com.android.calendar/time"));
+
+		final Intent settings = new Intent(this, SettingsActivity.class);
+		settings.putExtra(SettingsActivity.EXTRA_WIDGET_ID, widgetId);
+
 		findViewById(R.id.open_calendar).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent intent = new Intent(
-								Intent.ACTION_VIEW,
-								Uri.parse("content://com.android.calendar/time"));
-						startActivity(intent);
+						startActivity(calendar);
+					}
+				});
+		findViewById(R.id.open_settings).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						startActivity(settings);
 					}
 				});
 	}

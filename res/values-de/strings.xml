@@ -15,8 +15,22 @@
 	<bool name="format_this_week_remove_dot">true</bool>
 	<string name="open_calendar">Kalender öffnen</string>
 	<string-array name="birthday_patterns">
-    	<item>(.+)\'s Birthday</item>
-    	<item>(.+)s Geburtstag</item>
-    	<item>Geburtstag von (.+)</item>
-    </string-array>
+		<item>(.+)\'s Birthday</item>
+		<item>(.+)s Geburtstag</item>
+		<item>Geburtstag von (.+)</item>
+	</string-array>
+
+	<string name="settings_birthdays">Geburtstage</string>
+
+	<string name="settings_birthdays_recognition">Erkennung</string>
+	<string name="settings_birthdays_recognition_special">Geburtstage gesondert behandeln</string>
+	<string name="settings_birthdays_recognition_normal">Geburstatage sind normale Ereignisse</string>
+
+	<string name="settings_birthdays_display">Anzeige</string>
+	<string name="settings_birthdays_display_show">Geburtstage anzeigen</string>
+	<string name="settings_birthdays_display_hide">Geburtstage ausblenden</string>
+
+	<string name="settings_calendars">Kalender</string>
+	<string name="settings_calendars_show">Kalender anzeigen</string>
+	<string name="settings_calendars_hide">Kalender ausblenden</string>
 </resources>

@@ -48,6 +48,8 @@
 		</receiver>
 		<activity android:name=".PickActionActivity" android:theme="@style/PickAction"
 			android:noHistory="true"/>
+			
+		<activity android:name=".SettingsActivity" />
 	</application>
 
 
