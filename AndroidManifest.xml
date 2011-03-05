@@ -9,6 +9,20 @@
 		android:debuggable="false">
 		<service android:name=".WidgetService" />
 
+		<receiver android:name="Widget4x4" android:label="@string/label_4x4">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/agenda_widget_4x4" />
+		</receiver>
+		<receiver android:name="Widget4x3" android:label="@string/label_4x3">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/agenda_widget_4x3" />
+		</receiver>
 		<receiver android:name="Widget4x2" android:label="@string/label_4x2">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -47,8 +61,16 @@
 				android:resource="@xml/agenda_widget_3x3" />
 		</receiver>
 		<activity android:name=".PickActionActivity" android:theme="@style/PickAction"
-			android:noHistory="true"/>
-			
+			android:noHistory="true" />
+
+		<receiver android:name="Widget2x1" android:label="@string/label_2x1">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/agenda_widget_2x1" />
+		</receiver>
+
 		<activity android:name=".SettingsActivity" />
 	</application>
 

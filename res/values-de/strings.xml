@@ -5,13 +5,16 @@
 	<string name="format_this_year">%-d.%m.</string>
 	<string name="format_other">%-d.%-m.%y</string>
 	<string name="format_time">%-H:%M</string>
-	<string name="label_2x1">Antons Agenda Widget (2x1)</string>
-	<string name="label_2x2">Antons Agenda Widget (2x2)</string>
+	
+	<string name="label_4x1">Antons Agenda Widget (4x1)</string>
+	<string name="label_4x2">Antons Agenda Widget (4x2)</string>
+	<string name="label_4x3">Antons Agenda Widget (4x3)</string>
+	<string name="label_4x4">Antons Agenda Widget (4x4)</string>
 	<string name="label_3x1">Antons Agenda Widget (3x1)</string>
 	<string name="label_3x2">Antons Agenda Widget (3x2)</string>
 	<string name="label_3x3">Antons Agenda Widget (3x3)</string>
-	<string name="label_4x1">Antons Agenda Widget (4x1)</string>
-	<string name="label_4x2">Antons Agenda Widget (4x2)</string>
+	<string name="label_2x1">Antons Agenda Widget (2x1)</string>
+	
 	<bool name="format_this_week_remove_dot">true</bool>
 	<string name="open_calendar">Kalender öffnen</string>
 	<string-array name="birthday_patterns">
