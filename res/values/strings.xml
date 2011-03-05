@@ -10,12 +10,16 @@
 	<string name="label_4x1">Anton\'s Agenda Widget (4x1)</string>
 	<string name="label_4x2">Anton\'s Agenda Widget (4x2)</string>
 	<string name="label_4x3">Anton\'s Agenda Widget (4x3)</string>
-	<string name="label_4x4">Anton\'s Agenda Widget (4x4)</string>	
+	<string name="label_4x4">Anton\'s Agenda Widget (4x4)</string>
 	<string name="label_3x1">Anton\'s Agenda Widget (3x1)</string>
 	<string name="label_3x2">Anton\'s Agenda Widget (3x2)</string>
 	<string name="label_3x3">Anton\'s Agenda Widget (3x3)</string>
 	<string name="label_2x1">Anton\'s Agenda Widget (2x1)</string>
+
 	<string name="open_calendar">Open calendar</string>
+	<string name="settings">Settings</string>
+	<string name="settings_description">Configure Anton\'s Agenda Widget</string>
+
 	<bool name="format_this_week_remove_dot">false</bool>
 	<string-array name="birthday_patterns">
 		<item>(.+)\'s Birthday</item>

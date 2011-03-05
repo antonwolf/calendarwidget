@@ -16,7 +16,11 @@
 	<string name="label_2x1">Antons Agenda Widget (2x1)</string>
 	
 	<bool name="format_this_week_remove_dot">true</bool>
+	
 	<string name="open_calendar">Kalender öffnen</string>
+	<string name="settings">Einstellungen</string>
+	<string name="settings_description">Antons Agenda Widget konfigurieren</string>
+	
 	<string-array name="birthday_patterns">
 		<item>(.+)\'s Birthday</item>
 		<item>(.+)s Geburtstag</item>

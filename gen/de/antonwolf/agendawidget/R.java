@@ -64,16 +64,18 @@ public final class R {
         public static final int label_4x3=0x7f050008;
         public static final int label_4x4=0x7f050009;
         public static final int open_calendar=0x7f05000e;
-        public static final int settings_birthdays=0x7f05000f;
-        public static final int settings_birthdays_display=0x7f050013;
-        public static final int settings_birthdays_display_hide=0x7f050015;
-        public static final int settings_birthdays_display_show=0x7f050014;
-        public static final int settings_birthdays_recognition=0x7f050010;
-        public static final int settings_birthdays_recognition_normal=0x7f050012;
-        public static final int settings_birthdays_recognition_special=0x7f050011;
-        public static final int settings_calendars=0x7f050016;
-        public static final int settings_calendars_hide=0x7f050018;
-        public static final int settings_calendars_show=0x7f050017;
+        public static final int settings=0x7f05000f;
+        public static final int settings_birthdays=0x7f050011;
+        public static final int settings_birthdays_display=0x7f050015;
+        public static final int settings_birthdays_display_hide=0x7f050017;
+        public static final int settings_birthdays_display_show=0x7f050016;
+        public static final int settings_birthdays_recognition=0x7f050012;
+        public static final int settings_birthdays_recognition_normal=0x7f050014;
+        public static final int settings_birthdays_recognition_special=0x7f050013;
+        public static final int settings_calendars=0x7f050018;
+        public static final int settings_calendars_hide=0x7f05001a;
+        public static final int settings_calendars_show=0x7f050019;
+        public static final int settings_description=0x7f050010;
     }
     public static final class style {
         public static final int PickAction=0x7f090005;
