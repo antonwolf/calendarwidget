@@ -93,10 +93,19 @@ public final class WidgetService extends IntentService {
 				if (!cursor.moveToNext())
 					break;
 
+				Time end = getEnd(cursor);
+				boolean allDay = 1 == cursor.getInt(COLUMN_ALL_DAY);
+
+				if (!allDay
+						&& end.toMillis(false) <= System.currentTimeMillis())
+					continue;
+
 				String title = cursor.getString(COLUMN_TITLE);
 				String bdayTitle = getBirthday(title);
-				String time = formatTime(getStart(cursor), getEnd(cursor),
-						1 == cursor.getInt(COLUMN_ALL_DAY));
+
+				Time start = getStart(cursor);
+
+				String time = formatTime(start, end, allDay);
 
 				if (bdayTitle != null) {
 					if (bdayLeft)
