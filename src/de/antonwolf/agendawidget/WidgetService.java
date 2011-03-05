@@ -218,10 +218,12 @@ public final class WidgetService extends IntentService {
 	}
 
 	private Time getStart(Cursor cursor) {
-		Time value = new Time();
 		String timezone = cursor.getString(COLUMN_TIMEZONE);
-		if (null != timezone)
-			value.timezone = timezone;
+		
+		if (null == timezone)
+			timezone = Time.getCurrentTimezone();
+		
+		Time value = new Time(timezone);
 		value.setJulianDay(cursor.getInt(COLUMN_START_DAY));
 		if (cursor.getInt(COLUMN_ALL_DAY) != 1)
 			value.minute = cursor.getInt(COLUMN_START_MINUTE);
@@ -230,10 +232,12 @@ public final class WidgetService extends IntentService {
 	}
 
 	private Time getEnd(Cursor cursor) {
-		Time value = new Time();
 		String timezone = cursor.getString(COLUMN_TIMEZONE);
-		if (null != timezone)
-			value.timezone = timezone;
+		
+		if (null == timezone)
+			timezone = Time.getCurrentTimezone();
+		
+		Time value = new Time(timezone);
 		value.setJulianDay(cursor.getInt(COLUMN_END_DAY));
 		if (cursor.getInt(COLUMN_ALL_DAY) != 1)
 			value.minute = cursor.getInt(COLUMN_END_MINUTE);
