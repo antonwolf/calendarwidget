@@ -170,7 +170,8 @@ public final class WidgetService extends IntentService {
 			for (RemoteViews view : events)
 				widget.addView(R.id.events, view);
 
-			Intent pickAction = new Intent(this, PickActionActivity.class);
+			Intent pickAction = new Intent("pick", Uri.parse("widget://"
+					+ widgetId), this, PickActionActivity.class);
 			pickAction.putExtra(PickActionActivity.EXTRA_WIDGET_ID, widgetId);
 			PendingIntent pickPending = PendingIntent.getActivity(this, 0,
 					pickAction, 0);

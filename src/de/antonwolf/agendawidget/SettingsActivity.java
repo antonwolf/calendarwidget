@@ -14,13 +14,12 @@ public class SettingsActivity extends PreferenceActivity {
 	public final static String EXTRA_WIDGET_ID = "widgetId";
 	static final String TAG = "AgendaWidget";
 
-	private int widgetId = -1;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		widgetId = getIntent().getIntExtra(EXTRA_WIDGET_ID, -1);
+		int widgetId = getIntent().getIntExtra(EXTRA_WIDGET_ID, -1);
+		Log.d(TAG, "SettingsActivity.onCreate(" + widgetId + ")");
 		if (-1 == widgetId)
 			return;
 
@@ -76,11 +75,21 @@ public class SettingsActivity extends PreferenceActivity {
 				cursor.close();
 		}
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		int widgetId = getIntent().getIntExtra(EXTRA_WIDGET_ID, -1);
+		Log.d(TAG, "SettingsActivity.onResume(" + widgetId + ")");
+	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.d(TAG, "SettingsActivity.onPause()");
+		
+		int widgetId = getIntent().getIntExtra(EXTRA_WIDGET_ID, -1);
+		Log.d(TAG, "SettingsActivity.onPause(" + widgetId + ")");
 		if (-1 == widgetId)
 			return;
 

@@ -15,12 +15,10 @@ public class PickActionActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Log.d(TAG, "PickActionActivity.onCreate()");
 		final int widgetId = getIntent().getIntExtra(EXTRA_WIDGET_ID, -1);
-		if (widgetId == -1) {
-			Log.d(TAG, "No widget id!");
+		Log.d(TAG, "PickActionActivity.onCreate(" + widgetId + ")");
+		if (widgetId == -1)
 			return;
-		}
 
 		setContentView(R.layout.pick_action);
 
