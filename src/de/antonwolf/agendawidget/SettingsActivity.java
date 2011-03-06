@@ -1,14 +1,20 @@
 package de.antonwolf.agendawidget;
 
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProviderInfo;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 
 public class SettingsActivity extends PreferenceActivity {
 	public final static String EXTRA_WIDGET_ID = "widgetId";
@@ -26,6 +32,21 @@ public class SettingsActivity extends PreferenceActivity {
 		PreferenceScreen screen = getPreferenceManager()
 				.createPreferenceScreen(this);
 		setPreferenceScreen(screen);
+
+		PreferenceCategory display = new PreferenceCategory(this);
+		display.setTitle(R.string.settings_display);
+		screen.addPreference(display);
+
+		ListPreference lines = new ListPreference(this);
+		lines.setTitle(R.string.settings_display_lines);
+		lines.setKey(widgetId + "lines");
+		lines.setSummary(R.string.settings_display_lines_summary);
+		lines.setEntries(R.array.settings_display_lines_entries);
+		lines.setEntryValues(new String[] { "3", "4", "5", "6", "7", "8", "9",
+				"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
+				"20", "21", "22", "23", "24", "25" });
+		lines.setDefaultValue(getDefaultLines(widgetId, this));
+		display.addPreference(lines);
 
 		PreferenceCategory birthdays = new PreferenceCategory(this);
 		birthdays.setTitle(R.string.settings_birthdays);
@@ -97,5 +118,18 @@ public class SettingsActivity extends PreferenceActivity {
 				this, WidgetService.class);
 		Log.d(TAG, "Sending " + intent);
 		startService(intent);
+	}
+
+	public static String getDefaultLines(int widgetId, Context context) {
+		AppWidgetManager manager = AppWidgetManager.getInstance(context);
+		AppWidgetProviderInfo widgetInfo = manager.getAppWidgetInfo(widgetId);
+
+		WindowManager winManager = (WindowManager) context
+				.getSystemService(WINDOW_SERVICE);
+		DisplayMetrics metrics = new DisplayMetrics();
+		winManager.getDefaultDisplay().getMetrics(metrics);
+		int heightInCells = (int) (widgetInfo.minHeight / metrics.density + 2) / 74;
+		int maxLines = 5 + (int) ((heightInCells - 1) * 5.9);
+		return Integer.toString(maxLines);
 	}
 }

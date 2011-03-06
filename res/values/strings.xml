@@ -25,6 +25,36 @@
 		<item>(.+)\'s Birthday</item>
 	</string-array>
 
+	<string name="settings_display">Display</string>
+	<string name="settings_display_lines">Line count</string>
+	<string name="settings_display_lines_summary">How many lines to display</string>
+	
+	<string-array name="settings_display_lines_entries">
+		<item>3 lines</item>
+		<item>4 lines</item>
+		<item>5 lines</item>
+		<item>6 lines</item>
+		<item>7 lines</item>
+		<item>8 lines</item>
+		<item>9 lines</item>
+		<item>10 lines</item>
+		<item>11 lines</item>
+		<item>12 lines</item>
+		<item>13 lines</item>
+		<item>14 lines</item>
+		<item>15 lines</item>
+		<item>16 lines</item>
+		<item>17 lines</item>
+		<item>18 lines</item>
+		<item>19 lines</item>
+		<item>20 lines</item>
+		<item>21 lines</item>
+		<item>22 lines</item>
+		<item>23 lines</item>
+		<item>24 lines</item>
+		<item>25 lines</item>
+	</string-array>
+
 	<string name="settings_birthdays">Birthdays</string>
 
 	<string name="settings_birthdays_recognition">Recognition</string>

@@ -4,13 +4,8 @@
 	android:orientation="vertical" android:background="@drawable/background"
 	android:layout_marginTop="1dp" android:layout_marginBottom="1dp"
 	android:layout_marginLeft="4dp" android:layout_marginRight="4dp"
-	android:paddingTop="1dp" android:paddingBottom="1dp"
-	android:paddingLeft="7dp" android:paddingRight="7dp" android:gravity="left|center_vertical"
+	android:paddingTop="2dp" android:paddingBottom="2dp"
+	android:paddingLeft="4dp" android:paddingRight="4dp"
+	android:gravity="left|center_vertical"
 	android:id="@+id/widget">
-	<LinearLayout android:layout_width="match_parent"
-		android:orientation="vertical" android:layout_height="wrap_content"
-		android:id="@+id/birthdays"></LinearLayout>
-	<LinearLayout android:layout_width="match_parent"
-		android:orientation="vertical" android:layout_height="wrap_content"
-		android:id="@+id/events"></LinearLayout>
 </LinearLayout>

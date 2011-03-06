@@ -83,11 +83,8 @@ public final class WidgetService extends IntentService {
 
 		boolean bdayLeft = true;
 
-		WindowManager winManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-		DisplayMetrics metrics = new DisplayMetrics();
-		winManager.getDefaultDisplay().getMetrics(metrics);
-		int heightInCells = (int) (widgetInfo.minHeight / metrics.density + 2) / 74;
-		int maxLines = 5 + (int) ((heightInCells - 1) * 6.6);
+		int maxLines = Integer.parseInt(prefs.getString(widgetId + "lines",
+				SettingsActivity.getDefaultLines(widgetId, this)));
 
 		Cursor cursor = null;
 
@@ -163,12 +160,11 @@ public final class WidgetService extends IntentService {
 
 			RemoteViews widget = new RemoteViews(getPackageName(),
 					widgetInfo.initialLayout);
-			widget.removeAllViews(R.id.birthdays);
+			widget.removeAllViews(R.id.widget);
 			for (RemoteViews view : birthdays)
-				widget.addView(R.id.birthdays, view);
-			widget.removeAllViews(R.id.events);
+				widget.addView(R.id.widget, view);
 			for (RemoteViews view : events)
-				widget.addView(R.id.events, view);
+				widget.addView(R.id.widget, view);
 
 			Intent pickAction = new Intent("pick", Uri.parse("widget://"
 					+ widgetId), this, PickActionActivity.class);

@@ -26,6 +26,36 @@
 		<item>(.+)s Geburtstag</item>
 		<item>Geburtstag von (.+)</item>
 	</string-array>
+	
+	<string name="settings_display">Anzeige</string>
+	<string name="settings_display_lines">Zeilenzahl</string>
+	<string name="settings_display_lines_summary">Anzahl angezeigter Zeilen</string>
+	
+	<string-array name="settings_display_lines_entries">
+		<item>3 Zeilen</item>
+		<item>4 Zeilen</item>
+		<item>5 Zeilen</item>
+		<item>6 Zeilen</item>
+		<item>7 Zeilen</item>
+		<item>8 Zeilen</item>
+		<item>9 Zeilen</item>
+		<item>10 Zeilen</item>
+		<item>11 Zeilen</item>
+		<item>12 Zeilen</item>
+		<item>13 Zeilen</item>
+		<item>14 Zeilen</item>
+		<item>15 Zeilen</item>
+		<item>16 Zeilen</item>
+		<item>17 Zeilen</item>
+		<item>18 Zeilen</item>
+		<item>19 Zeilen</item>
+		<item>20 Zeilen</item>
+		<item>21 Zeilen</item>
+		<item>22 Zeilen</item>
+		<item>23 Zeilen</item>
+		<item>24 Zeilen</item>
+		<item>25 Zeilen</item>
+	</string-array>
 
 	<string name="settings_birthdays">Geburtstage</string>
 
