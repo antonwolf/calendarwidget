@@ -6,7 +6,7 @@
 	<string name="format_this_week">%a</string>
 	<string name="format_this_year">%-m/%-d</string>
 	<string name="format_other">%-m/%-d/%y</string>
-	<string name="format_time">%-I:%M %P</string>
+	<bool name="format_24hours">false</bool>
 	<string name="label_4x1">Anton\'s Agenda Widget (4x1)</string>
 	<string name="label_4x2">Anton\'s Agenda Widget (4x2)</string>
 	<string name="label_4x3">Anton\'s Agenda Widget (4x3)</string>

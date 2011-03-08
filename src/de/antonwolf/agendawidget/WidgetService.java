@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.Log;
@@ -116,7 +117,7 @@ public final class WidgetService extends IntentService {
 				Time endTime = getEnd(cur);
 				long startMillis = cur.getLong(COL_START);
 
-				String time = formatTime(startTime, startMillis, endTime,
+				CharSequence time = formatTime(startTime, startMillis, endTime,
 						endMillis, allDay);
 
 				if (prefs.getBoolean(widgetId + "bDayRecognition", true)
@@ -280,7 +281,7 @@ public final class WidgetService extends IntentService {
 		return value;
 	}
 
-	private String formatTime(Time start, long startMillis, Time end,
+	private CharSequence formatTime(Time start, long startMillis, Time end,
 			long endMillis, boolean allDay) {
 		String startDay;
 		String endDay;
@@ -310,13 +311,16 @@ public final class WidgetService extends IntentService {
 				return startDay + "-" + endDay;
 		}
 
-		String startHour = start.format(getResources().getString(
-				R.string.format_time));
+		boolean format_24hours = getResources().getBoolean(
+				R.bool.format_24hours);
+
+		String startHour = start.format(format_24hours ? "%-H:%M"
+				: "%-I:%M<small>%P</small>");
 		if (startMillis == endMillis)
 			return startDay + " " + startHour;
 
-		String endHour = end.format(getResources().getString(
-				R.string.format_time));
+		String endHour = end.format(format_24hours ? "%-H:%M"
+				: "%-I:%M<small>%P</small>");
 
 		StringBuilder result = new StringBuilder(startDay);
 		result.append(' ');
@@ -327,7 +331,11 @@ public final class WidgetService extends IntentService {
 			result.append(' ');
 		}
 		result.append(endHour);
-		return result.toString();
+
+		if (format_24hours)
+			return result;
+		else
+			return Html.fromHtml(result.toString());
 	}
 
 	private String formatDay(Time day, long dayMillis) {
