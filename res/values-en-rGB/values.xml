@@ -2,5 +2,4 @@
 <resources>
     <string name="format_this_year">%d/%m</string>
     <string name="format_other">%-d/%-m/%y</string>
-    <bool name="format_24hours">false</bool>
 </resources>

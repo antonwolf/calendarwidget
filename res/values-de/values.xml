@@ -2,9 +2,6 @@
 <resources>
 	<string name="format_today">heute</string>
 	<string name="app_name">Agenda Widget</string>
-	<string name="format_this_year">%-d.%m.</string>
-	<string name="format_other">%-d.%-m.%y</string>
-	<bool name="format_24hours">false</bool>
 	
 	<string name="label_4x1">Antons Agenda Widget (4x1)</string>
 	<string name="label_4x2">Antons Agenda Widget (4x2)</string>
@@ -15,7 +12,15 @@
 	<string name="label_3x3">Antons Agenda Widget (3x3)</string>
 	<string name="label_2x1">Antons Agenda Widget (2x1)</string>
 	
-	<bool name="format_this_week_remove_dot">true</bool>
+	<string-array name="format_day_of_week">
+		<item>So</item>
+		<item>Mo</item>
+		<item>Di</item>
+		<item>Mi</item>
+		<item>Do</item>
+		<item>Fr</item>
+		<item>Sa</item>
+	</string-array>
 	
 	<string name="open_calendar">Kalender öffnen</string>
 	<string name="settings">Einstellungen</string>

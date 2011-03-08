@@ -15,9 +15,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.text.format.DateUtils;
 import android.text.format.Time;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -315,39 +316,50 @@ public final class WidgetService extends IntentService {
 				R.bool.format_24hours);
 
 		String startHour = start.format(format_24hours ? "%-H:%M"
-				: "%-I:%M<small>%P</small>");
-		if (startMillis == endMillis)
-			return startDay + " " + startHour;
+				: "%-I:%M%P");
+		if (startMillis == endMillis) {
+			if (format_24hours)
+				return startDay + " " + startHour;
+			else {
+				SpannableStringBuilder result = new SpannableStringBuilder(
+						startDay + " " + startHour);
+				int len = result.length();
+				result.setSpan(new RelativeSizeSpan(0.7f), len - 2, len, 0);
+				return result;
+			}
+
+		}
 
 		String endHour = end.format(format_24hours ? "%-H:%M"
-				: "%-I:%M<small>%P</small>");
+				: "%-I:%M%P");
 
 		StringBuilder result = new StringBuilder(startDay);
 		result.append(' ');
 		result.append(startHour);
+		int pos1 = result.length();
 		result.append('-');
 		if (endDay != "") {
 			result.append(endDay);
 			result.append(' ');
 		}
 		result.append(endHour);
+		int pos2 = result.length();
 
 		if (format_24hours)
 			return result;
-		else
-			return Html.fromHtml(result.toString());
+		else {
+			SpannableStringBuilder spannable = new SpannableStringBuilder(result);
+			spannable.setSpan(new RelativeSizeSpan(0.7f), pos1 - 2, pos1, 0);
+			spannable.setSpan(new RelativeSizeSpan(0.7f), pos2 - 2, pos2, 0);
+			return spannable;
+		}
 	}
 
 	private String formatDay(Time day, long dayMillis) {
 		if (dayStart <= dayMillis && dayMillis <= dayEnd)
 			return day.format(getResources().getString(R.string.format_today));
 		else if (dayStart <= dayMillis && dayMillis <= oneWeekFromNow)
-			return getResources()
-					.getBoolean(R.bool.format_this_week_remove_dot) ? day
-					.format(getResources().getString(R.string.format_this_week))
-					.replace(".", "")
-					: day.format(getResources().getString(
-							R.string.format_this_week));
+			return getResources().getStringArray(R.array.format_day_of_week)[day.weekDay];
 		else if (yearStart <= dayMillis && dayMillis <= yearEnd)
 			return day.format(getResources().getString(
 					R.string.format_this_year));
