@@ -112,6 +112,8 @@ public final class WidgetService extends IntentService {
 					continue;
 
 				String title = cur.getString(COL_TITLE);
+				if (title == null)
+					title = "";
 				String bdayTitle = getBirthday(title);
 
 				Time startTime = getStart(cur);
@@ -143,7 +145,11 @@ public final class WidgetService extends IntentService {
 					events.addLast(event);
 
 					event.setTextViewText(R.id.event_title, title);
-					int commaFlag = cur.getString(COL_LOCATION) == null ? View.GONE
+
+					String location = cur.getString(COL_LOCATION);
+					if (location == null)
+						location = "";
+					int commaFlag = location.trim() == "" ? View.GONE
 							: View.VISIBLE;
 					event.setViewVisibility(R.id.event_comma, commaFlag);
 
@@ -315,8 +321,7 @@ public final class WidgetService extends IntentService {
 		boolean format_24hours = getResources().getBoolean(
 				R.bool.format_24hours);
 
-		String startHour = start.format(format_24hours ? "%-H:%M"
-				: "%-I:%M%P");
+		String startHour = start.format(format_24hours ? "%-H:%M" : "%-I:%M%P");
 		if (startMillis == endMillis) {
 			if (format_24hours)
 				return startDay + " " + startHour;
@@ -330,8 +335,7 @@ public final class WidgetService extends IntentService {
 
 		}
 
-		String endHour = end.format(format_24hours ? "%-H:%M"
-				: "%-I:%M%P");
+		String endHour = end.format(format_24hours ? "%-H:%M" : "%-I:%M%P");
 
 		StringBuilder result = new StringBuilder(startDay);
 		result.append(' ');
@@ -348,7 +352,8 @@ public final class WidgetService extends IntentService {
 		if (format_24hours)
 			return result;
 		else {
-			SpannableStringBuilder spannable = new SpannableStringBuilder(result);
+			SpannableStringBuilder spannable = new SpannableStringBuilder(
+					result);
 			spannable.setSpan(new RelativeSizeSpan(0.7f), pos1 - 2, pos1, 0);
 			spannable.setSpan(new RelativeSizeSpan(0.7f), pos2 - 2, pos2, 0);
 			return spannable;
