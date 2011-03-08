@@ -115,7 +115,6 @@ public final class WidgetService extends IntentService {
 
 				Time startTime = new Time(timezone);
 				Time endTime = new Time(timezone);
-				;
 
 				if (allDay) {
 					startTime.setJulianDay(cur.getInt(COL_START_DAY));

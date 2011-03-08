@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="format_today">heute</string>
-	<string name="app_name">Agenda Widget</string>
+	<string name="app_name">Kalender Widget</string>
 	
-	<string name="label_4x1">Antons Agenda Widget (4x1)</string>
-	<string name="label_4x2">Antons Agenda Widget (4x2)</string>
-	<string name="label_4x3">Antons Agenda Widget (4x3)</string>
-	<string name="label_4x4">Antons Agenda Widget (4x4)</string>
-	<string name="label_3x1">Antons Agenda Widget (3x1)</string>
-	<string name="label_3x2">Antons Agenda Widget (3x2)</string>
-	<string name="label_3x3">Antons Agenda Widget (3x3)</string>
-	<string name="label_2x1">Antons Agenda Widget (2x1)</string>
+	<string name="label_4x1">Antons Kalender-Widget (4x1)</string>
+	<string name="label_4x2">Antons Kalender-Widget (4x2)</string>
+	<string name="label_4x3">Antons Kalender-Widget (4x3)</string>
+	<string name="label_4x4">Antons Kalender-Widget (4x4)</string>
+	<string name="label_3x1">Antons Kalender-Widget (3x1)</string>
+	<string name="label_3x2">Antons Kalender-Widget (3x2)</string>
+	<string name="label_3x3">Antons Kalender-Widget (3x3)</string>
+	<string name="label_2x1">Antons Kalender-Widget (2x1)</string>
 	
 	<string-array name="format_day_of_week">
 		<item>So</item>
@@ -24,7 +24,7 @@
 	
 	<string name="open_calendar">Kalender öffnen</string>
 	<string name="settings">Einstellungen</string>
-	<string name="settings_description">Antons Agenda Widget konfigurieren</string>
+	<string name="settings_description">Antons Kalender-Widget konfigurieren</string>
 	
 	<string-array name="birthday_patterns">
 		<item>(.+)\'s Birthday</item>
@@ -66,7 +66,7 @@
 
 	<string name="settings_birthdays_recognition">Erkennung</string>
 	<string name="settings_birthdays_recognition_special">Geburtstage gesondert behandeln</string>
-	<string name="settings_birthdays_recognition_normal">Geburstatage sind normale Ereignisse</string>
+	<string name="settings_birthdays_recognition_normal">Geburststage sind normale Ereignisse</string>
 
 	<string name="settings_birthdays_display">Anzeige</string>
 	<string name="settings_birthdays_display_show">Geburtstage anzeigen</string>
