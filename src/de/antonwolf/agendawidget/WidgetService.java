@@ -17,21 +17,19 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.text.format.Time;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.RemoteViews;
 
 public final class WidgetService extends IntentService {
 	private static final String TAG = "AgendaWidget";
 	private static final String THEAD_NAME = "WidgetServiceThead";
 
-	private static Time dayStart;
-	private static Time dayEnd;
-	private static Time oneWeekFromNow;
-	private static Time yearStart;
-	private static Time yearEnd;
+	private static long dayStart;
+	private static long dayEnd = Long.MAX_VALUE;
+	private static long oneWeekFromNow;
+	private static long yearStart;
+	private static long yearEnd;
 
 	private static Pattern[] birthdayPatterns;
 
@@ -41,7 +39,7 @@ public final class WidgetService extends IntentService {
 	private final static String[] CURSOR_PROJECTION = new String[] { "title",
 			"color", "eventLocation", "allDay", "startDay", "startMinute",
 			"endDay", "endMinute", "eventTimezone", "end", "hasAlarm",
-			"calendar_id" };
+			"calendar_id", "begin" };
 	private final static int COL_TITLE = 0;
 	private final static int COL_COLOR = 1;
 	private final static int COL_LOCATION = 2;
@@ -54,6 +52,7 @@ public final class WidgetService extends IntentService {
 	private final static int COL_END = 9;
 	private final static int COL_HAS_ALARM = 10;
 	private final static int COL_CALENDAR = 11;
+	private final static int COL_START = 12;
 
 	public WidgetService() {
 		super(THEAD_NAME);
@@ -76,7 +75,7 @@ public final class WidgetService extends IntentService {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		long nextUpdate = dayEnd.toMillis(false);
+		long nextUpdate = dayEnd;
 
 		LinkedList<RemoteViews> events = new LinkedList<RemoteViews>();
 		LinkedList<RemoteViews> birthdays = new LinkedList<RemoteViews>();
@@ -104,19 +103,21 @@ public final class WidgetService extends IntentService {
 					continue;
 				}
 
-				Time end = getEnd(cur);
+				long endMillis = cur.getLong(COL_END);
 				boolean allDay = 1 == cur.getInt(COL_ALL_DAY);
 
-				if (!allDay
-						&& end.toMillis(false) <= System.currentTimeMillis())
+				if (!allDay && endMillis <= System.currentTimeMillis())
 					continue;
 
 				String title = cur.getString(COL_TITLE);
 				String bdayTitle = getBirthday(title);
 
-				Time start = getStart(cur);
+				Time startTime = getStart(cur);
+				Time endTime = getEnd(cur);
+				long startMillis = cur.getLong(COL_START);
 
-				String time = formatTime(start, end, allDay);
+				String time = formatTime(startTime, startMillis, endTime,
+						endMillis, allDay);
 
 				if (prefs.getBoolean(widgetId + "bDayRecognition", true)
 						&& bdayTitle != null) {
@@ -195,29 +196,37 @@ public final class WidgetService extends IntentService {
 	}
 
 	private synchronized void updateTimeRanges() {
-		if (null != dayEnd
-				&& dayEnd.toMillis(false) < System.currentTimeMillis())
+		if (dayEnd < System.currentTimeMillis())
 			return;
 
-		dayStart = new Time();
-		dayStart.setToNow();
-		dayStart.hour = dayStart.minute = dayStart.second = 0;
+		Time dayStartTime = new Time();
+		dayStartTime.setToNow();
+		dayStartTime.hour = dayStartTime.minute = dayStartTime.second = 0;
+		dayStartTime.normalize(false);
+		dayStart = dayStartTime.toMillis(false);
 
-		dayEnd = new Time(dayStart);
-		dayEnd.hour = 23;
-		dayEnd.minute = dayEnd.second = 59;
+		Time dayEndTime = new Time(dayStartTime);
+		dayEndTime.hour = 23;
+		dayEndTime.minute = dayEndTime.second = 59;
+		dayEndTime.normalize(false);
+		dayEnd = dayEndTime.toMillis(false);
 
-		oneWeekFromNow = new Time(dayEnd);
-		oneWeekFromNow.monthDay += 7;
-		oneWeekFromNow.normalize(false);
+		Time oneWeekFromNowTime = new Time(dayEndTime);
+		oneWeekFromNowTime.monthDay += 7;
+		oneWeekFromNowTime.normalize(false);
+		oneWeekFromNow = oneWeekFromNowTime.toMillis(false);
 
-		yearEnd = new Time(dayEnd);
-		yearEnd.month = 11;
-		yearEnd.monthDay = 31;
+		Time yearEndTime = new Time(dayEndTime);
+		yearEndTime.month = 11;
+		yearEndTime.monthDay = 31;
+		yearEndTime.normalize(false);
+		yearEnd = yearEndTime.toMillis(false);
 
-		yearStart = new Time(dayStart);
-		yearStart.month = 0;
-		yearStart.monthDay = 1;
+		Time yearStartTime = new Time(dayStartTime);
+		yearStartTime.month = 0;
+		yearStartTime.monthDay = 1;
+		yearStartTime.normalize(false);
+		yearStart = yearStartTime.toMillis(false);
 	}
 
 	private synchronized Pattern[] getBirthdayPatterns() {
@@ -271,88 +280,71 @@ public final class WidgetService extends IntentService {
 		return value;
 	}
 
-	private String formatTime(Time start, Time end, boolean allDay) {
+	private String formatTime(Time start, long startMillis, Time end,
+			long endMillis, boolean allDay) {
 		String startDay;
+		String endDay;
 
-		if (!allDay && isToday(start) && isToday(end))
-			startDay = "";
-		else if (isToday(start))
-			startDay = start.format(getResources().getString(
-					R.string.format_today));
-		else if (isThisWeek(start))
-			startDay = getResources().getBoolean(
-					R.bool.format_this_week_remove_dot) ? start.format(
-					getResources().getString(R.string.format_this_week))
-					.replace(".", "") : start.format(getResources().getString(
-					R.string.format_this_week));
-		else if (isThisYear(start))
-			startDay = start.format(getResources().getString(
-					R.string.format_this_year));
-		else
-			startDay = start.format(getResources().getString(
-					R.string.format_other));
+		boolean isStartToday = (dayStart <= startMillis && startMillis <= dayEnd);
+		boolean isEndToday = (dayStart <= endMillis && endMillis <= dayEnd);
 
-		String startHour = allDay ? "" : start.format(getResources().getString(
-				R.string.format_time));
-		String startTime = startDay
-				+ ((startDay == "" || startHour == "") ? "" : " ") + startHour;
-
-		if (Time.compare(start, end) == 0)
-			return startTime;
+		if (isStartToday && isEndToday)
+			startDay = endDay = "";
 		else {
-			String endDay;
+			startDay = formatDay(start, startMillis);
 
 			Time endOfStartDay = new Time(start);
 			endOfStartDay.hour = 23;
 			endOfStartDay.minute = endOfStartDay.second = 59;
 
-			if (isBeforeEndOfDay(start, end))
+			if (Time.compare(end, endOfStartDay) <= 0)
 				endDay = "";
-			else if (isToday(end))
-				endDay = end.format(getResources().getString(
-						R.string.format_today));
-			else if (isThisWeek(end))
-				endDay = getResources().getBoolean(
-						R.bool.format_this_week_remove_dot) ? end.format(
-						getResources().getString(R.string.format_this_week))
-						.replace(".", "") : end.format(getResources()
-						.getString(R.string.format_this_week));
-			else if (isThisYear(end))
-				endDay = end.format(getResources().getString(
-						R.string.format_this_year));
 			else
-				endDay = end.format(getResources().getString(
-						R.string.format_other));
-
-			String endHour = allDay ? "" : end.format(getResources().getString(
-					R.string.format_time));
-			String endTime = endDay
-					+ ((endDay == "" || endHour == "") ? "" : " ") + endHour;
-			return startTime + "-" + endTime;
+				endDay = formatDay(end, endMillis);
 		}
+
+		if (allDay) {
+			if (endDay == "")
+				return startDay;
+			else
+				return startDay + "-" + endDay;
+		}
+
+		String startHour = start.format(getResources().getString(
+				R.string.format_time));
+		if (startMillis == endMillis)
+			return startDay + " " + startHour;
+
+		String endHour = end.format(getResources().getString(
+				R.string.format_time));
+
+		StringBuilder result = new StringBuilder(startDay);
+		result.append(' ');
+		result.append(startHour);
+		result.append('-');
+		if (endDay != "") {
+			result.append(endDay);
+			result.append(' ');
+		}
+		result.append(endHour);
+		return result.toString();
 	}
 
-	private boolean isBeforeEndOfDay(Time day, Time test) {
-		Time nextDay = new Time(day);
-		nextDay.hour = 23;
-		nextDay.minute = 59;
-		nextDay.second = 59;
-		return Time.compare(test, nextDay) <= 0;
-	}
-
-	private boolean isToday(Time time) {
-		return Time.compare(time, dayEnd) <= 0
-				&& Time.compare(dayStart, time) <= 0;
-	}
-
-	private boolean isThisWeek(Time time) {
-		return Time.compare(time, oneWeekFromNow) <= 0
-				&& Time.compare(dayStart, time) <= 0;
-	}
-
-	private boolean isThisYear(Time time) {
-		return Time.compare(time, yearEnd) <= 0
-				&& Time.compare(yearStart, time) <= 0;
+	private String formatDay(Time day, long dayMillis) {
+		if (dayStart <= dayMillis && dayMillis <= dayEnd)
+			return day.format(getResources().getString(R.string.format_today));
+		else if (dayStart <= dayMillis && dayMillis <= oneWeekFromNow)
+			return getResources()
+					.getBoolean(R.bool.format_this_week_remove_dot) ? day
+					.format(getResources().getString(R.string.format_this_week))
+					.replace(".", "")
+					: day.format(getResources().getString(
+							R.string.format_this_week));
+		else if (yearStart <= dayMillis && dayMillis <= yearEnd)
+			return day.format(getResources().getString(
+					R.string.format_this_year));
+		else
+			return day.format(getResources().getString(R.string.format_other));
 	}
 
 }
