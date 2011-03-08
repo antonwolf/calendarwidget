@@ -42,18 +42,18 @@ public final class WidgetService extends IntentService {
 			"color", "eventLocation", "allDay", "startDay", "startMinute",
 			"endDay", "endMinute", "eventTimezone", "end", "hasAlarm",
 			"calendar_id" };
-	private final static int COLUMN_TITLE = 0;
-	private final static int COLUMN_COLOR = 1;
-	private final static int COLUMN_LOCATION = 2;
-	private final static int COLUMN_ALL_DAY = 3;
-	private final static int COLUMN_START_DAY = 4;
-	private final static int COLUMN_START_MINUTE = 5;
-	private final static int COLUMN_END_DAY = 6;
-	private final static int COLUMN_END_MINUTE = 7;
-	private final static int COLUMN_TIMEZONE = 8;
-	private final static int COLUMN_END = 9;
-	private final static int COLUMN_HAS_ALARM = 10;
-	private final static int COLUMN_CALENDAR = 11;
+	private final static int COL_TITLE = 0;
+	private final static int COL_COLOR = 1;
+	private final static int COL_LOCATION = 2;
+	private final static int COL_ALL_DAY = 3;
+	private final static int COL_START_DAY = 4;
+	private final static int COL_START_MINUTE = 5;
+	private final static int COL_END_DAY = 6;
+	private final static int COL_END_MINUTE = 7;
+	private final static int COL_TIMEZONE = 8;
+	private final static int COL_END = 9;
+	private final static int COL_HAS_ALARM = 10;
+	private final static int COL_CALENDAR = 11;
 
 	public WidgetService() {
 		super(THEAD_NAME);
@@ -86,34 +86,35 @@ public final class WidgetService extends IntentService {
 		int maxLines = Integer.parseInt(prefs.getString(widgetId + "lines",
 				SettingsActivity.getDefaultLines(widgetId, this)));
 
-		Cursor cursor = null;
+		Cursor cur = null;
 
 		try {
-			cursor = getCursor();
+			cur = getCursor();
 
 			for (int position = 0; position < (maxLines * 4); position++) {
 				if (bdayLeft && events.size() + birthdays.size() >= maxLines)
 					break;
-				if (!cursor.moveToNext())
+				if (!cur.moveToNext())
 					break;
-				if (!prefs.getBoolean(
-						widgetId + "calendar" + cursor.getInt(COLUMN_CALENDAR),
-						true)) {
+				String calPref = widgetId + "calendar"
+						+ cur.getInt(COL_CALENDAR);
+
+				if (!prefs.getBoolean(calPref, true)) {
 					position--;
 					continue;
 				}
 
-				Time end = getEnd(cursor);
-				boolean allDay = 1 == cursor.getInt(COLUMN_ALL_DAY);
+				Time end = getEnd(cur);
+				boolean allDay = 1 == cur.getInt(COL_ALL_DAY);
 
 				if (!allDay
 						&& end.toMillis(false) <= System.currentTimeMillis())
 					continue;
 
-				String title = cursor.getString(COLUMN_TITLE);
+				String title = cur.getString(COL_TITLE);
 				String bdayTitle = getBirthday(title);
 
-				Time start = getStart(cursor);
+				Time start = getStart(cur);
 
 				String time = formatTime(start, end, allDay);
 
@@ -139,20 +140,19 @@ public final class WidgetService extends IntentService {
 					events.addLast(event);
 
 					event.setTextViewText(R.id.event_title, title);
-					int commaFlag = cursor.getString(COLUMN_LOCATION) == null ? View.GONE
+					int commaFlag = cur.getString(COL_LOCATION) == null ? View.GONE
 							: View.VISIBLE;
 					event.setViewVisibility(R.id.event_comma, commaFlag);
 
 					event.setTextViewText(R.id.event_location,
-							cursor.getString(COLUMN_LOCATION));
+							cur.getString(COL_LOCATION));
 					event.setTextViewText(R.id.event_time, time);
-					if (1 != cursor.getInt(COLUMN_ALL_DAY)
-							&& cursor.getLong(COLUMN_END) < nextUpdate)
-						nextUpdate = cursor.getLong(COLUMN_END);
-					event.setTextColor(R.id.event_color,
-							cursor.getInt(COLUMN_COLOR));
+					if (1 != cur.getInt(COL_ALL_DAY)
+							&& cur.getLong(COL_END) < nextUpdate)
+						nextUpdate = cur.getLong(COL_END);
+					event.setTextColor(R.id.event_color, cur.getInt(COL_COLOR));
 
-					int alarmFlag = cursor.getInt(COLUMN_HAS_ALARM) == 1 ? View.VISIBLE
+					int alarmFlag = cur.getInt(COL_HAS_ALARM) == 1 ? View.VISIBLE
 							: View.GONE;
 					event.setViewVisibility(R.id.event_alarm, alarmFlag);
 				}
@@ -181,8 +181,8 @@ public final class WidgetService extends IntentService {
 			alarmManager.cancel(pending);
 			alarmManager.set(AlarmManager.RTC, nextUpdate + 1000, pending);
 		} finally {
-			if (cursor != null)
-				cursor.close();
+			if (cur != null)
+				cur.close();
 		}
 	}
 
@@ -244,29 +244,29 @@ public final class WidgetService extends IntentService {
 	}
 
 	private Time getStart(Cursor cursor) {
-		String timezone = cursor.getString(COLUMN_TIMEZONE);
+		String timezone = cursor.getString(COL_TIMEZONE);
 
 		if (null == timezone)
 			timezone = Time.getCurrentTimezone();
 
 		Time value = new Time(timezone);
-		value.setJulianDay(cursor.getInt(COLUMN_START_DAY));
-		if (cursor.getInt(COLUMN_ALL_DAY) != 1)
-			value.minute = cursor.getInt(COLUMN_START_MINUTE);
+		value.setJulianDay(cursor.getInt(COL_START_DAY));
+		if (cursor.getInt(COL_ALL_DAY) != 1)
+			value.minute = cursor.getInt(COL_START_MINUTE);
 		value.normalize(true);
 		return value;
 	}
 
 	private Time getEnd(Cursor cursor) {
-		String timezone = cursor.getString(COLUMN_TIMEZONE);
+		String timezone = cursor.getString(COL_TIMEZONE);
 
 		if (null == timezone)
 			timezone = Time.getCurrentTimezone();
 
 		Time value = new Time(timezone);
-		value.setJulianDay(cursor.getInt(COLUMN_END_DAY));
-		if (cursor.getInt(COLUMN_ALL_DAY) != 1)
-			value.minute = cursor.getInt(COLUMN_END_MINUTE);
+		value.setJulianDay(cursor.getInt(COL_END_DAY));
+		if (cursor.getInt(COL_ALL_DAY) != 1)
+			value.minute = cursor.getInt(COL_END_MINUTE);
 		value.normalize(true);
 		return value;
 	}
