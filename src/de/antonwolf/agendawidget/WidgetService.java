@@ -39,22 +39,19 @@ public final class WidgetService extends IntentService {
 	private final static long SEARCH_DURATION = 2 * DateUtils.YEAR_IN_MILLIS;
 	private final static String CURSOR_SORT = "startDay ASC, allDay DESC, begin ASC, Instances._id ASC";
 	private final static String[] CURSOR_PROJECTION = new String[] { "title",
-			"color", "eventLocation", "allDay", "startDay", "startMinute",
-			"endDay", "endMinute", "eventTimezone", "end", "hasAlarm",
-			"calendar_id", "begin" };
+			"color", "eventLocation", "allDay", "startDay", "endDay",
+			"eventTimezone", "end", "hasAlarm", "calendar_id", "begin" };
 	private final static int COL_TITLE = 0;
 	private final static int COL_COLOR = 1;
 	private final static int COL_LOCATION = 2;
 	private final static int COL_ALL_DAY = 3;
 	private final static int COL_START_DAY = 4;
-	private final static int COL_START_MINUTE = 5;
-	private final static int COL_END_DAY = 6;
-	private final static int COL_END_MINUTE = 7;
-	private final static int COL_TIMEZONE = 8;
-	private final static int COL_END = 9;
-	private final static int COL_HAS_ALARM = 10;
-	private final static int COL_CALENDAR = 11;
-	private final static int COL_START = 12;
+	private final static int COL_END_DAY = 5;
+	private final static int COL_TIMEZONE = 6;
+	private final static int COL_END = 7;
+	private final static int COL_HAS_ALARM = 8;
+	private final static int COL_CALENDAR = 9;
+	private final static int COL_START = 10;
 
 	public WidgetService() {
 		super(THEAD_NAME);
@@ -111,14 +108,27 @@ public final class WidgetService extends IntentService {
 				if (!allDay && endMillis <= System.currentTimeMillis())
 					continue;
 
+				long startMillis = cur.getLong(COL_START);
+				String timezone = cur.getString(COL_TIMEZONE);
+				if (null == timezone)
+					timezone = Time.getCurrentTimezone();
+
+				Time startTime = new Time(timezone);
+				Time endTime = new Time(timezone);
+				;
+
+				if (allDay) {
+					startTime.setJulianDay(cur.getInt(COL_START_DAY));
+					endTime.setJulianDay(cur.getInt(COL_END_DAY));
+				} else {
+					startTime.set(startMillis);
+					endTime.set(endMillis);
+				}
+
 				String title = cur.getString(COL_TITLE);
 				if (title == null)
 					title = "";
 				String bdayTitle = getBirthday(title);
-
-				Time startTime = getStart(cur);
-				Time endTime = getEnd(cur);
-				long startMillis = cur.getLong(COL_START);
 
 				CharSequence time = formatTime(startTime, startMillis, endTime,
 						endMillis, allDay);
@@ -258,34 +268,6 @@ public final class WidgetService extends IntentService {
 			return matcher.group(1);
 		}
 		return null;
-	}
-
-	private Time getStart(Cursor cursor) {
-		String timezone = cursor.getString(COL_TIMEZONE);
-
-		if (null == timezone)
-			timezone = Time.getCurrentTimezone();
-
-		Time value = new Time(timezone);
-		value.setJulianDay(cursor.getInt(COL_START_DAY));
-		if (cursor.getInt(COL_ALL_DAY) != 1)
-			value.minute = cursor.getInt(COL_START_MINUTE);
-		value.normalize(true);
-		return value;
-	}
-
-	private Time getEnd(Cursor cursor) {
-		String timezone = cursor.getString(COL_TIMEZONE);
-
-		if (null == timezone)
-			timezone = Time.getCurrentTimezone();
-
-		Time value = new Time(timezone);
-		value.setJulianDay(cursor.getInt(COL_END_DAY));
-		if (cursor.getInt(COL_ALL_DAY) != 1)
-			value.minute = cursor.getInt(COL_END_MINUTE);
-		value.normalize(true);
-		return value;
 	}
 
 	private CharSequence formatTime(Time start, long startMillis, Time end,
