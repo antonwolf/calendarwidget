@@ -1,8 +1,6 @@
 package de.antonwolf.agendawidget;
 
-import java.text.BreakIterator;
 import java.util.LinkedList;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

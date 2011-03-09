@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="format_today">heute</string>
-	<string name="app_name">Kalender Widget</string>
+	<string name="app_name">Antons Kalender-Widget</string>
 	
 	<string name="label_4x1">Antons Kalender-Widget (4x1)</string>
 	<string name="label_4x2">Antons Kalender-Widget (4x2)</string>
