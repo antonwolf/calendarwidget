@@ -29,25 +29,22 @@ public final class R {
         public static final int icon=0x7f020003;
     }
     public static final class id {
-        public static final int birthday1_time=0x7f0a0009;
-        public static final int birthday1_title=0x7f0a000a;
-        public static final int birthday2_time=0x7f0a000b;
-        public static final int birthday2_title=0x7f0a000c;
-        public static final int event_alarm=0x7f0a0008;
-        public static final int event_color=0x7f0a0003;
-        public static final int event_comma=0x7f0a0006;
-        public static final int event_location=0x7f0a0007;
-        public static final int event_time=0x7f0a0004;
-        public static final int event_title=0x7f0a0005;
-        public static final int open_calendar=0x7f0a0000;
-        public static final int open_settings=0x7f0a0001;
-        public static final int widget=0x7f0a0002;
+        public static final int birthday1_text=0x7f0a0000;
+        public static final int birthday2_text=0x7f0a0001;
+        public static final int event_alarm=0x7f0a0004;
+        public static final int event_color=0x7f0a0002;
+        public static final int event_text=0x7f0a0003;
+        public static final int open_calendar=0x7f0a0005;
+        public static final int open_settings=0x7f0a0006;
+        public static final int widget=0x7f0a0007;
     }
     public static final class layout {
-        public static final int pick_action=0x7f030000;
-        public static final int widget=0x7f030001;
-        public static final int widget_event=0x7f030002;
-        public static final int widget_two_birthdays=0x7f030003;
+        public static final int birthdays=0x7f030000;
+        public static final int event=0x7f030001;
+        public static final int pick_action=0x7f030002;
+        public static final int widget=0x7f030003;
+        public static final int widget_event=0x7f030004;
+        public static final int widget_two_birthdays=0x7f030005;
     }
     public static final class string {
         public static final int app_name=0x7f070000;

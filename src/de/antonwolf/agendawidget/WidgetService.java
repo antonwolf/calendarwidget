@@ -1,6 +1,8 @@
 package de.antonwolf.agendawidget;
 
+import java.text.BreakIterator;
 import java.util.LinkedList;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,9 +17,11 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateUtils;
 import android.text.format.Time;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
@@ -53,6 +57,8 @@ public final class WidgetService extends IntentService {
 	private final static int COL_CALENDAR = 9;
 	private final static int COL_START = 10;
 
+	private final static Pattern isEmpty = Pattern.compile("^\\s*$");
+
 	public WidgetService() {
 		super(THEAD_NAME);
 	}
@@ -73,6 +79,12 @@ public final class WidgetService extends IntentService {
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
+		boolean prefBDayRecognition = prefs.getBoolean(widgetId
+				+ "bDayRecognition", true);
+		boolean prefBDayDisplay = prefs.getBoolean(widgetId + "bDayDisplay",
+				true);
+
+		String packageName = getPackageName();
 
 		long nextUpdate = dayEnd;
 
@@ -90,13 +102,19 @@ public final class WidgetService extends IntentService {
 			cur = getCursor();
 
 			for (int position = 0; position < (maxLines * 4); position++) {
+				// all lines of the widget full? abort!
 				if (bdayLeft && events.size() + birthdays.size() >= maxLines)
 					break;
+
+				// no next item? abort!
 				if (!cur.moveToNext())
 					break;
+
+				Log.d(TAG, cur.getString(COL_TITLE));
+
+				// is this calendar enabled?
 				String calPref = widgetId + "calendar"
 						+ cur.getInt(COL_CALENDAR);
-
 				if (!prefs.getBoolean(calPref, true)) {
 					position--;
 					continue;
@@ -104,7 +122,9 @@ public final class WidgetService extends IntentService {
 
 				long endMillis = cur.getLong(COL_END);
 				boolean allDay = 1 == cur.getInt(COL_ALL_DAY);
+				int endDay = cur.getInt(COL_END_DAY);
 
+				// non-all-day event in the past? Don't display!
 				if (!allDay && endMillis <= System.currentTimeMillis())
 					continue;
 
@@ -117,8 +137,12 @@ public final class WidgetService extends IntentService {
 				Time endTime = new Time(timezone);
 
 				if (allDay) {
+					endTime.setJulianDay(endDay);
+
+					// allDay event in the past? Don't display!
+					if (endTime.toMillis(false) < dayStart)
+						continue;
 					startTime.setJulianDay(cur.getInt(COL_START_DAY));
-					endTime.setJulianDay(cur.getInt(COL_END_DAY));
 				} else {
 					startTime.set(startMillis);
 					endTime.set(endMillis);
@@ -127,51 +151,72 @@ public final class WidgetService extends IntentService {
 				String title = cur.getString(COL_TITLE);
 				if (title == null)
 					title = "";
-				String bdayTitle = getBirthday(title);
 
-				CharSequence time = formatTime(startTime, startMillis, endTime,
-						endMillis, allDay);
+				boolean isBirthday = false;
+				if (prefBDayRecognition)
+					for (Pattern pattern : getBirthdayPatterns()) {
+						Matcher matcher = pattern.matcher(title);
+						if (!matcher.find())
+							continue;
+						title = matcher.group(1);
+						isBirthday = true;
+						break;
+					}
 
-				if (prefs.getBoolean(widgetId + "bDayRecognition", true)
-						&& bdayTitle != null) {
-					if (!prefs.getBoolean(widgetId + "bDayDisplay", true))
-						continue;
+				// Hide birthday events
+				if (isBirthday && !prefBDayDisplay)
+					continue;
 
+				if (!allDay && endMillis < nextUpdate)
+					nextUpdate = endMillis;
+
+				SpannableStringBuilder builder = new SpannableStringBuilder();
+
+				formatTime(builder, startTime, startMillis, endTime, endMillis,
+						allDay);
+				builder.append(' ');
+				int timeEndPos = builder.length();
+				builder.setSpan(new ForegroundColorSpan(0xaaffffff), 0,
+						timeEndPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+				builder.append(title);
+				int titleEndPos = builder.length();
+				builder.setSpan(new ForegroundColorSpan(0xffffffff),
+						timeEndPos, titleEndPos,
+						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+				String location = cur.getString(COL_LOCATION);
+				if (location != null && !isEmpty.matcher(location).find()) {
+					builder.append(", ");
+					builder.append(location);
+					builder.setSpan(new ForegroundColorSpan(0xaaffffff),
+							titleEndPos, builder.length(),
+							Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
+
+				if (isBirthday) {
 					if (bdayLeft)
-						birthdays.addLast(new RemoteViews(getPackageName(),
-								R.layout.widget_two_birthdays));
-					int timeView = bdayLeft ? R.id.birthday1_time
-							: R.id.birthday2_time;
-					birthdays.getLast().setTextViewText(timeView, time);
-					int titleView = bdayLeft ? R.id.birthday1_title
-							: R.id.birthday2_title;
-					birthdays.getLast().setTextViewText(titleView, bdayTitle);
+						birthdays.addLast(new RemoteViews(packageName,
+								R.layout.birthdays));
+
+					int view = bdayLeft ? R.id.birthday1_text
+							: R.id.birthday2_text;
+					birthdays.getLast().setTextViewText(view, builder);
 
 					bdayLeft = !bdayLeft;
-				} else if (events.size() + birthdays.size() < maxLines) {
-					RemoteViews event = new RemoteViews(getPackageName(),
-							R.layout.widget_event);
+				} else {
+					if (events.size() + birthdays.size() >= maxLines)
+						continue;
+					RemoteViews event = new RemoteViews(packageName,
+							R.layout.event);
 					events.addLast(event);
 
-					event.setTextViewText(R.id.event_title, title);
+					event.setTextViewText(R.id.event_text, builder);
 
-					String location = cur.getString(COL_LOCATION);
-					if (location == null)
-						location = "";
-					int commaFlag = location.trim() == "" ? View.GONE
-							: View.VISIBLE;
-					event.setViewVisibility(R.id.event_comma, commaFlag);
-
-					event.setTextViewText(R.id.event_location,
-							cur.getString(COL_LOCATION));
-					event.setTextViewText(R.id.event_time, time);
-					if (1 != cur.getInt(COL_ALL_DAY)
-							&& cur.getLong(COL_END) < nextUpdate)
-						nextUpdate = cur.getLong(COL_END);
 					event.setTextColor(R.id.event_color, cur.getInt(COL_COLOR));
 
-					int alarmFlag = cur.getInt(COL_HAS_ALARM) == 1 ? View.VISIBLE
-							: View.GONE;
+					int alarmFlag = cur.getInt(COL_HAS_ALARM) == 0 ? View.GONE
+							: View.VISIBLE;
 					event.setViewVisibility(R.id.event_alarm, alarmFlag);
 				}
 			}
@@ -205,9 +250,9 @@ public final class WidgetService extends IntentService {
 	}
 
 	private Cursor getCursor() {
-		long now = System.currentTimeMillis();
-		long end = now + SEARCH_DURATION;
-		String uriString = String.format(CURSOR_FORMAT, now, end);
+		long start = dayStart - 1000 * 60 * 60 * 24;
+		long end = start + SEARCH_DURATION;
+		String uriString = String.format(CURSOR_FORMAT, start, end);
 		return getContentResolver().query(Uri.parse(uriString),
 				CURSOR_PROJECTION, null, null, CURSOR_SORT);
 	}
@@ -259,18 +304,8 @@ public final class WidgetService extends IntentService {
 		return birthdayPatterns;
 	}
 
-	private String getBirthday(String title) {
-		for (Pattern pattern : getBirthdayPatterns()) {
-			Matcher matcher = pattern.matcher(title);
-			if (!matcher.find())
-				continue;
-			return matcher.group(1);
-		}
-		return null;
-	}
-
-	private CharSequence formatTime(Time start, long startMillis, Time end,
-			long endMillis, boolean allDay) {
+	private void formatTime(SpannableStringBuilder builder, Time start,
+			long startMillis, Time end, long endMillis, boolean allDay) {
 		String startDay;
 		String endDay;
 
@@ -293,10 +328,12 @@ public final class WidgetService extends IntentService {
 		}
 
 		if (allDay) {
-			if (endDay == "")
-				return startDay;
-			else
-				return startDay + "-" + endDay;
+			builder.append(startDay);
+			if (endDay != "") {
+				builder.append('-');
+				builder.append(endDay);
+			}
+			return;
 		}
 
 		boolean format_24hours = getResources().getBoolean(
@@ -304,40 +341,33 @@ public final class WidgetService extends IntentService {
 
 		String startHour = start.format(format_24hours ? "%-H:%M" : "%-I:%M%P");
 		if (startMillis == endMillis) {
-			if (format_24hours)
-				return startDay + " " + startHour;
-			else {
-				SpannableStringBuilder result = new SpannableStringBuilder(
-						startDay + " " + startHour);
-				int len = result.length();
-				result.setSpan(new RelativeSizeSpan(0.7f), len - 2, len, 0);
-				return result;
+			builder.append(startDay);
+			builder.append(' ');
+			builder.append(startHour);
+			if (!format_24hours) {
+				int len = builder.length();
+				builder.setSpan(new RelativeSizeSpan(0.7f), len - 2, len, 0);
 			}
-
+			return;
 		}
 
 		String endHour = end.format(format_24hours ? "%-H:%M" : "%-I:%M%P");
 
-		StringBuilder result = new StringBuilder(startDay);
-		result.append(' ');
-		result.append(startHour);
-		int pos1 = result.length();
-		result.append('-');
+		builder.append(startDay);
+		builder.append(' ');
+		builder.append(startHour);
+		int pos1 = builder.length();
+		builder.append('-');
 		if (endDay != "") {
-			result.append(endDay);
-			result.append(' ');
+			builder.append(endDay);
+			builder.append(' ');
 		}
-		result.append(endHour);
-		int pos2 = result.length();
+		builder.append(endHour);
 
-		if (format_24hours)
-			return result;
-		else {
-			SpannableStringBuilder spannable = new SpannableStringBuilder(
-					result);
-			spannable.setSpan(new RelativeSizeSpan(0.7f), pos1 - 2, pos1, 0);
-			spannable.setSpan(new RelativeSizeSpan(0.7f), pos2 - 2, pos2, 0);
-			return spannable;
+		if (!format_24hours) {
+			int pos2 = builder.length();
+			builder.setSpan(new RelativeSizeSpan(0.7f), pos1 - 2, pos1, 0);
+			builder.setSpan(new RelativeSizeSpan(0.7f), pos2 - 2, pos2, 0);
 		}
 	}
 
