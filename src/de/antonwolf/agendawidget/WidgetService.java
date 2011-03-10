@@ -62,7 +62,7 @@ public final class WidgetService extends IntentService {
 	}
 
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	protected synchronized void onHandleIntent(Intent intent) {
 		Log.d(TAG, "Handling " + intent);
 
 		int widgetId = Integer.parseInt(intent.getData().getHost());
@@ -255,10 +255,7 @@ public final class WidgetService extends IntentService {
 				CURSOR_PROJECTION, null, null, CURSOR_SORT);
 	}
 
-	private synchronized void updateTimeRanges() {
-		if (dayEnd < System.currentTimeMillis())
-			return;
-
+	private void updateTimeRanges() {
 		Time dayStartTime = new Time();
 		dayStartTime.setToNow();
 		dayStartTime.hour = dayStartTime.minute = dayStartTime.second = 0;
@@ -339,8 +336,10 @@ public final class WidgetService extends IntentService {
 
 		String startHour = start.format(format_24hours ? "%-H:%M" : "%-I:%M%P");
 		if (startMillis == endMillis) {
-			builder.append(startDay);
-			builder.append(' ');
+			if (startDay != "") {
+				builder.append(startDay);
+				builder.append(' ');
+			}
 			builder.append(startHour);
 			if (!format_24hours) {
 				int len = builder.length();
@@ -351,8 +350,10 @@ public final class WidgetService extends IntentService {
 
 		String endHour = end.format(format_24hours ? "%-H:%M" : "%-I:%M%P");
 
-		builder.append(startDay);
-		builder.append(' ');
+		if (startDay != "") {
+			builder.append(startDay);
+			builder.append(' ');
+		}
 		builder.append(startHour);
 		int pos1 = builder.length();
 		builder.append('-');
