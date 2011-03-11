@@ -108,8 +108,6 @@ public final class WidgetService extends IntentService {
 				if (!cur.moveToNext())
 					break;
 
-				Log.d(TAG, cur.getString(COL_TITLE));
-
 				// is this calendar enabled?
 				String calPref = widgetId + "calendar"
 						+ cur.getInt(COL_CALENDAR);
