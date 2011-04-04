@@ -30,6 +30,7 @@
 		<item>(.+)\'s Birthday</item>
 		<item>(.+)s Geburtstag</item>
 		<item>Geburtstag von (.+)</item>
+		<item>(.+) hat Geburtstag</item>
 	</string-array>
 	
 	<string name="settings_display">Anzeige</string>
