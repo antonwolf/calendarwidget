@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="format_this_year">%d/%m</string>
-    <string name="format_other">%-d/%-m/%y</string>
+    <string name="format_this_year">%1$te/%1$tm</string>
+    <string name="format_other">%1$te/%1$tm/%1$ty</string>
 </resources>

@@ -1,5 +1,6 @@
 package de.antonwolf.agendawidget;
 
+import java.util.Formatter;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,21 +40,20 @@ public final class WidgetService extends IntentService {
 
 	private final static String CURSOR_FORMAT = "content://com.android.calendar/instances/when/%1$s/%2$s";
 	private final static long SEARCH_DURATION = 2 * DateUtils.YEAR_IN_MILLIS;
-	private final static String CURSOR_SORT = "startDay ASC, allDay DESC, begin ASC, Instances._id ASC";
+	private final static String CURSOR_SORT = "begin ASC, end DESC, title ASC";
 	private final static String[] CURSOR_PROJECTION = new String[] { "title",
-			"color", "eventLocation", "allDay", "startDay", "endDay",
-			"eventTimezone", "end", "hasAlarm", "calendar_id", "begin" };
+			"color", "eventLocation", "allDay", "startDay", "endDay", "end",
+			"hasAlarm", "calendar_id", "begin" };
 	private final static int COL_TITLE = 0;
 	private final static int COL_COLOR = 1;
 	private final static int COL_LOCATION = 2;
 	private final static int COL_ALL_DAY = 3;
 	private final static int COL_START_DAY = 4;
 	private final static int COL_END_DAY = 5;
-	private final static int COL_TIMEZONE = 6;
-	private final static int COL_END = 7;
-	private final static int COL_HAS_ALARM = 8;
-	private final static int COL_CALENDAR = 9;
-	private final static int COL_START = 10;
+	private final static int COL_END_MILLIS = 6;
+	private final static int COL_HAS_ALARM = 7;
+	private final static int COL_CALENDAR = 8;
+	private final static int COL_START_MILLIS = 9;
 
 	private final static Pattern isEmpty = Pattern.compile("^\\s*$");
 
@@ -116,7 +116,7 @@ public final class WidgetService extends IntentService {
 					continue;
 				}
 
-				long endMillis = cur.getLong(COL_END);
+				long endMillis = cur.getLong(COL_END_MILLIS);
 				boolean allDay = 1 == cur.getInt(COL_ALL_DAY);
 				int endDay = cur.getInt(COL_END_DAY);
 
@@ -124,13 +124,9 @@ public final class WidgetService extends IntentService {
 				if (!allDay && endMillis <= System.currentTimeMillis())
 					continue;
 
-				long startMillis = cur.getLong(COL_START);
-				String timezone = cur.getString(COL_TIMEZONE);
-				if (null == timezone)
-					timezone = Time.getCurrentTimezone();
-
-				Time startTime = new Time(timezone);
-				Time endTime = new Time(timezone);
+				long startMillis = cur.getLong(COL_START_MILLIS);
+				Time startTime = new Time();
+				Time endTime = new Time();
 
 				if (allDay) {
 					endTime.setJulianDay(endDay);
@@ -189,6 +185,11 @@ public final class WidgetService extends IntentService {
 							titleEndPos, builder.length(),
 							Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				}
+
+				Log.d(TAG,
+						"EventStart: " + startMillis + " Jetzt:"
+								+ System.currentTimeMillis());
+				Log.d(TAG, builder.toString());
 
 				if (isBirthday) {
 					if (bdayLeft)
@@ -299,85 +300,73 @@ public final class WidgetService extends IntentService {
 
 	private void formatTime(SpannableStringBuilder builder, Time start,
 			long startMillis, Time end, long endMillis, boolean allDay) {
-		String startDay;
-		String endDay;
+
+		Formatter formatter = new Formatter(builder);
 
 		boolean isStartToday = (dayStart <= startMillis && startMillis <= dayEnd);
 		boolean isEndToday = (dayStart <= endMillis && endMillis <= dayEnd);
+		boolean showDay = !isStartToday || !isEndToday;
 
-		if (isStartToday && isEndToday)
-			startDay = endDay = "";
-		else {
-			startDay = formatDay(start, startMillis);
-
-			Time endOfStartDay = new Time(start);
-			endOfStartDay.hour = 23;
-			endOfStartDay.minute = endOfStartDay.second = 59;
-
-			if (Time.compare(end, endOfStartDay) <= 0)
-				endDay = "";
-			else
-				endDay = formatDay(end, endMillis);
-		}
+		Time endOfStartDay = new Time(start);
+		endOfStartDay.hour = 23;
+		endOfStartDay.minute = endOfStartDay.second = 59;
 
 		if (allDay) {
-			builder.append(startDay);
-			if (endDay != "") {
+			if (showDay)
+				appendDay(formatter, builder, startMillis, start);
+
+			if (Time.compare(end, endOfStartDay) > 0) {
 				builder.append('-');
-				builder.append(endDay);
+				appendDay(formatter, builder, endMillis, end);
 			}
 			return;
 		}
 
-		boolean format_24hours = getResources().getBoolean(
-				R.bool.format_24hours);
-
-		String startHour = start.format(format_24hours ? "%-H:%M" : "%-I:%M%P");
 		if (startMillis == endMillis) {
-			if (startDay != "") {
-				builder.append(startDay);
+			if (showDay) {
+				appendDay(formatter, builder, startMillis, start);
 				builder.append(' ');
 			}
-			builder.append(startHour);
-			if (!format_24hours) {
-				int len = builder.length();
-				builder.setSpan(new RelativeSizeSpan(0.7f), len - 2, len, 0);
-			}
+			appendHour(formatter, builder, startMillis);
 			return;
 		}
 
-		String endHour = end.format(format_24hours ? "%-H:%M" : "%-I:%M%P");
-
-		if (startDay != "") {
-			builder.append(startDay);
+		if (showDay) {
+			appendDay(formatter, builder, startMillis, start);
 			builder.append(' ');
 		}
-		builder.append(startHour);
-		int pos1 = builder.length();
+		appendHour(formatter, builder, startMillis);
 		builder.append('-');
-		if (endDay != "") {
-			builder.append(endDay);
+		if (Time.compare(end, endOfStartDay) > 0) {
+			appendDay(formatter, builder, endMillis, end);
 			builder.append(' ');
 		}
-		builder.append(endHour);
+		appendHour(formatter, builder, endMillis);
+	}
 
-		if (!format_24hours) {
-			int pos2 = builder.length();
-			builder.setSpan(new RelativeSizeSpan(0.7f), pos1 - 2, pos1, 0);
-			builder.setSpan(new RelativeSizeSpan(0.7f), pos2 - 2, pos2, 0);
+	private void appendHour(Formatter formatter,
+			SpannableStringBuilder builder, long time) {
+		if (getResources().getBoolean(R.bool.format_24hours))
+			formatter.format("%tk:%<tM", time);
+		else {
+			formatter.format("%tl:%<tM%<tp", time);
+			int len = builder.length();
+			builder.setSpan(new RelativeSizeSpan(0.7f), len - 2, len, 0);
 		}
 	}
 
-	private String formatDay(Time day, long dayMillis) {
-		if (dayStart <= dayMillis && dayMillis <= dayEnd)
-			return day.format(getResources().getString(R.string.format_today));
-		else if (dayStart <= dayMillis && dayMillis <= oneWeekFromNow)
-			return getResources().getStringArray(R.array.format_day_of_week)[day.weekDay];
-		else if (yearStart <= dayMillis && dayMillis <= yearEnd)
-			return day.format(getResources().getString(
-					R.string.format_this_year));
-		else
-			return day.format(getResources().getString(R.string.format_other));
+	private void appendDay(Formatter formatter, SpannableStringBuilder builder,
+			long time, Time day) {
+		if (dayStart <= time && time <= dayEnd)
+			builder.append(getResources().getString(R.string.format_today));
+		else if (dayStart <= time && time <= oneWeekFromNow)
+			builder.append(getResources().getStringArray(
+					R.array.format_day_of_week)[day.weekDay]);
+		else if (yearStart <= time && time <= yearEnd) {
+			formatter.format(getResources()
+					.getString(R.string.format_this_year), time);
+		} else
+			formatter.format(getResources().getString(R.string.format_other),
+					time);
 	}
-
 }

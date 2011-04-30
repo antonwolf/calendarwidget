@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<bool name="format_24hours">false</bool>
-	<string name="format_this_year">%-m/%-d</string>
-	<string name="format_other">%-m/%-d/%y</string>
+	<string name="format_this_year">%1$tm/%1$te</string>
+	<string name="format_other">%1$tm/%1$te/%1$ty</string>
 </resources>

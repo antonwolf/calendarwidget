@@ -3,8 +3,8 @@
 	<string name="app_name">Anton\'s Agenda Widget</string>
 
 	<string name="format_today">today</string>
-	<string name="format_this_year">%-d.%m.</string>
-	<string name="format_other">%-d.%-m.%y</string>
+	<string name="format_this_year">%1$te.%1$tm.</string>
+	<string name="format_other">%1$te.%1$tm.%1$ty</string>
 	<bool name="format_24hours">true</bool>
 	<string name="label_4x1">Anton\'s Agenda Widget (4x1)</string>
 	<string name="label_4x2">Anton\'s Agenda Widget (4x2)</string>
