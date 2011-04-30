@@ -2,7 +2,9 @@
 <resources>
 	<string name="app_name">Anton\'s Calendar Widget</string>
 
+	<string name="format_yesterday">yesterday</string>
 	<string name="format_today">today</string>
+	<string name="format_tomorrow">tomorrow</string>
 	<string name="format_this_year">%1$te.%1$tm.</string>
 	<string name="format_other">%1$te.%1$tm.%1$ty</string>
 	<bool name="format_24hours">true</bool>

@@ -28,8 +28,10 @@ public final class WidgetService extends IntentService {
 	private static final String TAG = "AgendaWidget";
 	private static final String THEAD_NAME = "WidgetServiceThead";
 
+	private static long yesterdayStart;
 	private static long todayStart;
-	private static long tomorrowStart = Long.MAX_VALUE;
+	private static long tomorrowStart;
+	private static long dayAfterTomorrowStart;
 	private static long oneWeekFromNow;
 	private static long yearStart;
 	private static long yearEnd;
@@ -114,12 +116,14 @@ public final class WidgetService extends IntentService {
 				Time endTime = new Time();
 
 				if (allDay) {
-					endTime.setJulianDay(endDay);
+					endTime.timezone = Time.getCurrentTimezone();
+					endMillis = endTime.setJulianDay(endDay);
 
 					// allDay event in the past? Don't display!
-					if (endTime.toMillis(false) < todayStart)
+					if (endMillis < todayStart)
 						continue;
-					startTime.setJulianDay(cur.getInt(COL_START_DAY));
+					startTime.timezone = endTime.timezone;
+					startMillis = startTime.setJulianDay(cur.getInt(COL_START_DAY));
 				} else {
 					startTime.set(startMillis);
 					endTime.set(endMillis);
@@ -246,8 +250,10 @@ public final class WidgetService extends IntentService {
 		yearStart = now.setJulianDay(julianDay - now.yearDay);
 		now.year++;
 		yearEnd = now.toMillis(false);
+		yesterdayStart = now.setJulianDay(julianDay - 1);
 		todayStart = now.setJulianDay(julianDay);
 		tomorrowStart = now.setJulianDay(julianDay + 1);
+		dayAfterTomorrowStart = now.setJulianDay(julianDay + 2);
 		oneWeekFromNow = now.setJulianDay(julianDay + 8);
 	}
 
@@ -271,7 +277,7 @@ public final class WidgetService extends IntentService {
 
 		boolean isStartToday = (todayStart <= startMillis && startMillis <= tomorrowStart);
 		boolean isEndToday = (todayStart <= endMillis && endMillis <= tomorrowStart);
-		boolean showDay = !isStartToday || !isEndToday;
+		boolean showDay = !isStartToday || !isEndToday || allDay;
 
 		Time endOfStartDay = new Time(start);
 		endOfStartDay.hour = 23;
@@ -323,15 +329,26 @@ public final class WidgetService extends IntentService {
 
 	private void appendDay(Formatter formatter, SpannableStringBuilder builder,
 			long time, Time day) {
-		if (todayStart <= time && time < tomorrowStart) //today?
-			builder.append(getResources().getString(R.string.format_today));
-		else if (todayStart <= time && time < oneWeekFromNow) //this week? 
+		if (yesterdayStart <= time && time < dayAfterTomorrowStart) {
+			int from = builder.length();
+			if (time < todayStart)
+				builder.append(getResources().getString(
+						R.string.format_yesterday));
+			else if (time < tomorrowStart)
+				builder.append(getResources().getString(R.string.format_today));
+			else
+				builder.append(getResources().getString(
+						R.string.format_tomorrow));
+			
+			builder.setSpan(new RelativeSizeSpan(0.7f), from, builder.length(), 0);
+		} else if (todayStart <= time && time < oneWeekFromNow) // this week?
 			builder.append(getResources().getStringArray(
 					R.array.format_day_of_week)[day.weekDay]);
-		else if (yearStart <= time && time < yearEnd) { //this year?
+		else if (yearStart <= time && time < yearEnd) { // this year?
 			formatter.format(getResources()
 					.getString(R.string.format_this_year), time);
-		} else //other time
+		} else
+			// other time
 			formatter.format(getResources().getString(R.string.format_other),
 					time);
 	}

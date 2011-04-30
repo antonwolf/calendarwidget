@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="format_yesterday">gestern</string>
 	<string name="format_today">heute</string>
+	<string name="format_tomorrow">morgen</string>
 	<string name="app_name">Antons Kalender-Widget</string>
 	
 	<string name="label_4x1">Antons Kalender-Widget (4x1)</string>
