@@ -11,6 +11,7 @@ public final class R {
     public static final class array {
         public static final int birthday_patterns=0x7f090001;
         public static final int format_day_of_week=0x7f090000;
+        public static final int settings_birthdays_entries=0x7f090003;
         public static final int settings_display_lines_entries=0x7f090002;
     }
     public static final class attr {
@@ -62,15 +63,10 @@ public final class R {
         public static final int open_calendar=0x7f07000c;
         public static final int settings=0x7f07000d;
         public static final int settings_birthdays=0x7f070012;
-        public static final int settings_birthdays_display=0x7f070016;
-        public static final int settings_birthdays_display_hide=0x7f070018;
-        public static final int settings_birthdays_display_show=0x7f070017;
-        public static final int settings_birthdays_recognition=0x7f070013;
-        public static final int settings_birthdays_recognition_normal=0x7f070015;
-        public static final int settings_birthdays_recognition_special=0x7f070014;
-        public static final int settings_calendars=0x7f070019;
-        public static final int settings_calendars_hide=0x7f07001b;
-        public static final int settings_calendars_show=0x7f07001a;
+        public static final int settings_birthdays_summary=0x7f070013;
+        public static final int settings_calendars=0x7f070014;
+        public static final int settings_calendars_hide=0x7f070016;
+        public static final int settings_calendars_show=0x7f070015;
         public static final int settings_description=0x7f07000e;
         public static final int settings_display=0x7f07000f;
         public static final int settings_display_lines=0x7f070010;

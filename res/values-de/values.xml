@@ -64,14 +64,12 @@
 	</string-array>
 
 	<string name="settings_birthdays">Geburtstage</string>
-
-	<string name="settings_birthdays_recognition">Erkennung</string>
-	<string name="settings_birthdays_recognition_special">Geburtstage gesondert behandeln</string>
-	<string name="settings_birthdays_recognition_normal">Geburststage sind normale Ereignisse</string>
-
-	<string name="settings_birthdays_display">Anzeige</string>
-	<string name="settings_birthdays_display_show">Geburtstage anzeigen</string>
-	<string name="settings_birthdays_display_hide">Geburtstage ausblenden</string>
+	<string-array name="settings_birthdays_entries">
+		<item>Gesondert anzeigen</item>
+		<item>Als normales Ereignis anzeigent</item>
+		<item>Verstecken</item>
+	</string-array>
+	<string name="settings_birthdays_summary">Wie soll ein Ereignis behandelt werden, das als Geburtstag erkannt wurde?</string>
 
 	<string name="settings_calendars">Kalender</string>
 	<string name="settings_calendars_show">Kalender anzeigen</string>

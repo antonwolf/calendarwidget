@@ -63,16 +63,14 @@
 		<item>24 lines</item>
 		<item>25 lines</item>
 	</string-array>
-
+	
 	<string name="settings_birthdays">Birthdays</string>
-
-	<string name="settings_birthdays_recognition">Recognition</string>
-	<string name="settings_birthdays_recognition_special">Treat birthday events specially</string>
-	<string name="settings_birthdays_recognition_normal">Birthdays are normal events</string>
-
-	<string name="settings_birthdays_display">Display</string>
-	<string name="settings_birthdays_display_show">Show birthday events</string>
-	<string name="settings_birthdays_display_hide">Hide birthday events</string>
+	<string-array name="settings_birthdays_entries">
+		<item>Display separately</item>
+		<item>Display as normal event</item>
+		<item>Hide</item>
+	</string-array>
+	<string name="settings_birthdays_summary">How should an event be treated when recognized as a birthday?</string>
 
 	<string name="settings_calendars">Calendars</string>
 	<string name="settings_calendars_show">Show this calendar</string>

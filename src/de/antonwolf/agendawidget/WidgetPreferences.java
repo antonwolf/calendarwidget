@@ -26,6 +26,9 @@ public final class WidgetPreferences {
 	private int widgetId;
 	private Context context;
 	private SharedPreferences prefs;
+	public static final String BIRTHDAY_SPECIAL = "special";
+	public static final String BIRTHDAY_NORMAL = "normal";
+	public static final String BIRTHDAY_HIDE = "hidden";
 
 	public WidgetPreferences(int appWidgetId, Context context) {
 		widgetId = appWidgetId;
@@ -33,24 +36,37 @@ public final class WidgetPreferences {
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
-	public String getBirthdayRecognitionKey() {
+	private String getBirthdayRecognitionKey() {
 		return widgetId + "bDayRecognition";
 	}
 
-	public boolean isBirthdayRecognition() {
+	private boolean isBirthdayRecognition() {
 		return prefs.getBoolean(getBirthdayRecognitionKey(), true);
 	}
 
-	public String getBirthdayDisplayKey() {
+	private String getBirthdayDisplayKey() {
 		return widgetId + "bDayDisplay";
 	}
 
-	public boolean isBirthdayDisplay() {
+	private boolean isBirthdayDisplay() {
 		return prefs.getBoolean(getBirthdayDisplayKey(), true);
 	}
 
 	public String getLinesKey() {
 		return widgetId + "lines";
+	}
+
+	public String getBirthdaysKey() {
+		return widgetId + "birthdays";
+	}
+
+	public String getBirthdays() {
+		String defaultValue = WidgetPreferences.BIRTHDAY_SPECIAL;
+		if (!isBirthdayRecognition())
+			defaultValue = WidgetPreferences.BIRTHDAY_NORMAL;
+		else if (!isBirthdayDisplay())
+			defaultValue = WidgetPreferences.BIRTHDAY_HIDE;
+		return prefs.getString(getBirthdaysKey(), defaultValue);
 	}
 
 	public int getLines() {

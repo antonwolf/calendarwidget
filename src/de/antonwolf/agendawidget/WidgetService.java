@@ -136,7 +136,8 @@ public final class WidgetService extends IntentService {
 					title = "";
 
 				boolean isBirthday = false;
-				if (prefs.isBirthdayRecognition())
+				if (!prefs.getBirthdays().equals(
+						WidgetPreferences.BIRTHDAY_NORMAL))
 					for (Pattern pattern : getBirthdayPatterns()) {
 						Matcher matcher = pattern.matcher(title);
 						if (!matcher.find())
@@ -147,7 +148,9 @@ public final class WidgetService extends IntentService {
 					}
 
 				// Hide birthday events
-				if (isBirthday && !prefs.isBirthdayDisplay())
+				if (isBirthday
+						&& prefs.getBirthdays().equals(
+								WidgetPreferences.BIRTHDAY_HIDE))
 					continue;
 
 				if (!allDay && endMillis < nextUpdate)

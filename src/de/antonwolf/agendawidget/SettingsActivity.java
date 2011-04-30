@@ -43,33 +43,23 @@ public class SettingsActivity extends PreferenceActivity {
 		lines.setDefaultValue(prefs.getLines());
 		display.addPreference(lines);
 
-		PreferenceCategory birthdays = new PreferenceCategory(this);
+		ListPreference birthdays = new ListPreference(this);
 		birthdays.setTitle(R.string.settings_birthdays);
-		screen.addPreference(birthdays);
-
-		CheckBoxPreference bDayRecognition = new CheckBoxPreference(this);
-		bDayRecognition.setDefaultValue(prefs.isBirthdayRecognition());
-		bDayRecognition.setKey(prefs.getBirthdayRecognitionKey());
-		bDayRecognition.setTitle(R.string.settings_birthdays_recognition);
-		bDayRecognition
-				.setSummaryOn(R.string.settings_birthdays_recognition_special);
-		bDayRecognition
-				.setSummaryOff(R.string.settings_birthdays_recognition_normal);
-		birthdays.addPreference(bDayRecognition);
-
-		CheckBoxPreference bDayDisplay = new CheckBoxPreference(this);
-		bDayDisplay.setDefaultValue(prefs.isBirthdayDisplay());
-		bDayDisplay.setKey(prefs.getBirthdayDisplayKey());
-		bDayDisplay.setTitle(R.string.settings_birthdays_display);
-		bDayDisplay.setSummaryOn(R.string.settings_birthdays_display_show);
-		bDayDisplay.setSummaryOff(R.string.settings_birthdays_display_hide);
-		birthdays.addPreference(bDayDisplay);
+		birthdays.setKey(prefs.getBirthdaysKey());
+		birthdays.setSummary(R.string.settings_birthdays_summary);
+		birthdays.setEntries(R.array.settings_birthdays_entries);
+		birthdays.setEntryValues(new String[] { WidgetPreferences.BIRTHDAY_SPECIAL,
+				WidgetPreferences.BIRTHDAY_NORMAL,
+				WidgetPreferences.BIRTHDAY_HIDE });
+		birthdays.setDefaultValue(prefs.getBirthdays());
+		display.addPreference(birthdays);
 
 		PreferenceCategory calendars = new PreferenceCategory(this);
 		calendars.setTitle(R.string.settings_calendars);
 		screen.addPreference(calendars);
 
-		for(WidgetPreferences.CalendarPreferences cprefs : prefs.getCalendars()) {
+		for (WidgetPreferences.CalendarPreferences cprefs : prefs
+				.getCalendars()) {
 			CheckBoxPreference calendar = new CheckBoxPreference(this);
 			calendar.setDefaultValue(prefs.isCalendar(cprefs.calendarId));
 			calendar.setKey(prefs.getCalendarKey(cprefs.calendarId));
