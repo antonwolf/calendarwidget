@@ -32,6 +32,7 @@
 	<bool name="format_this_week_remove_dot">false</bool>
 	<string-array name="birthday_patterns">
 		<item>(.+)\'s Birthday</item>
+		<item>(.+)\'s birthday</item>
 	</string-array>
 
 	<string name="settings_display">Display</string>

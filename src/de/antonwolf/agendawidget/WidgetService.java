@@ -92,20 +92,14 @@ public final class WidgetService extends IntentService {
 		try {
 			cur = getCursor();
 
-			for (int position = 0; position < (maxLines * 4); position++) {
-				// all lines of the widget full? abort!
-				if (bdayLeft && events.size() + birthdays.size() >= maxLines)
-					break;
-
+			while (!bdayLeft || ((events.size() + birthdays.size()) < maxLines)) {
 				// no next item? abort!
 				if (!cur.moveToNext())
 					break;
 
 				// is this calendar enabled?
-				if (!prefs.isCalendar(cur.getInt(COL_CALENDAR))) {
-					position--;
+				if (!prefs.isCalendar(cur.getInt(COL_CALENDAR)))
 					continue;
-				}
 
 				long endMillis = cur.getLong(COL_END_MILLIS);
 				boolean allDay = 1 == cur.getInt(COL_ALL_DAY);
@@ -179,11 +173,6 @@ public final class WidgetService extends IntentService {
 							titleEndPos, builder.length(),
 							Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				}
-
-				Log.d(TAG,
-						"EventStart: " + startMillis + " Jetzt:"
-								+ System.currentTimeMillis());
-				Log.d(TAG, builder.toString());
 
 				if (isBirthday) {
 					if (bdayLeft)

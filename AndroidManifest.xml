@@ -71,7 +71,8 @@
 		</receiver>
 
 		<activity android:name=".PickActionActivity" android:theme="@style/PickAction"
-			android:launchMode="singleInstance" android:excludeFromRecents="true" />
+			android:noHistory="true" android:launchMode="singleInstance"
+			android:excludeFromRecents="true" />
 
 		<activity android:name=".SettingsActivity" />
 	</application>
