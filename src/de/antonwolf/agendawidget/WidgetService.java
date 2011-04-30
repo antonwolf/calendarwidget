@@ -28,8 +28,8 @@ public final class WidgetService extends IntentService {
 	private static final String TAG = "AgendaWidget";
 	private static final String THEAD_NAME = "WidgetServiceThead";
 
-	private static long dayStart;
-	private static long dayEnd = Long.MAX_VALUE;
+	private static long todayStart;
+	private static long tomorrowStart = Long.MAX_VALUE;
 	private static long oneWeekFromNow;
 	private static long yearStart;
 	private static long yearEnd;
@@ -66,19 +66,19 @@ public final class WidgetService extends IntentService {
 		int widgetId = Integer.parseInt(intent.getData().getHost());
 		AppWidgetManager manager = AppWidgetManager.getInstance(this);
 		AppWidgetProviderInfo widgetInfo = manager.getAppWidgetInfo(widgetId);
-		
+
 		if (null == widgetInfo) {
 			Log.d(TAG, "Invalid widget ID: " + widgetId);
 			return;
 		}
-		
+
 		WidgetPreferences prefs = new WidgetPreferences(widgetId, this);
 
 		updateTimeRanges();
-		
+
 		String packageName = getPackageName();
 
-		long nextUpdate = dayEnd;
+		long nextUpdate = tomorrowStart;
 
 		LinkedList<RemoteViews> events = new LinkedList<RemoteViews>();
 		LinkedList<RemoteViews> birthdays = new LinkedList<RemoteViews>();
@@ -117,7 +117,7 @@ public final class WidgetService extends IntentService {
 					endTime.setJulianDay(endDay);
 
 					// allDay event in the past? Don't display!
-					if (endTime.toMillis(false) < dayStart)
+					if (endTime.toMillis(false) < todayStart)
 						continue;
 					startTime.setJulianDay(cur.getInt(COL_START_DAY));
 				} else {
@@ -230,7 +230,7 @@ public final class WidgetService extends IntentService {
 	}
 
 	private Cursor getCursor() {
-		long start = dayStart - 1000 * 60 * 60 * 24;
+		long start = todayStart - 1000 * 60 * 60 * 24;
 		long end = start + SEARCH_DURATION;
 		String uriString = String.format(CURSOR_FORMAT, start, end);
 		return getContentResolver().query(Uri.parse(uriString),
@@ -238,34 +238,17 @@ public final class WidgetService extends IntentService {
 	}
 
 	private void updateTimeRanges() {
-		Time dayStartTime = new Time();
-		dayStartTime.setToNow();
-		dayStartTime.hour = dayStartTime.minute = dayStartTime.second = 0;
-		dayStartTime.normalize(false);
-		dayStart = dayStartTime.toMillis(false);
+		Time now = new Time();
+		now.setToNow();
+		int julianDay = Time.getJulianDay(System.currentTimeMillis(),
+				now.gmtoff);
 
-		Time dayEndTime = new Time(dayStartTime);
-		dayEndTime.hour = 23;
-		dayEndTime.minute = dayEndTime.second = 59;
-		dayEndTime.normalize(false);
-		dayEnd = dayEndTime.toMillis(false);
-
-		Time oneWeekFromNowTime = new Time(dayEndTime);
-		oneWeekFromNowTime.monthDay += 7;
-		oneWeekFromNowTime.normalize(false);
-		oneWeekFromNow = oneWeekFromNowTime.toMillis(false);
-
-		Time yearEndTime = new Time(dayEndTime);
-		yearEndTime.month = 11;
-		yearEndTime.monthDay = 31;
-		yearEndTime.normalize(false);
-		yearEnd = yearEndTime.toMillis(false);
-
-		Time yearStartTime = new Time(dayStartTime);
-		yearStartTime.month = 0;
-		yearStartTime.monthDay = 1;
-		yearStartTime.normalize(false);
-		yearStart = yearStartTime.toMillis(false);
+		yearStart = now.setJulianDay(julianDay - now.yearDay);
+		now.year++;
+		yearEnd = now.toMillis(false);
+		todayStart = now.setJulianDay(julianDay);
+		tomorrowStart = now.setJulianDay(julianDay + 1);
+		oneWeekFromNow = now.setJulianDay(julianDay + 8);
 	}
 
 	private synchronized Pattern[] getBirthdayPatterns() {
@@ -286,8 +269,8 @@ public final class WidgetService extends IntentService {
 
 		Formatter formatter = new Formatter(builder);
 
-		boolean isStartToday = (dayStart <= startMillis && startMillis <= dayEnd);
-		boolean isEndToday = (dayStart <= endMillis && endMillis <= dayEnd);
+		boolean isStartToday = (todayStart <= startMillis && startMillis <= tomorrowStart);
+		boolean isEndToday = (todayStart <= endMillis && endMillis <= tomorrowStart);
 		boolean showDay = !isStartToday || !isEndToday;
 
 		Time endOfStartDay = new Time(start);
@@ -340,15 +323,15 @@ public final class WidgetService extends IntentService {
 
 	private void appendDay(Formatter formatter, SpannableStringBuilder builder,
 			long time, Time day) {
-		if (dayStart <= time && time <= dayEnd)
+		if (todayStart <= time && time < tomorrowStart) //today?
 			builder.append(getResources().getString(R.string.format_today));
-		else if (dayStart <= time && time <= oneWeekFromNow)
+		else if (todayStart <= time && time < oneWeekFromNow) //this week? 
 			builder.append(getResources().getStringArray(
 					R.array.format_day_of_week)[day.weekDay]);
-		else if (yearStart <= time && time <= yearEnd) {
+		else if (yearStart <= time && time < yearEnd) { //this year?
 			formatter.format(getResources()
 					.getString(R.string.format_this_year), time);
-		} else
+		} else //other time
 			formatter.format(getResources().getString(R.string.format_other),
 					time);
 	}
