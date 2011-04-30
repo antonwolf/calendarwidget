@@ -12,10 +12,8 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateUtils;
@@ -68,20 +66,16 @@ public final class WidgetService extends IntentService {
 		int widgetId = Integer.parseInt(intent.getData().getHost());
 		AppWidgetManager manager = AppWidgetManager.getInstance(this);
 		AppWidgetProviderInfo widgetInfo = manager.getAppWidgetInfo(widgetId);
+		
 		if (null == widgetInfo) {
 			Log.d(TAG, "Invalid widget ID: " + widgetId);
 			return;
 		}
+		
+		WidgetPreferences prefs = new WidgetPreferences(widgetId, this);
 
 		updateTimeRanges();
-
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		boolean prefBDayRecognition = prefs.getBoolean(widgetId
-				+ "bDayRecognition", true);
-		boolean prefBDayDisplay = prefs.getBoolean(widgetId + "bDayDisplay",
-				true);
-
+		
 		String packageName = getPackageName();
 
 		long nextUpdate = dayEnd;
@@ -91,8 +85,7 @@ public final class WidgetService extends IntentService {
 
 		boolean bdayLeft = true;
 
-		int maxLines = Integer.parseInt(prefs.getString(widgetId + "lines",
-				SettingsActivity.getDefaultLines(widgetId, this)));
+		int maxLines = prefs.getLines();
 
 		Cursor cur = null;
 
@@ -109,9 +102,7 @@ public final class WidgetService extends IntentService {
 					break;
 
 				// is this calendar enabled?
-				String calPref = widgetId + "calendar"
-						+ cur.getInt(COL_CALENDAR);
-				if (!prefs.getBoolean(calPref, true)) {
+				if (!prefs.isCalendar(cur.getInt(COL_CALENDAR))) {
 					position--;
 					continue;
 				}
@@ -145,7 +136,7 @@ public final class WidgetService extends IntentService {
 					title = "";
 
 				boolean isBirthday = false;
-				if (prefBDayRecognition)
+				if (prefs.isBirthdayRecognition())
 					for (Pattern pattern : getBirthdayPatterns()) {
 						Matcher matcher = pattern.matcher(title);
 						if (!matcher.find())
@@ -156,7 +147,7 @@ public final class WidgetService extends IntentService {
 					}
 
 				// Hide birthday events
-				if (isBirthday && !prefBDayDisplay)
+				if (isBirthday && !prefs.isBirthdayDisplay())
 					continue;
 
 				if (!allDay && endMillis < nextUpdate)

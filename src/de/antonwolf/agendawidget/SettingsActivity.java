@@ -1,10 +1,6 @@
 package de.antonwolf.agendawidget;
 
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProviderInfo;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -12,9 +8,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.WindowManager;
 
 public class SettingsActivity extends PreferenceActivity {
 	public final static String EXTRA_WIDGET_ID = "widgetId";
@@ -28,6 +22,7 @@ public class SettingsActivity extends PreferenceActivity {
 		Log.d(TAG, "SettingsActivity.onCreate(" + widgetId + ")");
 		if (-1 == widgetId)
 			return;
+		WidgetPreferences prefs = new WidgetPreferences(widgetId, this);
 
 		PreferenceScreen screen = getPreferenceManager()
 				.createPreferenceScreen(this);
@@ -39,13 +34,13 @@ public class SettingsActivity extends PreferenceActivity {
 
 		ListPreference lines = new ListPreference(this);
 		lines.setTitle(R.string.settings_display_lines);
-		lines.setKey(widgetId + "lines");
+		lines.setKey(prefs.getLinesKey());
 		lines.setSummary(R.string.settings_display_lines_summary);
 		lines.setEntries(R.array.settings_display_lines_entries);
 		lines.setEntryValues(new String[] { "3", "4", "5", "6", "7", "8", "9",
 				"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
 				"20", "21", "22", "23", "24", "25" });
-		lines.setDefaultValue(getDefaultLines(widgetId, this));
+		lines.setDefaultValue(prefs.getLines());
 		display.addPreference(lines);
 
 		PreferenceCategory birthdays = new PreferenceCategory(this);
@@ -53,8 +48,8 @@ public class SettingsActivity extends PreferenceActivity {
 		screen.addPreference(birthdays);
 
 		CheckBoxPreference bDayRecognition = new CheckBoxPreference(this);
-		bDayRecognition.setDefaultValue(true);
-		bDayRecognition.setKey(widgetId + "bDayRecognition");
+		bDayRecognition.setDefaultValue(prefs.isBirthdayRecognition());
+		bDayRecognition.setKey(prefs.getBirthdayRecognitionKey());
 		bDayRecognition.setTitle(R.string.settings_birthdays_recognition);
 		bDayRecognition
 				.setSummaryOn(R.string.settings_birthdays_recognition_special);
@@ -63,8 +58,8 @@ public class SettingsActivity extends PreferenceActivity {
 		birthdays.addPreference(bDayRecognition);
 
 		CheckBoxPreference bDayDisplay = new CheckBoxPreference(this);
-		bDayDisplay.setDefaultValue(true);
-		bDayDisplay.setKey(widgetId + "bDayDisplay");
+		bDayDisplay.setDefaultValue(prefs.isBirthdayDisplay());
+		bDayDisplay.setKey(prefs.getBirthdayDisplayKey());
 		bDayDisplay.setTitle(R.string.settings_birthdays_display);
 		bDayDisplay.setSummaryOn(R.string.settings_birthdays_display_show);
 		bDayDisplay.setSummaryOff(R.string.settings_birthdays_display_hide);
@@ -74,26 +69,14 @@ public class SettingsActivity extends PreferenceActivity {
 		calendars.setTitle(R.string.settings_calendars);
 		screen.addPreference(calendars);
 
-		Cursor cursor = null;
-
-		try {
-			cursor = getContentResolver().query(
-					Uri.parse("content://com.android.calendar/calendars"),
-					new String[] { "_id", "displayName" }, null, null,
-					"displayName ASC");
-
-			while (cursor.moveToNext()) {
-				CheckBoxPreference calendar = new CheckBoxPreference(this);
-				calendar.setDefaultValue(true);
-				calendar.setKey(widgetId + "calendar" + cursor.getInt(0));
-				calendar.setSummaryOn(R.string.settings_calendars_show);
-				calendar.setSummaryOff(R.string.settings_calendars_hide);
-				calendar.setTitle(cursor.getString(1));
-				calendars.addPreference(calendar);
-			}
-		} finally {
-			if (null != cursor)
-				cursor.close();
+		for(WidgetPreferences.CalendarPreferences cprefs : prefs.getCalendars()) {
+			CheckBoxPreference calendar = new CheckBoxPreference(this);
+			calendar.setDefaultValue(prefs.isCalendar(cprefs.calendarId));
+			calendar.setKey(prefs.getCalendarKey(cprefs.calendarId));
+			calendar.setSummaryOn(R.string.settings_calendars_show);
+			calendar.setSummaryOff(R.string.settings_calendars_hide);
+			calendar.setTitle(cprefs.displayName);
+			calendars.addPreference(calendar);
 		}
 	}
 	
@@ -118,18 +101,5 @@ public class SettingsActivity extends PreferenceActivity {
 				this, WidgetService.class);
 		Log.d(TAG, "Sending " + intent);
 		startService(intent);
-	}
-
-	public static String getDefaultLines(int widgetId, Context context) {
-		AppWidgetManager manager = AppWidgetManager.getInstance(context);
-		AppWidgetProviderInfo widgetInfo = manager.getAppWidgetInfo(widgetId);
-
-		WindowManager winManager = (WindowManager) context
-				.getSystemService(WINDOW_SERVICE);
-		DisplayMetrics metrics = new DisplayMetrics();
-		winManager.getDefaultDisplay().getMetrics(metrics);
-		int heightInCells = (int) (widgetInfo.minHeight / metrics.density + 2) / 74;
-		int maxLines = 5 + (int) ((heightInCells - 1) * 5.9);
-		return Integer.toString(maxLines);
 	}
 }
