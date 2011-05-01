@@ -39,6 +39,18 @@ public final class WidgetService extends IntentService {
 		public Time startTime;
 		public int startDay;
 		public String title;
+
+		@Override
+		public boolean equals(Object o) {
+			if (!(o instanceof Event))
+				return false;
+			
+			Event other = (Event) o;
+			
+			return isBirthday && other.isBirthday
+					&& other.startDay == this.startDay
+					&& other.title.equals(this.title);
+		}
 	}
 
 	private static final String TAG = "AgendaWidget";
@@ -110,9 +122,10 @@ public final class WidgetService extends IntentService {
 				if (event == null)
 					break;
 
-				if (event.isBirthday)
-					birthdayEvents.add(event);
-				else
+				if (event.isBirthday) {
+					if (!birthdayEvents.contains(event))
+						birthdayEvents.add(event);
+				} else
 					agendaEvents.add(event);
 			}
 		} finally {
@@ -195,7 +208,7 @@ public final class WidgetService extends IntentService {
 		if (event.title == null)
 			event.title = "";
 
-		if (!prefs.getBirthdays().equals(WidgetPreferences.BIRTHDAY_NORMAL))
+		if (event.allDay && !prefs.getBirthdays().equals(WidgetPreferences.BIRTHDAY_NORMAL))
 			for (Pattern pattern : getBirthdayPatterns()) {
 				Matcher matcher = pattern.matcher(event.title);
 				if (!matcher.find())
@@ -310,11 +323,12 @@ public final class WidgetService extends IntentService {
 		boolean isEndToday = (todayStart <= event.endMillis && event.endMillis <= tomorrowStart);
 		boolean showStartDay = !isStartToday || !isEndToday || event.allDay;
 
-		//all-Day events
+		// all-Day events
 		if (event.allDay) {
 			if (showStartDay)
-				appendDay(formatter, builder, event.startMillis, event.startTime);
-			
+				appendDay(formatter, builder, event.startMillis,
+						event.startTime);
+
 			if (event.startDay != event.endDay) {
 				builder.append('-');
 				appendDay(formatter, builder, event.endMillis, event.endTime);
@@ -322,27 +336,28 @@ public final class WidgetService extends IntentService {
 			return;
 		}
 
-		//events with no duration
+		// events with no duration
 		if (event.startMillis == event.endMillis) {
 			if (showStartDay) {
-				appendDay(formatter, builder, event.startMillis, event.startTime);
+				appendDay(formatter, builder, event.startMillis,
+						event.startTime);
 				builder.append(' ');
 			}
 			appendHour(formatter, builder, event.startMillis);
 			return;
 		}
 
-		//events with duration
+		// events with duration
 		if (showStartDay) {
 			appendDay(formatter, builder, event.startMillis, event.startTime);
 			builder.append(' ');
 		}
 		appendHour(formatter, builder, event.startMillis);
 		builder.append('-');
-		
+
 		Time helper = new Time();
 		helper.timezone = Time.getCurrentTimezone();
-		long endOfStartDay = helper.setJulianDay(event.endDay+1);
+		long endOfStartDay = helper.setJulianDay(event.endDay + 1);
 		if (event.endMillis >= endOfStartDay) {
 			appendDay(formatter, builder, event.endMillis, event.endTime);
 			builder.append(' ');
@@ -373,8 +388,9 @@ public final class WidgetService extends IntentService {
 			else
 				builder.append(getResources().getString(
 						R.string.format_tomorrow));
-			
-			builder.setSpan(new RelativeSizeSpan(0.7f), from, builder.length(), 0);
+
+			builder.setSpan(new RelativeSizeSpan(0.7f), from, builder.length(),
+					0);
 		} else if (todayStart <= time && time < oneWeekFromNow) // this week?
 			builder.append(getResources().getStringArray(
 					R.array.format_day_of_week)[day.weekDay]);
