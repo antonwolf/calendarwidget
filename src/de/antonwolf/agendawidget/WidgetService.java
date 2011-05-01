@@ -1,7 +1,8 @@
 package de.antonwolf.agendawidget;
 
+import java.util.ArrayList;
 import java.util.Formatter;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -95,103 +96,69 @@ public final class WidgetService extends IntentService {
 
 		String packageName = getPackageName();
 
-		long nextUpdate = tomorrowStart;
-
-		LinkedList<RemoteViews> events = new LinkedList<RemoteViews>();
-		LinkedList<RemoteViews> birthdays = new LinkedList<RemoteViews>();
-
-		boolean bdayLeft = true;
-
 		int maxLines = prefs.getLines();
 
-		Cursor cursor = null;
+		List<Event> birthdayEvents = new ArrayList<Event>(maxLines * 2);
+		List<Event> agendaEvents = new ArrayList<Event>(maxLines);
 
+		Cursor cursor = null;
 		try {
 			cursor = getCursor();
 
-			while (!bdayLeft || ((events.size() + birthdays.size()) < maxLines)) {
+			while (birthdayEvents.size() / 2 + agendaEvents.size() < maxLines) {
 				Event event = readEvent(cursor, prefs);
-				// no next item? abort!
 				if (event == null)
 					break;
 
-				if (!event.allDay && event.endMillis < nextUpdate)
-					nextUpdate = event.endMillis;
-
-				SpannableStringBuilder builder = new SpannableStringBuilder();
-
-				formatTime(builder, event);
-				builder.append(' ');
-				int timeEndPos = builder.length();
-				builder.setSpan(new ForegroundColorSpan(0xaaffffff), 0,
-						timeEndPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-				builder.append(event.title);
-				int titleEndPos = builder.length();
-				builder.setSpan(new ForegroundColorSpan(0xffffffff),
-						timeEndPos, titleEndPos,
-						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-				if (event.location != null) {
-					builder.append(", ");
-					builder.append(event.location);
-					builder.setSpan(new ForegroundColorSpan(0xaaffffff),
-							titleEndPos, builder.length(),
-							Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				}
-
-				if (event.isBirthday) {
-					if (bdayLeft)
-						birthdays.addLast(new RemoteViews(packageName,
-								R.layout.birthdays));
-
-					int view = bdayLeft ? R.id.birthday1_text
-							: R.id.birthday2_text;
-					birthdays.getLast().setTextViewText(view, builder);
-
-					bdayLeft = !bdayLeft;
-				} else {
-					if (events.size() + birthdays.size() >= maxLines)
-						continue;
-					RemoteViews eventView = new RemoteViews(packageName,
-							R.layout.event);
-					events.addLast(eventView);
-
-					eventView.setTextViewText(R.id.event_text, builder);
-
-					eventView.setTextColor(R.id.event_color, event.color);
-
-					int alarmFlag = event.hasAlarm ? View.VISIBLE : View.GONE;
-					eventView.setViewVisibility(R.id.event_alarm, alarmFlag);
-				}
+				if (event.isBirthday)
+					birthdayEvents.add(event);
+				else
+					agendaEvents.add(event);
 			}
-
-			RemoteViews widget = new RemoteViews(getPackageName(),
-					widgetInfo.initialLayout);
-			widget.removeAllViews(R.id.widget);
-			for (RemoteViews view : birthdays)
-				widget.addView(R.id.widget, view);
-			for (RemoteViews view : events)
-				widget.addView(R.id.widget, view);
-
-			Intent pickAction = new Intent("pick", Uri.parse("widget://"
-					+ widgetId), this, PickActionActivity.class);
-			pickAction.putExtra(PickActionActivity.EXTRA_WIDGET_ID, widgetId);
-			PendingIntent pickPending = PendingIntent.getActivity(this, 0,
-					pickAction, 0);
-			widget.setOnClickPendingIntent(R.id.widget, pickPending);
-
-			manager.updateAppWidget(widgetId, widget);
-
-			PendingIntent pending = PendingIntent
-					.getService(this, 0, intent, 0);
-			AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-			alarmManager.cancel(pending);
-			alarmManager.set(AlarmManager.RTC, nextUpdate + 1000, pending);
 		} finally {
 			if (cursor != null)
 				cursor.close();
 		}
+
+		RemoteViews widget = new RemoteViews(getPackageName(),
+				widgetInfo.initialLayout);
+		widget.removeAllViews(R.id.widget);
+		widget.setOnClickPendingIntent(R.id.widget,
+				getOnClickPendingIntent(widgetId));
+
+		for (int i = 0; i < maxLines - agendaEvents.size(); i++) {
+			RemoteViews view = new RemoteViews(packageName, R.layout.birthdays);
+			view.setTextViewText(R.id.birthday1_text,
+					formatEventText(birthdayEvents.get(i * 2)));
+			view.setTextViewText(R.id.birthday2_text,
+					formatEventText(birthdayEvents.get(i * 2 + 1)));
+			widget.addView(R.id.widget, view);
+		}
+
+		for (Event event : agendaEvents) {
+			RemoteViews view = new RemoteViews(packageName, R.layout.event);
+
+			view.setTextViewText(R.id.event_text, formatEventText(event));
+			view.setTextColor(R.id.event_color, event.color);
+			int alarmFlag = event.hasAlarm ? View.VISIBLE : View.GONE;
+			view.setViewVisibility(R.id.event_alarm, alarmFlag);
+			widget.addView(R.id.widget, view);
+		}
+		manager.updateAppWidget(widgetId, widget);
+		scheduleNextUpdate(agendaEvents, intent);
+	}
+
+	private void scheduleNextUpdate(List<Event> search, Intent intent) {
+		long nextUpdate = tomorrowStart;
+
+		for (Event event : search)
+			if (!event.allDay && event.endMillis < nextUpdate)
+				nextUpdate = event.endMillis;
+
+		PendingIntent pending = PendingIntent.getService(this, 0, intent, 0);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		alarmManager.cancel(pending);
+		alarmManager.set(AlarmManager.RTC, nextUpdate + 1000, pending);
 	}
 
 	private Event readEvent(Cursor cur, WidgetPreferences prefs) {
@@ -264,6 +231,14 @@ public final class WidgetService extends IntentService {
 		return event;
 	}
 
+	private PendingIntent getOnClickPendingIntent(int widgetId) {
+		Intent pickAction = new Intent("pick",
+				Uri.parse("widget://" + widgetId), this,
+				PickActionActivity.class);
+		pickAction.putExtra(PickActionActivity.EXTRA_WIDGET_ID, widgetId);
+		return PendingIntent.getActivity(this, 0, pickAction, 0);
+	}
+
 	private Cursor getCursor() {
 		long start = todayStart - 1000 * 60 * 60 * 24;
 		long end = start + SEARCH_DURATION;
@@ -299,6 +274,33 @@ public final class WidgetService extends IntentService {
 		}
 
 		return birthdayPatterns;
+	}
+
+	private CharSequence formatEventText(Event event) {
+		if (event == null)
+			return "";
+
+		SpannableStringBuilder builder = new SpannableStringBuilder();
+
+		formatTime(builder, event);
+		builder.append(' ');
+		int timeEndPos = builder.length();
+		builder.setSpan(new ForegroundColorSpan(0xaaffffff), 0, timeEndPos,
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		builder.append(event.title);
+		int titleEndPos = builder.length();
+		builder.setSpan(new ForegroundColorSpan(0xffffffff), timeEndPos,
+				titleEndPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		if (event.location != null) {
+			builder.append(", ");
+			builder.append(event.location);
+			builder.setSpan(new ForegroundColorSpan(0xaaffffff), titleEndPos,
+					builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+
+		return builder;
 	}
 
 	private void formatTime(SpannableStringBuilder builder, Event event) {
