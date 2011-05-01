@@ -117,7 +117,9 @@ public final class WidgetService extends IntentService {
 			cursor = getCursor();
 
 			while (birthdayEvents.size() / 2 + agendaEvents.size() < maxLines) {
-				final Event event = readEvent(cursor, prefs);
+				Event event = null;
+				while (event == null && !cursor.isAfterLast())
+					event = readEvent(cursor, prefs);
 				if (event == null)
 					break;
 
@@ -139,13 +141,17 @@ public final class WidgetService extends IntentService {
 		widget.setOnClickPendingIntent(R.id.widget,
 				getOnClickPendingIntent(widgetId));
 
-		for (int i = 0; i < maxLines - agendaEvents.size(); i++) {
+		for (int i = 0; (i < maxLines - agendaEvents.size())
+				&& (i <= birthdayEvents.size() - 1); i++) {
 			final RemoteViews view = new RemoteViews(packageName,
 					R.layout.birthdays);
 			view.setTextViewText(R.id.birthday1_text,
 					formatEventText(birthdayEvents.get(i * 2)));
-			view.setTextViewText(R.id.birthday2_text,
-					formatEventText(birthdayEvents.get(i * 2 + 1)));
+			if (i <= birthdayEvents.size() - 2)
+				view.setTextViewText(R.id.birthday2_text,
+						formatEventText(birthdayEvents.get(i * 2 + 1)));
+			else
+				view.setTextViewText(R.id.birthday2_text, "");
 			widget.addView(R.id.widget, view);
 		}
 
@@ -183,7 +189,7 @@ public final class WidgetService extends IntentService {
 
 		// Calendar is disabled, return next row
 		if (!prefs.isCalendar(cursor.getInt(COL_CALENDAR)))
-			return readEvent(cursor, prefs);
+			return null;
 
 		final Event event = new Event();
 
@@ -205,7 +211,7 @@ public final class WidgetService extends IntentService {
 		if ((event.allDay && event.endMillis < todayStart)
 				|| (!event.allDay && event.endMillis <= System
 						.currentTimeMillis()))
-			return readEvent(cursor, prefs);
+			return null;
 
 		event.title = cursor.getString(COL_TITLE);
 		if (event.title == null)
@@ -226,7 +232,7 @@ public final class WidgetService extends IntentService {
 		// Skip birthday events if necessary
 		if (event.isBirthday
 				&& prefs.getBirthdays().equals(WidgetPreferences.BIRTHDAY_HIDE))
-			return readEvent(cursor, prefs);
+			return null;
 
 		event.startDay = cursor.getInt(COL_START_DAY);
 		event.startTime = new Time();
