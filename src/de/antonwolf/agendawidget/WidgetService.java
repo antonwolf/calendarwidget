@@ -120,8 +120,7 @@ public final class WidgetService extends IntentService {
 
 				SpannableStringBuilder builder = new SpannableStringBuilder();
 
-				formatTime(builder, event.startTime, event.startMillis,
-						event.endTime, event.endMillis, event.allDay);
+				formatTime(builder, event);
 				builder.append(' ');
 				int timeEndPos = builder.length();
 				builder.setSpan(new ForegroundColorSpan(0xaaffffff), 0,
@@ -302,50 +301,51 @@ public final class WidgetService extends IntentService {
 		return birthdayPatterns;
 	}
 
-	private void formatTime(SpannableStringBuilder builder, Time start,
-			long startMillis, Time end, long endMillis, boolean allDay) {
-
+	private void formatTime(SpannableStringBuilder builder, Event event) {
 		Formatter formatter = new Formatter(builder);
 
-		boolean isStartToday = (todayStart <= startMillis && startMillis <= tomorrowStart);
-		boolean isEndToday = (todayStart <= endMillis && endMillis <= tomorrowStart);
-		boolean showDay = !isStartToday || !isEndToday || allDay;
+		boolean isStartToday = (todayStart <= event.startMillis && event.startMillis <= tomorrowStart);
+		boolean isEndToday = (todayStart <= event.endMillis && event.endMillis <= tomorrowStart);
+		boolean showStartDay = !isStartToday || !isEndToday || event.allDay;
 
-		Time endOfStartDay = new Time(start);
-		endOfStartDay.hour = 23;
-		endOfStartDay.minute = endOfStartDay.second = 59;
-
-		if (allDay) {
-			if (showDay)
-				appendDay(formatter, builder, startMillis, start);
-
-			if (Time.compare(end, endOfStartDay) > 0) {
+		//all-Day events
+		if (event.allDay) {
+			if (showStartDay)
+				appendDay(formatter, builder, event.startMillis, event.startTime);
+			
+			if (event.startDay != event.endDay) {
 				builder.append('-');
-				appendDay(formatter, builder, endMillis, end);
+				appendDay(formatter, builder, event.endMillis, event.endTime);
 			}
 			return;
 		}
 
-		if (startMillis == endMillis) {
-			if (showDay) {
-				appendDay(formatter, builder, startMillis, start);
+		//events with no duration
+		if (event.startMillis == event.endMillis) {
+			if (showStartDay) {
+				appendDay(formatter, builder, event.startMillis, event.startTime);
 				builder.append(' ');
 			}
-			appendHour(formatter, builder, startMillis);
+			appendHour(formatter, builder, event.startMillis);
 			return;
 		}
 
-		if (showDay) {
-			appendDay(formatter, builder, startMillis, start);
+		//events with duration
+		if (showStartDay) {
+			appendDay(formatter, builder, event.startMillis, event.startTime);
 			builder.append(' ');
 		}
-		appendHour(formatter, builder, startMillis);
+		appendHour(formatter, builder, event.startMillis);
 		builder.append('-');
-		if (Time.compare(end, endOfStartDay) > 0) {
-			appendDay(formatter, builder, endMillis, end);
+		
+		Time helper = new Time();
+		helper.timezone = Time.getCurrentTimezone();
+		long endOfStartDay = helper.setJulianDay(event.endDay+1);
+		if (event.endMillis >= endOfStartDay) {
+			appendDay(formatter, builder, event.endMillis, event.endTime);
 			builder.append(' ');
 		}
-		appendHour(formatter, builder, endMillis);
+		appendHour(formatter, builder, event.endMillis);
 	}
 
 	private void appendHour(Formatter formatter,
