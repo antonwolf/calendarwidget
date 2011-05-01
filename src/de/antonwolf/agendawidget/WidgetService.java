@@ -25,6 +25,21 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 public final class WidgetService extends IntentService {
+	private final static class Event {
+		public boolean allDay = false;
+		public int color;
+		public int endDay;
+		public long endMillis;
+		public Time endTime;
+		public boolean hasAlarm;
+		public boolean isBirthday = false;
+		public String location;
+		public long startMillis;
+		public Time startTime;
+		public int startDay;
+		public String title;
+	}
+
 	private static final String TAG = "AgendaWidget";
 	private static final String THEAD_NAME = "WidgetServiceThead";
 
@@ -89,96 +104,44 @@ public final class WidgetService extends IntentService {
 
 		int maxLines = prefs.getLines();
 
-		Cursor cur = null;
+		Cursor cursor = null;
 
 		try {
-			cur = getCursor();
+			cursor = getCursor();
 
 			while (!bdayLeft || ((events.size() + birthdays.size()) < maxLines)) {
+				Event event = readEvent(cursor, prefs);
 				// no next item? abort!
-				if (!cur.moveToNext())
+				if (event == null)
 					break;
 
-				// is this calendar enabled?
-				if (!prefs.isCalendar(cur.getInt(COL_CALENDAR)))
-					continue;
-
-				long endMillis = cur.getLong(COL_END_MILLIS);
-				boolean allDay = 1 == cur.getInt(COL_ALL_DAY);
-				int endDay = cur.getInt(COL_END_DAY);
-
-				// non-all-day event in the past? Don't display!
-				if (!allDay && endMillis <= System.currentTimeMillis())
-					continue;
-
-				long startMillis = cur.getLong(COL_START_MILLIS);
-				Time startTime = new Time();
-				Time endTime = new Time();
-
-				if (allDay) {
-					endTime.timezone = Time.getCurrentTimezone();
-					endMillis = endTime.setJulianDay(endDay);
-
-					// allDay event in the past? Don't display!
-					if (endMillis < todayStart)
-						continue;
-					startTime.timezone = endTime.timezone;
-					startMillis = startTime.setJulianDay(cur.getInt(COL_START_DAY));
-				} else {
-					startTime.set(startMillis);
-					endTime.set(endMillis);
-				}
-
-				String title = cur.getString(COL_TITLE);
-				if (title == null)
-					title = "";
-
-				boolean isBirthday = false;
-				if (!prefs.getBirthdays().equals(
-						WidgetPreferences.BIRTHDAY_NORMAL))
-					for (Pattern pattern : getBirthdayPatterns()) {
-						Matcher matcher = pattern.matcher(title);
-						if (!matcher.find())
-							continue;
-						title = matcher.group(1);
-						isBirthday = true;
-						break;
-					}
-
-				// Hide birthday events
-				if (isBirthday
-						&& prefs.getBirthdays().equals(
-								WidgetPreferences.BIRTHDAY_HIDE))
-					continue;
-
-				if (!allDay && endMillis < nextUpdate)
-					nextUpdate = endMillis;
+				if (!event.allDay && event.endMillis < nextUpdate)
+					nextUpdate = event.endMillis;
 
 				SpannableStringBuilder builder = new SpannableStringBuilder();
 
-				formatTime(builder, startTime, startMillis, endTime, endMillis,
-						allDay);
+				formatTime(builder, event.startTime, event.startMillis,
+						event.endTime, event.endMillis, event.allDay);
 				builder.append(' ');
 				int timeEndPos = builder.length();
 				builder.setSpan(new ForegroundColorSpan(0xaaffffff), 0,
 						timeEndPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-				builder.append(title);
+				builder.append(event.title);
 				int titleEndPos = builder.length();
 				builder.setSpan(new ForegroundColorSpan(0xffffffff),
 						timeEndPos, titleEndPos,
 						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-				String location = cur.getString(COL_LOCATION);
-				if (location != null && !isEmpty.matcher(location).find()) {
+				if (event.location != null) {
 					builder.append(", ");
-					builder.append(location);
+					builder.append(event.location);
 					builder.setSpan(new ForegroundColorSpan(0xaaffffff),
 							titleEndPos, builder.length(),
 							Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				}
 
-				if (isBirthday) {
+				if (event.isBirthday) {
 					if (bdayLeft)
 						birthdays.addLast(new RemoteViews(packageName,
 								R.layout.birthdays));
@@ -191,17 +154,16 @@ public final class WidgetService extends IntentService {
 				} else {
 					if (events.size() + birthdays.size() >= maxLines)
 						continue;
-					RemoteViews event = new RemoteViews(packageName,
+					RemoteViews eventView = new RemoteViews(packageName,
 							R.layout.event);
-					events.addLast(event);
+					events.addLast(eventView);
 
-					event.setTextViewText(R.id.event_text, builder);
+					eventView.setTextViewText(R.id.event_text, builder);
 
-					event.setTextColor(R.id.event_color, cur.getInt(COL_COLOR));
+					eventView.setTextColor(R.id.event_color, event.color);
 
-					int alarmFlag = cur.getInt(COL_HAS_ALARM) == 0 ? View.GONE
-							: View.VISIBLE;
-					event.setViewVisibility(R.id.event_alarm, alarmFlag);
+					int alarmFlag = event.hasAlarm ? View.VISIBLE : View.GONE;
+					eventView.setViewVisibility(R.id.event_alarm, alarmFlag);
 				}
 			}
 
@@ -228,9 +190,79 @@ public final class WidgetService extends IntentService {
 			alarmManager.cancel(pending);
 			alarmManager.set(AlarmManager.RTC, nextUpdate + 1000, pending);
 		} finally {
-			if (cur != null)
-				cur.close();
+			if (cursor != null)
+				cursor.close();
 		}
+	}
+
+	private Event readEvent(Cursor cur, WidgetPreferences prefs) {
+		if (!cur.moveToNext())
+			return null;
+
+		// Calendar is disabled, return next row
+		if (!prefs.isCalendar(cur.getInt(COL_CALENDAR)))
+			return readEvent(cur, prefs);
+
+		Event event = new Event();
+
+		if (1 == cur.getInt(COL_ALL_DAY))
+			event.allDay = true;
+
+		event.endDay = cur.getInt(COL_END_DAY);
+		event.endTime = new Time();
+
+		if (event.allDay) {
+			event.endTime.timezone = Time.getCurrentTimezone();
+			event.endMillis = event.endTime.setJulianDay(event.endDay);
+		} else {
+			event.endMillis = cur.getLong(COL_END_MILLIS);
+			event.endTime.set(event.endMillis);
+		}
+
+		// Skip events in the past
+		if ((event.allDay && event.endMillis < todayStart)
+				|| (!event.allDay && event.endMillis <= System
+						.currentTimeMillis()))
+			return readEvent(cur, prefs);
+
+		event.title = cur.getString(COL_TITLE);
+		if (event.title == null)
+			event.title = "";
+
+		if (!prefs.getBirthdays().equals(WidgetPreferences.BIRTHDAY_NORMAL))
+			for (Pattern pattern : getBirthdayPatterns()) {
+				Matcher matcher = pattern.matcher(event.title);
+				if (!matcher.find())
+					continue;
+				event.title = matcher.group(1);
+				event.isBirthday = true;
+				break;
+			}
+
+		// Skip birthday events if necessary
+		if (event.isBirthday
+				&& prefs.getBirthdays().equals(WidgetPreferences.BIRTHDAY_HIDE))
+			return readEvent(cur, prefs);
+
+		event.startDay = cur.getInt(COL_START_DAY);
+		event.startTime = new Time();
+		if (event.allDay) {
+			event.startTime.timezone = event.endTime.timezone;
+			event.startMillis = event.startTime.setJulianDay(event.startDay);
+		} else {
+			event.startMillis = cur.getLong(COL_START_MILLIS);
+			event.startTime.set(event.startMillis);
+		}
+
+		event.location = cur.getString(COL_LOCATION);
+		if (event.location != null && isEmpty.matcher(event.location).find())
+			event.location = null;
+
+		event.color = cur.getInt(COL_COLOR);
+
+		event.hasAlarm = cur.getInt(COL_HAS_ALARM) == 1;
+
+		return event;
 	}
 
 	private Cursor getCursor() {
