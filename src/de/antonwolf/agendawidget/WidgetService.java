@@ -103,16 +103,12 @@ public final class WidgetService extends IntentService {
 				.getAppWidgetInfo(widgetId);
 
 		if (null == widgetInfo) {
-			Log.d(TAG, "Invalid widget ID:");
+			Log.d(TAG, "Invalid widget ID!");
 			return;
 		}
-
-		final WidgetPreferences prefs = new WidgetPreferences(widgetId, this);
-
 		computeTimeRanges();
-
+		final WidgetPreferences prefs = new WidgetPreferences(widgetId, this);
 		final int maxLines = prefs.getLines();
-
 		final List<Event> birthdayEvents = new ArrayList<Event>(maxLines * 2);
 		final List<Event> agendaEvents = new ArrayList<Event>(maxLines);
 
@@ -144,7 +140,7 @@ public final class WidgetService extends IntentService {
 		widget.removeAllViews(R.id.widget);
 		widget.setOnClickPendingIntent(R.id.widget,
 				getOnClickPendingIntent(widgetId));
-		
+
 		final boolean calendarColor = prefs.isCalendarColor();
 
 		for (int i = 0; (i < maxLines - agendaEvents.size())
@@ -164,8 +160,8 @@ public final class WidgetService extends IntentService {
 		for (Event event : agendaEvents) {
 			final RemoteViews view = new RemoteViews(packageName,
 					R.layout.event);
-
-			view.setTextViewText(R.id.event_text, formatEventText(event, calendarColor));
+			view.setTextViewText(R.id.event_text,
+					formatEventText(event, calendarColor));
 			int alarmFlag = event.hasAlarm ? View.VISIBLE : View.GONE;
 			view.setViewVisibility(R.id.event_alarm, alarmFlag);
 			widget.addView(R.id.widget, view);
@@ -177,7 +173,6 @@ public final class WidgetService extends IntentService {
 	private void scheduleNextUpdate(final List<Event> search,
 			final Intent intent) {
 		long nextUpdate = tomorrowStart;
-
 		for (Event event : search)
 			if (!event.allDay && event.endMillis < nextUpdate)
 				nextUpdate = event.endMillis;
@@ -190,11 +185,9 @@ public final class WidgetService extends IntentService {
 
 	private Event readEvent(final Cursor cursor, final WidgetPreferences prefs) {
 		if (!cursor.moveToNext())
-			return null;
-
-		// Calendar is disabled, return next row
+			return null; // no next item
 		if (!prefs.isCalendar(cursor.getInt(COL_CALENDAR)))
-			return null;
+			return null; // Calendar is disabled
 
 		final Event event = new Event();
 
@@ -211,12 +204,10 @@ public final class WidgetService extends IntentService {
 			event.endMillis = cursor.getLong(COL_END_MILLIS);
 			event.endTime.set(event.endMillis);
 		}
-
-		// Skip events in the past
 		if ((event.allDay && event.endMillis < todayStart)
 				|| (!event.allDay && event.endMillis <= System
 						.currentTimeMillis()))
-			return null;
+			return null; // Skip events in the past
 
 		event.title = cursor.getString(COL_TITLE);
 		if (event.title == null)
@@ -255,9 +246,7 @@ public final class WidgetService extends IntentService {
 			event.location = null;
 
 		event.color = cursor.getInt(COL_COLOR);
-
 		event.hasAlarm = cursor.getInt(COL_HAS_ALARM) == 1;
-
 		return event;
 	}
 
@@ -301,7 +290,6 @@ public final class WidgetService extends IntentService {
 				birthdayPatterns[i] = Pattern.compile(strings[i]);
 			}
 		}
-
 		return birthdayPatterns;
 	}
 
@@ -326,8 +314,8 @@ public final class WidgetService extends IntentService {
 		formatTime(builder, event);
 		builder.append(' ');
 		final int timeEndPos = builder.length();
-		builder.setSpan(new ForegroundColorSpan(0xaaffffff), timeStartPos, timeEndPos,
-				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		builder.setSpan(new ForegroundColorSpan(0xaaffffff), timeStartPos,
+				timeEndPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		builder.append(event.title);
 		final int titleEndPos = builder.length();
@@ -340,7 +328,6 @@ public final class WidgetService extends IntentService {
 			builder.setSpan(new ForegroundColorSpan(0xaaffffff), titleEndPos,
 					builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
-
 		return builder;
 	}
 
@@ -420,8 +407,8 @@ public final class WidgetService extends IntentService {
 				builder.append(getResources().getString(
 						R.string.format_tomorrow));
 
-			builder.setSpan(new RelativeSizeSpan(0.7f), from, builder.length(),
-					0);
+			final RelativeSizeSpan smaller = new RelativeSizeSpan(0.7f);
+			builder.setSpan(smaller, from, builder.length(), 0);
 		} else if (todayStart <= time && time < oneWeekFromNow) // this week?
 			builder.append(getResources().getStringArray(
 					R.array.format_day_of_week)[day.weekDay]);
