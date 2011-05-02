@@ -76,6 +76,14 @@
 	<string name="settings_calendar_color">Kalenderfarbe anzeigen</string>
 	<string name="settings_calendar_color_show">Farbe neben Ereignissen anzeigen</string>
 	<string name="settings_calendar_color_hide">Kalenderfarbe nicht anzeigen</string>
+	
+	<string name="settings_tommorow_yesterday">\"Morgen\" und \"gestern\"</string>
+	<string name="settings_tommorow_yesterday_yes">Morgige und gestrige Ereignisse als solche kennzeichnen</string>
+	<string name="settings_tommorow_yesterday_no">Morgen und gestern als normale Tage behandeln</string>
+	
+	<string name="settings_weekday">Wochentag-Namen</string>
+	<string name="settings_weekday_yes">Wochentag für die nächsten sieben Tage anzeigen</string>
+	<string name="settings_weekday_no">Immer volles Datum verwenden</string>
 
 	<string name="settings_calendars">Kalender</string>
 	<string name="settings_calendars_show">Kalender anzeigen</string>

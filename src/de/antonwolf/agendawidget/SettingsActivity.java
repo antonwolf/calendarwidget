@@ -54,6 +54,22 @@ public class SettingsActivity extends PreferenceActivity {
 		birthdays.setDefaultValue(prefs.getBirthdays());
 		display.addPreference(birthdays);
 		
+		CheckBoxPreference weekday = new CheckBoxPreference(this);
+		weekday.setDefaultValue(prefs.isWeekday());
+		weekday.setKey(prefs.getWeekdayKey());
+		weekday.setTitle(R.string.settings_weekday);
+		weekday.setSummaryOn(R.string.settings_weekday_yes);
+		weekday.setSummaryOff(R.string.settings_weekday_no);
+		display.addPreference(weekday);
+		
+		CheckBoxPreference tomorrowYesterday = new CheckBoxPreference(this);
+		tomorrowYesterday.setDefaultValue(prefs.isTommorowYesterday());
+		tomorrowYesterday.setKey(prefs.getTommorowYesterdayKey());
+		tomorrowYesterday.setTitle(R.string.settings_tommorow_yesterday);
+		tomorrowYesterday.setSummaryOn(R.string.settings_tommorow_yesterday_yes);
+		tomorrowYesterday.setSummaryOff(R.string.settings_tommorow_yesterday_no);
+		display.addPreference(tomorrowYesterday);
+		
 		CheckBoxPreference calendarColor = new CheckBoxPreference(this);
 		calendarColor.setDefaultValue(prefs.isCalendarColor());
 		calendarColor.setKey(prefs.getCalendarColorKey());

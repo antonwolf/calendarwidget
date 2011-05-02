@@ -96,6 +96,22 @@ public final class WidgetPreferences {
 	public boolean isCalendarColor() {
 		return prefs.getBoolean(getCalendarColorKey(), true);
 	}
+	
+	public String getTommorowYesterdayKey() {
+		return widgetId + "tommorowYesterday";
+	}
+
+	public boolean isTommorowYesterday() {
+		return prefs.getBoolean(getTommorowYesterdayKey(), true);
+	}
+	
+	public String getWeekdayKey() {
+		return widgetId + "weekday";
+	}
+
+	public boolean isWeekday() {
+		return prefs.getBoolean(getWeekdayKey(), true);
+	}
 
 	public List<CalendarPreferences> getCalendars() {
 		Cursor cursor = null;

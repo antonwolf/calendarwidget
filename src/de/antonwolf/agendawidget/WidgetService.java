@@ -147,11 +147,15 @@ public final class WidgetService extends IntentService {
 				&& (i <= birthdayEvents.size() - 1); i++) {
 			final RemoteViews view = new RemoteViews(packageName,
 					R.layout.birthdays);
-			view.setTextViewText(R.id.birthday1_text,
-					formatEventText(birthdayEvents.get(i * 2), calendarColor));
+			view.setTextViewText(
+					R.id.birthday1_text,
+					formatEventText(birthdayEvents.get(i * 2), calendarColor,
+							prefs));
 			if (i <= birthdayEvents.size() - 2)
-				view.setTextViewText(R.id.birthday2_text,
-						formatEventText(birthdayEvents.get(i * 2 + 1), false));
+				view.setTextViewText(
+						R.id.birthday2_text,
+						formatEventText(birthdayEvents.get(i * 2 + 1), false,
+								prefs));
 			else
 				view.setTextViewText(R.id.birthday2_text, "");
 			widget.addView(R.id.widget, view);
@@ -161,7 +165,7 @@ public final class WidgetService extends IntentService {
 			final RemoteViews view = new RemoteViews(packageName,
 					R.layout.event);
 			view.setTextViewText(R.id.event_text,
-					formatEventText(event, calendarColor));
+					formatEventText(event, calendarColor, prefs));
 			int alarmFlag = event.hasAlarm ? View.VISIBLE : View.GONE;
 			view.setViewVisibility(R.id.event_alarm, alarmFlag);
 			widget.addView(R.id.widget, view);
@@ -294,7 +298,7 @@ public final class WidgetService extends IntentService {
 	}
 
 	private CharSequence formatEventText(final Event event,
-			final boolean showColor) {
+			final boolean showColor, final WidgetPreferences prefs) {
 		if (event == null)
 			return "";
 
@@ -311,7 +315,7 @@ public final class WidgetService extends IntentService {
 		}
 
 		final int timeStartPos = builder.length();
-		formatTime(builder, event);
+		formatTime(builder, event, prefs);
 		builder.append(' ');
 		final int timeEndPos = builder.length();
 		builder.setSpan(new ForegroundColorSpan(0xaaffffff), timeStartPos,
@@ -332,7 +336,7 @@ public final class WidgetService extends IntentService {
 	}
 
 	private void formatTime(final SpannableStringBuilder builder,
-			final Event event) {
+			final Event event, final WidgetPreferences prefs) {
 		final Formatter formatter = new Formatter(builder);
 
 		final boolean isStartToday = (todayStart <= event.startMillis && event.startMillis <= tomorrowStart);
@@ -344,11 +348,12 @@ public final class WidgetService extends IntentService {
 		if (event.allDay) {
 			if (showStartDay)
 				appendDay(formatter, builder, event.startMillis,
-						event.startTime);
+						event.startTime, prefs);
 
 			if (event.startDay != event.endDay) {
 				builder.append('-');
-				appendDay(formatter, builder, event.endMillis, event.endTime);
+				appendDay(formatter, builder, event.endMillis, event.endTime,
+						prefs);
 			}
 			return;
 		}
@@ -357,7 +362,7 @@ public final class WidgetService extends IntentService {
 		if (event.startMillis == event.endMillis) {
 			if (showStartDay) {
 				appendDay(formatter, builder, event.startMillis,
-						event.startTime);
+						event.startTime, prefs);
 				builder.append(' ');
 			}
 			appendHour(formatter, builder, event.startMillis);
@@ -366,7 +371,8 @@ public final class WidgetService extends IntentService {
 
 		// events with duration
 		if (showStartDay) {
-			appendDay(formatter, builder, event.startMillis, event.startTime);
+			appendDay(formatter, builder, event.startMillis, event.startTime,
+					prefs);
 			builder.append(' ');
 		}
 		appendHour(formatter, builder, event.startMillis);
@@ -376,7 +382,7 @@ public final class WidgetService extends IntentService {
 		helper.timezone = Time.getCurrentTimezone();
 		long endOfStartDay = helper.setJulianDay(event.endDay + 1);
 		if (event.endMillis >= endOfStartDay) {
-			appendDay(formatter, builder, event.endMillis, event.endTime);
+			appendDay(formatter, builder, event.endMillis, event.endTime, prefs);
 			builder.append(' ');
 		}
 		appendHour(formatter, builder, event.endMillis);
@@ -395,8 +401,16 @@ public final class WidgetService extends IntentService {
 
 	private void appendDay(final Formatter formatter,
 			final SpannableStringBuilder builder, final long time,
-			final Time day) {
-		if (yesterdayStart <= time && time < dayAfterTomorrowStart) {
+			final Time day, final WidgetPreferences prefs) {
+		final boolean tomorrowYesterday = prefs.isTommorowYesterday();
+		final long specialStart = tomorrowYesterday ? yesterdayStart
+				: todayStart;
+		final long specialEnd = tomorrowYesterday ? dayAfterTomorrowStart
+				: tomorrowStart;
+		final boolean weekday = prefs.isWeekday();
+		final long weekEnd = weekday ? oneWeekFromNow : tomorrowStart;
+
+		if (specialStart <= time && time < specialEnd) {
 			final int from = builder.length();
 			if (time < todayStart)
 				builder.append(getResources().getString(
@@ -409,7 +423,7 @@ public final class WidgetService extends IntentService {
 
 			final RelativeSizeSpan smaller = new RelativeSizeSpan(0.7f);
 			builder.setSpan(smaller, from, builder.length(), 0);
-		} else if (todayStart <= time && time < oneWeekFromNow) // this week?
+		} else if (todayStart <= time && time < weekEnd) // this week?
 			builder.append(getResources().getStringArray(
 					R.array.format_day_of_week)[day.weekDay]);
 		else if (yearStart <= time && time < yearEnd) { // this year?

@@ -78,6 +78,14 @@
 	<string name="settings_calendar_color">Show calendar color</string>
 	<string name="settings_calendar_color_show">Display color next to events</string>
 	<string name="settings_calendar_color_hide">Calendar color is not displayed</string>
+	
+	<string name="settings_tommorow_yesterday">\"tomorrow\" and \"yesterday\"</string>
+	<string name="settings_tommorow_yesterday_yes">Special display for tomorrow and yesterday</string>
+	<string name="settings_tommorow_yesterday_no">Treat tomorrow and yesterday like any other day</string>
+	
+	<string name="settings_weekday">Weekday names</string>
+	<string name="settings_weekday_yes">Display weekday name for the next seven days</string>
+	<string name="settings_weekday_no">Always display full date</string>
 
 	<string name="settings_calendars">Calendars</string>
 	<string name="settings_calendars_show">Show this calendar</string>
