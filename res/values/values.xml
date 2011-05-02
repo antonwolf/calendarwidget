@@ -74,6 +74,10 @@
 		<item>Hide</item>
 	</string-array>
 	<string name="settings_birthdays_summary">How should an event be treated when recognized as a birthday?</string>
+	
+	<string name="settings_calendar_color">Show calendar color</string>
+	<string name="settings_calendar_color_show">Display color next to events</string>
+	<string name="settings_calendar_color_hide">Calendar color is not displayed</string>
 
 	<string name="settings_calendars">Calendars</string>
 	<string name="settings_calendars_show">Show this calendar</string>

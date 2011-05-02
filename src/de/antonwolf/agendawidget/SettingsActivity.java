@@ -53,6 +53,14 @@ public class SettingsActivity extends PreferenceActivity {
 				WidgetPreferences.BIRTHDAY_HIDE });
 		birthdays.setDefaultValue(prefs.getBirthdays());
 		display.addPreference(birthdays);
+		
+		CheckBoxPreference calendarColor = new CheckBoxPreference(this);
+		calendarColor.setDefaultValue(prefs.isCalendarColor());
+		calendarColor.setKey(prefs.getCalendarColorKey());
+		calendarColor.setTitle(R.string.settings_calendar_color);
+		calendarColor.setSummaryOn(R.string.settings_calendar_color_show);
+		calendarColor.setSummaryOff(R.string.settings_calendar_color_hide);
+		display.addPreference(calendarColor);
 
 		PreferenceCategory calendars = new PreferenceCategory(this);
 		calendars.setTitle(R.string.settings_calendars);

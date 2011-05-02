@@ -73,6 +73,10 @@
 	</string-array>
 	<string name="settings_birthdays_summary">Wie soll ein Ereignis behandelt werden, das als Geburtstag erkannt wurde?</string>
 
+	<string name="settings_calendar_color">Kalenderfarbe anzeigen</string>
+	<string name="settings_calendar_color_show">Farbe neben Ereignissen anzeigen</string>
+	<string name="settings_calendar_color_hide">Kalenderfarbe nicht anzeigen</string>
+
 	<string name="settings_calendars">Kalender</string>
 	<string name="settings_calendars_show">Kalender anzeigen</string>
 	<string name="settings_calendars_hide">Kalender ausblenden</string>

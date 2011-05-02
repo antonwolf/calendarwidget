@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<dimen name="WidgetPaddingLeft">11sp</dimen>
 	<style name="WidgetText">
 		<item name="android:ellipsize">marquee</item>
 		<item name="android:layout_height">wrap_content</item>
@@ -12,15 +11,6 @@
 	</style>
 	<style name="WidgetTitle" parent="@style/WidgetText">
 		<item name="android:textColor">#fff</item>
-	</style>
-	<style name="WidgetGrey" parent="@style/WidgetText">
-		<item name="android:textColor">#afff</item>
-	</style>
-	<style name="WidgetTime" parent="@style/WidgetGrey">
-		<item name="android:paddingRight">2dp</item>
-	</style>
-	<style name="WidgetDot" parent="@style/WidgetText">
-		<item name="android:layout_width">@dimen/WidgetPaddingLeft</item>
 	</style>
 
 	<style name="PickAction" parent="android:Theme.Dialog">

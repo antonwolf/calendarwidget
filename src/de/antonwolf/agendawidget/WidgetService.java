@@ -83,6 +83,10 @@ public final class WidgetService extends IntentService {
 	private final static int COL_CALENDAR = 8;
 	private final static int COL_START_MILLIS = 9;
 
+	private final static String COLOR_DOT = "●\t";
+	private final static String COLOR_HIDDEN = "\t";
+	private final static String SEPARATOR_COMMA = ", ";
+
 	private final static Pattern IS_EMPTY_PATTERN = Pattern.compile("^\\s*$");
 
 	public WidgetService() {
@@ -140,16 +144,18 @@ public final class WidgetService extends IntentService {
 		widget.removeAllViews(R.id.widget);
 		widget.setOnClickPendingIntent(R.id.widget,
 				getOnClickPendingIntent(widgetId));
+		
+		final boolean calendarColor = prefs.isCalendarColor();
 
 		for (int i = 0; (i < maxLines - agendaEvents.size())
 				&& (i <= birthdayEvents.size() - 1); i++) {
 			final RemoteViews view = new RemoteViews(packageName,
 					R.layout.birthdays);
 			view.setTextViewText(R.id.birthday1_text,
-					formatEventText(birthdayEvents.get(i * 2)));
+					formatEventText(birthdayEvents.get(i * 2), calendarColor));
 			if (i <= birthdayEvents.size() - 2)
 				view.setTextViewText(R.id.birthday2_text,
-						formatEventText(birthdayEvents.get(i * 2 + 1)));
+						formatEventText(birthdayEvents.get(i * 2 + 1), false));
 			else
 				view.setTextViewText(R.id.birthday2_text, "");
 			widget.addView(R.id.widget, view);
@@ -159,8 +165,7 @@ public final class WidgetService extends IntentService {
 			final RemoteViews view = new RemoteViews(packageName,
 					R.layout.event);
 
-			view.setTextViewText(R.id.event_text, formatEventText(event));
-			view.setTextColor(R.id.event_color, event.color);
+			view.setTextViewText(R.id.event_text, formatEventText(event, calendarColor));
 			int alarmFlag = event.hasAlarm ? View.VISIBLE : View.GONE;
 			view.setViewVisibility(R.id.event_alarm, alarmFlag);
 			widget.addView(R.id.widget, view);
@@ -300,16 +305,28 @@ public final class WidgetService extends IntentService {
 		return birthdayPatterns;
 	}
 
-	private CharSequence formatEventText(final Event event) {
+	private CharSequence formatEventText(final Event event,
+			final boolean showColor) {
 		if (event == null)
 			return "";
 
 		final SpannableStringBuilder builder = new SpannableStringBuilder();
 
+		if (showColor) {
+			if (event.isBirthday)
+				builder.append(COLOR_HIDDEN);
+			else {
+				builder.append(COLOR_DOT);
+				builder.setSpan(new ForegroundColorSpan(event.color), 0, 1,
+						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			}
+		}
+
+		final int timeStartPos = builder.length();
 		formatTime(builder, event);
 		builder.append(' ');
 		final int timeEndPos = builder.length();
-		builder.setSpan(new ForegroundColorSpan(0xaaffffff), 0, timeEndPos,
+		builder.setSpan(new ForegroundColorSpan(0xaaffffff), timeStartPos, timeEndPos,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		builder.append(event.title);
@@ -318,7 +335,7 @@ public final class WidgetService extends IntentService {
 				titleEndPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		if (event.location != null) {
-			builder.append(", ");
+			builder.append(SEPARATOR_COMMA);
 			builder.append(event.location);
 			builder.setSpan(new ForegroundColorSpan(0xaaffffff), titleEndPos,
 					builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

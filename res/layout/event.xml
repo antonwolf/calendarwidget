@@ -5,8 +5,6 @@
 	<LinearLayout android:layout_width="0dp"
 		android:layout_weight="1" android:layout_height="wrap_content"
 		android:orientation="horizontal">
-		<TextView style="@style/WidgetDot" android:text="■"
-			android:id="@+id/event_color" />
 		<TextView style="@style/WidgetText" android:id="@+id/event_text" />
 	</LinearLayout>
 	<ImageView android:id="@+id/event_alarm" android:src="@drawable/alert"

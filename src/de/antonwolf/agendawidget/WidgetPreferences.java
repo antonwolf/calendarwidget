@@ -88,6 +88,14 @@ public final class WidgetPreferences {
 
 		return 5 + (int) ((heightInCells - 1) * 5.9);
 	}
+	
+	public String getCalendarColorKey() {
+		return widgetId + "calendarColor";
+	}
+
+	public boolean isCalendarColor() {
+		return prefs.getBoolean(getCalendarColorKey(), true);
+	}
 
 	public List<CalendarPreferences> getCalendars() {
 		Cursor cursor = null;
