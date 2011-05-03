@@ -31,6 +31,7 @@
 	<string-array name="birthday_patterns">
 		<item>(.+)\'s Birthday</item>
 		<item>(.+)s Geburtstag</item>
+		<item>(.+)\\. Geburtstag</item>
 		<item>Geburtstag von (.+)</item>
 		<item>(.+) hat Geburtstag</item>
 	</string-array>
@@ -68,7 +69,7 @@
 	<string name="settings_birthdays">Geburtstage</string>
 	<string-array name="settings_birthdays_entries">
 		<item>Gesondert anzeigen</item>
-		<item>Als normales Ereignis anzeigent</item>
+		<item>Als normales Ereignis anzeigen</item>
 		<item>Verstecken</item>
 	</string-array>
 	<string name="settings_birthdays_summary">Wie soll ein Ereignis behandelt werden, das als Geburtstag erkannt wurde?</string>

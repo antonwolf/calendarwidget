@@ -83,7 +83,7 @@ public final class WidgetService extends IntentService {
 	private final static int COL_CALENDAR = 8;
 	private final static int COL_START_MILLIS = 9;
 
-	private final static String COLOR_DOT = "●\t";
+	private final static String COLOR_DOT = "■\t";
 	private final static String COLOR_HIDDEN = "\t";
 	private final static String SEPARATOR_COMMA = ", ";
 

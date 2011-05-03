@@ -51,7 +51,7 @@ public class SettingsActivity extends PreferenceActivity {
 		birthdays.setEntryValues(new String[] { WidgetPreferences.BIRTHDAY_SPECIAL,
 				WidgetPreferences.BIRTHDAY_NORMAL,
 				WidgetPreferences.BIRTHDAY_HIDE });
-		birthdays.setDefaultValue(prefs.getBirthdays());
+		birthdays.setDefaultValue(WidgetPreferences.BIRTHDAY_SPECIAL);
 		display.addPreference(birthdays);
 		
 		CheckBoxPreference weekday = new CheckBoxPreference(this);
