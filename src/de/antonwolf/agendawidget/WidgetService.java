@@ -2,6 +2,7 @@ package de.antonwolf.agendawidget;
 
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -116,17 +117,23 @@ public final class WidgetService extends IntentService {
 		try {
 			cursor = getCursor();
 
-			while (birthdayEvents.size() / 2 + agendaEvents.size() < maxLines) {
+			while (true) {
+				boolean widgetFull = Math.ceil(birthdayEvents.size() / 2.0)
+						+ agendaEvents.size() >= maxLines;
+				boolean evenBirthdayCount = birthdayEvents.size() % 2 == 0;
+				if (widgetFull && evenBirthdayCount)
+					break; // widget is full
+
 				Event event = null;
 				while (event == null && !cursor.isAfterLast())
 					event = readEvent(cursor, prefs);
 				if (event == null)
-					break;
+					break; // no further events
 
 				if (event.isBirthday) {
 					if (!birthdayEvents.contains(event))
 						birthdayEvents.add(event);
-				} else
+				} else if (!widgetFull)
 					agendaEvents.add(event);
 			}
 		} finally {
@@ -143,19 +150,15 @@ public final class WidgetService extends IntentService {
 
 		final boolean calendarColor = prefs.isCalendarColor();
 
-		for (int i = 0; (i < maxLines - agendaEvents.size())
-				&& (i <= birthdayEvents.size() - 1); i++) {
+		Iterator<Event> bdayIterator = birthdayEvents.iterator();
+		while (bdayIterator.hasNext()) {
 			final RemoteViews view = new RemoteViews(packageName,
 					R.layout.birthdays);
-			view.setTextViewText(
-					R.id.birthday1_text,
-					formatEventText(birthdayEvents.get(i * 2), calendarColor,
-							prefs));
-			if (i <= birthdayEvents.size() - 2)
-				view.setTextViewText(
-						R.id.birthday2_text,
-						formatEventText(birthdayEvents.get(i * 2 + 1), false,
-								prefs));
+			view.setTextViewText(R.id.birthday1_text,
+					formatEventText(bdayIterator.next(), calendarColor, prefs));
+			if (bdayIterator.hasNext())
+				view.setTextViewText(R.id.birthday2_text,
+						formatEventText(bdayIterator.next(), false, prefs));
 			else
 				view.setTextViewText(R.id.birthday2_text, "");
 			widget.addView(R.id.widget, view);

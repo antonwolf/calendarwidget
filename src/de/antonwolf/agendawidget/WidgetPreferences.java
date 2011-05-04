@@ -75,7 +75,7 @@ public final class WidgetPreferences {
 		return Integer.parseInt(lines);
 	}
 
-	private int getLinesDefault() {
+	public int getLinesDefault() {
 		AppWidgetManager manager = AppWidgetManager.getInstance(context);
 		AppWidgetProviderInfo widgetInfo = manager.getAppWidgetInfo(widgetId);
 
