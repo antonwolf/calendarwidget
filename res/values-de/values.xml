@@ -67,13 +67,18 @@
 	</string-array>
 
 	<string name="settings_birthdays">Geburtstage</string>
+	<string-array name="settings_birthdays_summaries">
+		<item>Als Geburtstag erkannte Ereignisse gesondert anzeigen.</item>
+		<item>Als Geburtstag erkannte Ereignisse wie normale Ereignisse
+			behandeln.</item>
+		<item>Verstecke als Geburtstag erkannte Ereignisse.</item>
+	</string-array>
 	<string-array name="settings_birthdays_entries">
 		<item>Gesondert anzeigen</item>
 		<item>Als normales Ereignis anzeigen</item>
 		<item>Verstecken</item>
 	</string-array>
-	<string name="settings_birthdays_summary">Wie soll ein Ereignis behandelt werden, das als Geburtstag erkannt wurde?</string>
-
+	
 	<string name="settings_calendar_color">Kalenderfarbe anzeigen</string>
 	<string name="settings_calendar_color_show">Farbe neben Ereignissen anzeigen</string>
 	<string name="settings_calendar_color_hide">Kalenderfarbe nicht anzeigen</string>
@@ -87,6 +92,6 @@
 	<string name="settings_weekday_no">Immer volles Datum verwenden</string>
 
 	<string name="settings_calendars">Kalender</string>
-	<string name="settings_calendars_show">Kalender anzeigen</string>
-	<string name="settings_calendars_hide">Kalender ausblenden</string>
+	<string name="settings_calendars_show">Ereignisse im Kalender \"%s\" anzeigen</string>
+	<string name="settings_calendars_hide">Ereignisse im Kalender \"%s\" ausblenden</string>
 </resources>

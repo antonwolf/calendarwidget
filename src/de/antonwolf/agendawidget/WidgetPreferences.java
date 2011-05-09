@@ -15,10 +15,13 @@ import android.view.WindowManager;
 public final class WidgetPreferences {
 	public final class CalendarPreferences {
 		public int calendarId;
+		public int color;
 		public String displayName;
 
-		private CalendarPreferences(int calendarId, String displayName) {
+		private CalendarPreferences(int calendarId, String displayName,
+				int color) {
 			this.calendarId = calendarId;
+			this.color = color;
 			this.displayName = displayName;
 		}
 	}
@@ -88,7 +91,7 @@ public final class WidgetPreferences {
 
 		return 5 + (int) ((heightInCells - 1) * 5.9);
 	}
-	
+
 	public String getCalendarColorKey() {
 		return widgetId + "calendarColor";
 	}
@@ -96,7 +99,7 @@ public final class WidgetPreferences {
 	public boolean isCalendarColor() {
 		return prefs.getBoolean(getCalendarColorKey(), true);
 	}
-	
+
 	public String getTommorowYesterdayKey() {
 		return widgetId + "tommorowYesterday";
 	}
@@ -104,7 +107,7 @@ public final class WidgetPreferences {
 	public boolean isTommorowYesterday() {
 		return prefs.getBoolean(getTommorowYesterdayKey(), true);
 	}
-	
+
 	public String getWeekdayKey() {
 		return widgetId + "weekday";
 	}
@@ -119,13 +122,13 @@ public final class WidgetPreferences {
 		try {
 			cursor = context.getContentResolver().query(
 					Uri.parse("content://com.android.calendar/calendars"),
-					new String[] { "_id", "displayName" }, null, null,
+					new String[] { "_id", "displayName", "color" }, null, null,
 					"displayName ASC");
 			ArrayList<CalendarPreferences> result = new ArrayList<WidgetPreferences.CalendarPreferences>(
 					cursor.getCount());
 			while (cursor.moveToNext())
 				result.add(new CalendarPreferences(cursor.getInt(0), cursor
-						.getString(1)));
+						.getString(1), cursor.getInt(2)));
 			return result;
 		} finally {
 			if (null != cursor)

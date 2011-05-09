@@ -5,72 +5,107 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 public class SettingsActivity extends PreferenceActivity {
 	public final static String EXTRA_WIDGET_ID = "widgetId";
-	static final String TAG = "AgendaWidget";
+	private static final String TAG = "AgendaWidget";
+	private static final String[] BIRTHDAY_PREFERENCES = new String[] {
+			WidgetPreferences.BIRTHDAY_SPECIAL,
+			WidgetPreferences.BIRTHDAY_NORMAL, WidgetPreferences.BIRTHDAY_HIDE };
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		int widgetId = getIntent().getIntExtra(EXTRA_WIDGET_ID, -1);
+		final int widgetId = getIntent().getIntExtra(EXTRA_WIDGET_ID, -1);
 		Log.d(TAG, "SettingsActivity.onCreate(" + widgetId + ")");
 		if (-1 == widgetId)
 			return;
-		WidgetPreferences prefs = new WidgetPreferences(widgetId, this);
+		final WidgetPreferences prefs = new WidgetPreferences(widgetId, this);
 
-		PreferenceScreen screen = getPreferenceManager()
+		final PreferenceScreen screen = getPreferenceManager()
 				.createPreferenceScreen(this);
 		setPreferenceScreen(screen);
 
-		PreferenceCategory display = new PreferenceCategory(this);
+		final PreferenceCategory display = new PreferenceCategory(this);
 		display.setTitle(R.string.settings_display);
 		screen.addPreference(display);
 
-		ListPreference lines = new ListPreference(this);
+		final ListPreference lines = new ListPreference(this);
 		lines.setTitle(R.string.settings_display_lines);
 		lines.setKey(prefs.getLinesKey());
-		lines.setSummary(R.string.settings_display_lines_summary);
 		lines.setEntries(R.array.settings_display_lines_entries);
 		lines.setEntryValues(new String[] { "3", "4", "5", "6", "7", "8", "9",
 				"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
 				"20", "21", "22", "23", "24", "25" });
 		lines.setDefaultValue(Integer.toString(prefs.getLinesDefault()));
+		final OnPreferenceChangeListener linesChanged = new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(final Preference pref,
+					final Object newValue) {
+				pref.setSummary(getResources().getString(
+						R.string.settings_display_lines_summary, newValue));
+				return true;
+			}
+		};
+		linesChanged.onPreferenceChange(lines, prefs.getLines());
+		lines.setOnPreferenceChangeListener(linesChanged);
 		display.addPreference(lines);
 
-		ListPreference birthdays = new ListPreference(this);
+		final ListPreference birthdays = new ListPreference(this);
 		birthdays.setTitle(R.string.settings_birthdays);
 		birthdays.setKey(prefs.getBirthdaysKey());
-		birthdays.setSummary(R.string.settings_birthdays_summary);
 		birthdays.setEntries(R.array.settings_birthdays_entries);
-		birthdays.setEntryValues(new String[] { WidgetPreferences.BIRTHDAY_SPECIAL,
-				WidgetPreferences.BIRTHDAY_NORMAL,
-				WidgetPreferences.BIRTHDAY_HIDE });
+		birthdays.setEntryValues(BIRTHDAY_PREFERENCES);
 		birthdays.setDefaultValue(WidgetPreferences.BIRTHDAY_SPECIAL);
+		final OnPreferenceChangeListener birthdaysChanged = new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(final Preference pref,
+					final Object newValue) {
+				Log.d(TAG, newValue.toString());
+				int i = 0;
+				for (; i < BIRTHDAY_PREFERENCES.length; i++)
+					if (BIRTHDAY_PREFERENCES[i].equals(newValue))
+						break;
+				String[] summaries = getResources().getStringArray(
+						R.array.settings_birthdays_summaries);
+				pref.setSummary(summaries[i]);
+				return true;
+			}
+		};
+		birthdaysChanged.onPreferenceChange(birthdays, prefs.getBirthdays());
+		birthdays.setOnPreferenceChangeListener(birthdaysChanged);
 		display.addPreference(birthdays);
-		
-		CheckBoxPreference weekday = new CheckBoxPreference(this);
+
+		final CheckBoxPreference weekday = new CheckBoxPreference(this);
 		weekday.setDefaultValue(prefs.isWeekday());
 		weekday.setKey(prefs.getWeekdayKey());
 		weekday.setTitle(R.string.settings_weekday);
 		weekday.setSummaryOn(R.string.settings_weekday_yes);
 		weekday.setSummaryOff(R.string.settings_weekday_no);
 		display.addPreference(weekday);
-		
-		CheckBoxPreference tomorrowYesterday = new CheckBoxPreference(this);
+
+		final CheckBoxPreference tomorrowYesterday = new CheckBoxPreference(
+				this);
 		tomorrowYesterday.setDefaultValue(prefs.isTommorowYesterday());
 		tomorrowYesterday.setKey(prefs.getTommorowYesterdayKey());
 		tomorrowYesterday.setTitle(R.string.settings_tommorow_yesterday);
-		tomorrowYesterday.setSummaryOn(R.string.settings_tommorow_yesterday_yes);
-		tomorrowYesterday.setSummaryOff(R.string.settings_tommorow_yesterday_no);
+		tomorrowYesterday
+				.setSummaryOn(R.string.settings_tommorow_yesterday_yes);
+		tomorrowYesterday
+				.setSummaryOff(R.string.settings_tommorow_yesterday_no);
 		display.addPreference(tomorrowYesterday);
-		
-		CheckBoxPreference calendarColor = new CheckBoxPreference(this);
+
+		final CheckBoxPreference calendarColor = new CheckBoxPreference(this);
 		calendarColor.setDefaultValue(prefs.isCalendarColor());
 		calendarColor.setKey(prefs.getCalendarColorKey());
 		calendarColor.setTitle(R.string.settings_calendar_color);
@@ -78,18 +113,26 @@ public class SettingsActivity extends PreferenceActivity {
 		calendarColor.setSummaryOff(R.string.settings_calendar_color_hide);
 		display.addPreference(calendarColor);
 
-		PreferenceCategory calendars = new PreferenceCategory(this);
+		final PreferenceCategory calendars = new PreferenceCategory(this);
 		calendars.setTitle(R.string.settings_calendars);
 		screen.addPreference(calendars);
 
-		for (WidgetPreferences.CalendarPreferences cprefs : prefs
+		for (final WidgetPreferences.CalendarPreferences cprefs : prefs
 				.getCalendars()) {
-			CheckBoxPreference calendar = new CheckBoxPreference(this);
+			final CheckBoxPreference calendar = new CheckBoxPreference(this);
 			calendar.setDefaultValue(prefs.isCalendar(cprefs.calendarId));
 			calendar.setKey(prefs.getCalendarKey(cprefs.calendarId));
-			calendar.setSummaryOn(R.string.settings_calendars_show);
-			calendar.setSummaryOff(R.string.settings_calendars_hide);
-			calendar.setTitle(cprefs.displayName);
+			
+			final SpannableStringBuilder title = new SpannableStringBuilder("■ ");
+			title.setSpan(new ForegroundColorSpan(cprefs.color), 0, 1,
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			title.append(cprefs.displayName);
+			calendar.setTitle(title);
+			
+			calendar.setSummaryOn(getResources().getString(
+					R.string.settings_calendars_show, cprefs.displayName));
+			calendar.setSummaryOff(getResources().getString(
+					R.string.settings_calendars_hide, cprefs.displayName));
 			calendars.addPreference(calendar);
 		}
 	}

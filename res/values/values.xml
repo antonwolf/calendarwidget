@@ -39,7 +39,7 @@
 
 	<string name="settings_display">Display</string>
 	<string name="settings_display_lines">Line count</string>
-	<string name="settings_display_lines_summary">How many lines to display</string>
+	<string name="settings_display_lines_summary">Display %s lines on the widget.</string>
 
 	<string-array name="settings_display_lines_entries">
 		<item>3 lines</item>
@@ -68,12 +68,16 @@
 	</string-array>
 	
 	<string name="settings_birthdays">Birthdays</string>
+	<string-array name="settings_birthdays_summaries">
+		<item>Events that are recognized as birthdays are displayed separately.</item>
+		<item>Events that are recognized as birthdays are displayed as normal events.</item>
+		<item>Hide events that are recognized as birthdays.</item>
+	</string-array>
 	<string-array name="settings_birthdays_entries">
 		<item>Display separately</item>
 		<item>Display as normal event</item>
 		<item>Hide</item>
 	</string-array>
-	<string name="settings_birthdays_summary">How should an event be treated when recognized as a birthday?</string>
 	
 	<string name="settings_calendar_color">Show calendar color</string>
 	<string name="settings_calendar_color_show">Display color next to events</string>
@@ -88,6 +92,6 @@
 	<string name="settings_weekday_no">Always display full date</string>
 
 	<string name="settings_calendars">Calendars</string>
-	<string name="settings_calendars_show">Show this calendar</string>
-	<string name="settings_calendars_hide">Hide this calendar</string>
+	<string name="settings_calendars_show">Show events in calendar \"%s\"</string>
+	<string name="settings_calendars_hide">Hide events in calendar \"%s\"</string>
 </resources>
