@@ -87,6 +87,8 @@ public final class WidgetService extends IntentService {
 	private final static String COLOR_DOT = "■\t";
 	private final static String COLOR_HIDDEN = "\t";
 	private final static String SEPARATOR_COMMA = ", ";
+	
+	private final static long DAY_IN_MILLIS = 24*60*60*1000;
 
 	private final static Pattern IS_EMPTY_PATTERN = Pattern.compile("^\\s*$");
 
@@ -381,10 +383,7 @@ public final class WidgetService extends IntentService {
 		appendHour(formatter, builder, event.startMillis);
 		builder.append('-');
 
-		final Time helper = new Time();
-		helper.timezone = Time.getCurrentTimezone();
-		long endOfStartDay = helper.setJulianDay(event.endDay + 1);
-		if (event.endMillis >= endOfStartDay) {
+		if (Math.abs(event.endMillis - event.startMillis) > DAY_IN_MILLIS) {
 			appendDay(formatter, builder, event.endMillis, event.endTime, prefs);
 			builder.append(' ');
 		}
