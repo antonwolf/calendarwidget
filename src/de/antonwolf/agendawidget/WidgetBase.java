@@ -105,7 +105,7 @@ public abstract class WidgetBase extends AppWidgetProvider {
 			};
 		}
 		Log.d(TAG, "WidgetBase.registerContentObserver()");
-		String uriString = "content://com.android.calendar/instances";
+		String uriString = "content://com.android.calendar";
 		Uri instancesUri = Uri.parse(uriString);
 		context.getContentResolver().registerContentObserver(instancesUri,
 				true, calendarInstancesObserver);
