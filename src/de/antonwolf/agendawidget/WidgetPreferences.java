@@ -55,10 +55,6 @@ public final class WidgetPreferences {
 		return prefs.getBoolean(getBirthdayDisplayKey(), true);
 	}
 
-	public String getLinesKey() {
-		return widgetId + "lines";
-	}
-
 	public String getBirthdaysKey() {
 		return widgetId + "birthdays";
 	}
@@ -72,6 +68,11 @@ public final class WidgetPreferences {
 		return prefs.getString(getBirthdaysKey(), defaultValue);
 	}
 
+
+	public String getLinesKey() {
+		return widgetId + "lines";
+	}
+	
 	public int getLines() {
 		String defaultValue = Integer.toString(getLinesDefault());
 		String lines = prefs.getString(getLinesKey(), defaultValue);
@@ -90,6 +91,20 @@ public final class WidgetPreferences {
 		int heightInCells = (int) (widgetInfo.minHeight / metrics.density + 2) / 74;
 
 		return 5 + (int) ((heightInCells - 1) * 5.9);
+	}
+	
+	public String getOpacityKey() {
+		return widgetId + "opacity";
+	}
+	
+	public int getOpacity() {
+		String defaultValue = Integer.toString(getOpacityDefault());
+		String lines = prefs.getString(getOpacityKey(), defaultValue);
+		return Integer.parseInt(lines);
+	}
+
+	public int getOpacityDefault() {
+		return 60;
 	}
 
 	public String getCalendarColorKey() {

@@ -4,7 +4,7 @@
 	<string name="format_today">heute</string>
 	<string name="format_tomorrow">morgen</string>
 	<string name="app_name">Antons Kalender-Widget</string>
-	
+
 	<string name="label_4x1">Antons Kalender-Widget (4x1)</string>
 	<string name="label_4x2">Antons Kalender-Widget (4x2)</string>
 	<string name="label_4x3">Antons Kalender-Widget (4x3)</string>
@@ -13,7 +13,7 @@
 	<string name="label_3x2">Antons Kalender-Widget (3x2)</string>
 	<string name="label_3x3">Antons Kalender-Widget (3x3)</string>
 	<string name="label_2x1">Antons Kalender-Widget (2x1)</string>
-	
+
 	<string-array name="format_day_of_week">
 		<item>So</item>
 		<item>Mo</item>
@@ -23,11 +23,11 @@
 		<item>Fr</item>
 		<item>Sa</item>
 	</string-array>
-	
+
 	<string name="open_calendar">Kalender öffnen</string>
 	<string name="settings">Einstellungen</string>
 	<string name="settings_description">Antons Kalender-Widget konfigurieren</string>
-	
+
 	<string-array name="birthday_patterns">
 		<item>(.+)\'s Birthday</item>
 		<item>(.+)s Geburtstag</item>
@@ -35,11 +35,11 @@
 		<item>Geburtstag von (.+)</item>
 		<item>(.+) hat Geburtstag</item>
 	</string-array>
-	
+
 	<string name="settings_display">Anzeige</string>
 	<string name="settings_display_lines">Zeilenzahl</string>
-	<string name="settings_display_lines_summary">Anzahl angezeigter Zeilen</string>
-	
+	<string name="settings_display_lines_summary">Zeige %s Zeilen an.</string>
+
 	<string-array name="settings_display_lines_entries">
 		<item>3 Zeilen</item>
 		<item>4 Zeilen</item>
@@ -66,6 +66,17 @@
 		<item>25 Zeilen</item>
 	</string-array>
 
+	<string name="settings_display_opacity">Transparenz des Hintergrunds</string>
+	<string name="settings_display_opacity_summary">Der Hintergrund des Widgets ist zu %s%% deckend.</string>
+	<string-array name="settings_display_opacity_entries">
+		<item>0% deckend (völlig transparent)</item>
+		<item>20% deckend</item>
+		<item>40% deckend</item>
+		<item>60% deckend (Standard)</item>
+		<item>80% deckend</item>
+		<item>100% deckend (völlig deckend)</item>
+	</string-array>
+
 	<string name="settings_birthdays">Geburtstage</string>
 	<string-array name="settings_birthdays_summaries">
 		<item>Als Geburtstag erkannte Ereignisse gesondert anzeigen.</item>
@@ -78,20 +89,23 @@
 		<item>Als normales Ereignis anzeigen</item>
 		<item>Verstecken</item>
 	</string-array>
-	
+
 	<string name="settings_calendar_color">Kalenderfarbe anzeigen</string>
-	<string name="settings_calendar_color_show">Farbe neben Ereignissen anzeigen</string>
-	<string name="settings_calendar_color_hide">Kalenderfarbe nicht anzeigen</string>
-	
+	<string name="settings_calendar_color_show">Farbe neben Ereignissen anzeigen.</string>
+	<string name="settings_calendar_color_hide">Kalenderfarbe nicht anzeigen.</string>
+
 	<string name="settings_tommorow_yesterday">\"Morgen\" und \"gestern\"</string>
-	<string name="settings_tommorow_yesterday_yes">Morgige und gestrige Ereignisse als solche kennzeichnen</string>
-	<string name="settings_tommorow_yesterday_no">Morgen und gestern als normale Tage behandeln</string>
-	
+	<string name="settings_tommorow_yesterday_yes">Morgige und gestrige Ereignisse als solche
+		kennzeichnen.</string>
+	<string name="settings_tommorow_yesterday_no">Morgen und gestern als normale Tage behandeln.
+	</string>
+
 	<string name="settings_weekday">Wochentag-Namen</string>
-	<string name="settings_weekday_yes">Wochentag für die nächsten sieben Tage anzeigen</string>
-	<string name="settings_weekday_no">Immer volles Datum verwenden</string>
+	<string name="settings_weekday_yes">Wochentag für die nächsten sieben Tage anzeigen.
+	</string>
+	<string name="settings_weekday_no">Immer volles Datum verwenden.</string>
 
 	<string name="settings_calendars">Kalender</string>
-	<string name="settings_calendars_show">Ereignisse im Kalender \"%s\" anzeigen</string>
-	<string name="settings_calendars_hide">Ereignisse im Kalender \"%s\" ausblenden</string>
+	<string name="settings_calendars_show">Ereignisse im Kalender \"%s\" anzeigen.</string>
+	<string name="settings_calendars_hide">Ereignisse im Kalender \"%s\" ausblenden.</string>
 </resources>

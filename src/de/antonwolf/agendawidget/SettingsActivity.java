@@ -61,6 +61,26 @@ public class SettingsActivity extends PreferenceActivity {
 		lines.setOnPreferenceChangeListener(linesChanged);
 		display.addPreference(lines);
 
+		final ListPreference opacity = new ListPreference(this);
+		opacity.setTitle(R.string.settings_display_opacity);
+		opacity.setKey(prefs.getOpacityKey());
+		opacity.setEntries(R.array.settings_display_opacity_entries);
+		opacity.setEntryValues(new String[] { "0", "20", "40", "60", "80",
+				"100" });
+		opacity.setDefaultValue(Integer.toString(prefs.getOpacityDefault()));
+		final OnPreferenceChangeListener opacityChanged = new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(final Preference pref,
+					final Object newValue) {
+				pref.setSummary(getResources().getString(
+						R.string.settings_display_opacity_summary, newValue));
+				return true;
+			}
+		};
+		opacityChanged.onPreferenceChange(opacity, prefs.getOpacity());
+		opacity.setOnPreferenceChangeListener(opacityChanged);
+		display.addPreference(opacity);
+
 		final ListPreference birthdays = new ListPreference(this);
 		birthdays.setTitle(R.string.settings_birthdays);
 		birthdays.setKey(prefs.getBirthdaysKey());
@@ -122,13 +142,14 @@ public class SettingsActivity extends PreferenceActivity {
 			final CheckBoxPreference calendar = new CheckBoxPreference(this);
 			calendar.setDefaultValue(prefs.isCalendar(cprefs.calendarId));
 			calendar.setKey(prefs.getCalendarKey(cprefs.calendarId));
-			
-			final SpannableStringBuilder title = new SpannableStringBuilder("■ ");
+
+			final SpannableStringBuilder title = new SpannableStringBuilder(
+					"■ ");
 			title.setSpan(new ForegroundColorSpan(cprefs.color), 0, 1,
 					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			title.append(cprefs.displayName);
 			calendar.setTitle(title);
-			
+
 			calendar.setSummaryOn(getResources().getString(
 					R.string.settings_calendars_show, cprefs.displayName));
 			calendar.setSummaryOff(getResources().getString(
@@ -136,11 +157,11 @@ public class SettingsActivity extends PreferenceActivity {
 			calendars.addPreference(calendar);
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		int widgetId = getIntent().getIntExtra(EXTRA_WIDGET_ID, -1);
 		Log.d(TAG, "SettingsActivity.onResume(" + widgetId + ")");
 	}
@@ -148,7 +169,7 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
+
 		int widgetId = getIntent().getIntExtra(EXTRA_WIDGET_ID, -1);
 		Log.d(TAG, "SettingsActivity.onPause(" + widgetId + ")");
 		if (-1 == widgetId)

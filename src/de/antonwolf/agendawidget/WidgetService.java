@@ -87,10 +87,15 @@ public final class WidgetService extends IntentService {
 	private final static String COLOR_DOT = "■\t";
 	private final static String COLOR_HIDDEN = "\t";
 	private final static String SEPARATOR_COMMA = ", ";
-	
-	private final static long DAY_IN_MILLIS = 24*60*60*1000;
+
+	private final static long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
 
 	private final static Pattern IS_EMPTY_PATTERN = Pattern.compile("^\\s*$");
+	private final static int[] BACKGROUNDS = new int[] {
+			R.drawable.background_0, R.drawable.background_20,
+			R.drawable.background_40, R.drawable.background_60,
+			R.drawable.background_80, R.drawable.background_100 };
+	private final static int DATETIME_COLOR = 0xb8ffffff;
 
 	public WidgetService() {
 		super(THEAD_NAME);
@@ -175,6 +180,11 @@ public final class WidgetService extends IntentService {
 			view.setViewVisibility(R.id.event_alarm, alarmFlag);
 			widget.addView(R.id.widget, view);
 		}
+
+		final int opacityIndex = prefs.getOpacity() / 20;
+		final int background = BACKGROUNDS[opacityIndex];
+		widget.setInt(R.id.widget, "setBackgroundResource", background);
+
 		manager.updateAppWidget(widgetId, widget);
 		scheduleNextUpdate(agendaEvents, intent);
 	}
@@ -323,7 +333,7 @@ public final class WidgetService extends IntentService {
 		formatTime(builder, event, prefs);
 		builder.append(' ');
 		final int timeEndPos = builder.length();
-		builder.setSpan(new ForegroundColorSpan(0xaaffffff), timeStartPos,
+		builder.setSpan(new ForegroundColorSpan(DATETIME_COLOR), timeStartPos,
 				timeEndPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		builder.append(event.title);
@@ -334,7 +344,7 @@ public final class WidgetService extends IntentService {
 		if (event.location != null) {
 			builder.append(SEPARATOR_COMMA);
 			builder.append(event.location);
-			builder.setSpan(new ForegroundColorSpan(0xaaffffff), titleEndPos,
+			builder.setSpan(new ForegroundColorSpan(DATETIME_COLOR), titleEndPos,
 					builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 		return builder;

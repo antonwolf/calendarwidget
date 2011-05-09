@@ -67,6 +67,17 @@
 		<item>25 lines</item>
 	</string-array>
 	
+	<string name="settings_display_opacity">Background opacity</string>
+	<string name="settings_display_opacity_summary">The widget\'s background is %s%% opaque.</string>
+	<string-array name="settings_display_opacity_entries">
+		<item>0% opaque (fully transparent)</item>
+		<item>20% opaque</item>
+		<item>40% opaque</item>
+		<item>60% opaque (default)</item>
+		<item>80% opaque</item>
+		<item>100% opaque (fully opaque)</item>
+	</string-array>
+	
 	<string name="settings_birthdays">Birthdays</string>
 	<string-array name="settings_birthdays_summaries">
 		<item>Events that are recognized as birthdays are displayed separately.</item>
