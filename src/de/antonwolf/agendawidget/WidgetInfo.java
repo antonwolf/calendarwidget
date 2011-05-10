@@ -47,6 +47,10 @@ public final class WidgetInfo {
 	public final String linesDefault;
 	public final String linesKey;
 
+	public final String size;
+	public final String sizeDefault = "100";;
+	public final String sizeKey;
+
 	public final String opacity;
 	public final String opacityDefault = "60";;
 	public final String opacityKey;
@@ -68,6 +72,7 @@ public final class WidgetInfo {
 	public WidgetInfo(int widgetId, Context context) {
 		this.widgetId = widgetId;
 		final SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(context);
 
 		birthdaysKey = widgetId + "birthdays";
 		birthdays = prefs.getString(birthdaysKey, birthdaysDefault);
