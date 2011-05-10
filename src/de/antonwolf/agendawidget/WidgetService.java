@@ -115,8 +115,8 @@ public final class WidgetService extends IntentService {
 			return;
 		}
 		computeTimeRanges();
-		final WidgetPreferences prefs = new WidgetPreferences(widgetId, this);
-		final int maxLines = prefs.getLines();
+		final WidgetInfo info = new WidgetInfo(widgetId, this);
+		final int maxLines = Integer.parseInt(info.lines);
 		final List<Event> birthdayEvents = new ArrayList<Event>(maxLines * 2);
 		final List<Event> agendaEvents = new ArrayList<Event>(maxLines);
 
@@ -133,7 +133,7 @@ public final class WidgetService extends IntentService {
 
 				Event event = null;
 				while (event == null && !cursor.isAfterLast())
-					event = readEvent(cursor, prefs);
+					event = readEvent(cursor, info);
 				if (event == null)
 					break; // no further events
 
@@ -155,17 +155,17 @@ public final class WidgetService extends IntentService {
 		widget.setOnClickPendingIntent(R.id.widget,
 				getOnClickPendingIntent(widgetId));
 
-		final boolean calendarColor = prefs.isCalendarColor();
+		final boolean calendarColor = info.calendarColor;
 
 		Iterator<Event> bdayIterator = birthdayEvents.iterator();
 		while (bdayIterator.hasNext()) {
 			final RemoteViews view = new RemoteViews(packageName,
 					R.layout.birthdays);
 			view.setTextViewText(R.id.birthday1_text,
-					formatEventText(bdayIterator.next(), calendarColor, prefs));
+					formatEventText(bdayIterator.next(), calendarColor, info));
 			if (bdayIterator.hasNext())
 				view.setTextViewText(R.id.birthday2_text,
-						formatEventText(bdayIterator.next(), false, prefs));
+						formatEventText(bdayIterator.next(), false, info));
 			else
 				view.setTextViewText(R.id.birthday2_text, "");
 			widget.addView(R.id.widget, view);
@@ -175,13 +175,13 @@ public final class WidgetService extends IntentService {
 			final RemoteViews view = new RemoteViews(packageName,
 					R.layout.event);
 			view.setTextViewText(R.id.event_text,
-					formatEventText(event, calendarColor, prefs));
+					formatEventText(event, calendarColor, info));
 			int alarmFlag = event.hasAlarm ? View.VISIBLE : View.GONE;
 			view.setViewVisibility(R.id.event_alarm, alarmFlag);
 			widget.addView(R.id.widget, view);
 		}
 
-		final int opacityIndex = prefs.getOpacity() / 20;
+		final int opacityIndex = Integer.parseInt(info.opacity) / 20;
 		final int background = BACKGROUNDS[opacityIndex];
 		widget.setInt(R.id.widget, "setBackgroundResource", background);
 
@@ -202,10 +202,10 @@ public final class WidgetService extends IntentService {
 		alarmManager.set(AlarmManager.RTC, nextUpdate + 1000, pending);
 	}
 
-	private Event readEvent(final Cursor cursor, final WidgetPreferences prefs) {
+	private Event readEvent(final Cursor cursor, final WidgetInfo info) {
 		if (!cursor.moveToNext())
 			return null; // no next item
-		if (!prefs.isCalendar(cursor.getInt(COL_CALENDAR)))
+		if (!info.calendars.get(cursor.getInt(COL_CALENDAR)).enabled)
 			return null; // Calendar is disabled
 
 		final Event event = new Event();
@@ -232,9 +232,7 @@ public final class WidgetService extends IntentService {
 		if (event.title == null)
 			event.title = "";
 
-		if (event.allDay
-				&& !prefs.getBirthdays().equals(
-						WidgetPreferences.BIRTHDAY_NORMAL))
+		if (event.allDay && !info.birthdays.equals(WidgetInfo.BIRTHDAY_NORMAL))
 			for (Pattern pattern : getBirthdayPatterns()) {
 				Matcher matcher = pattern.matcher(event.title);
 				if (!matcher.find())
@@ -245,8 +243,7 @@ public final class WidgetService extends IntentService {
 			}
 
 		// Skip birthday events if necessary
-		if (event.isBirthday
-				&& prefs.getBirthdays().equals(WidgetPreferences.BIRTHDAY_HIDE))
+		if (event.isBirthday && info.birthdays.equals(WidgetInfo.BIRTHDAY_HIDE))
 			return null;
 
 		event.startDay = cursor.getInt(COL_START_DAY);
@@ -313,7 +310,7 @@ public final class WidgetService extends IntentService {
 	}
 
 	private CharSequence formatEventText(final Event event,
-			final boolean showColor, final WidgetPreferences prefs) {
+			final boolean showColor, final WidgetInfo prefs) {
 		if (event == null)
 			return "";
 
@@ -344,14 +341,15 @@ public final class WidgetService extends IntentService {
 		if (event.location != null) {
 			builder.append(SEPARATOR_COMMA);
 			builder.append(event.location);
-			builder.setSpan(new ForegroundColorSpan(DATETIME_COLOR), titleEndPos,
-					builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			builder.setSpan(new ForegroundColorSpan(DATETIME_COLOR),
+					titleEndPos, builder.length(),
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 		return builder;
 	}
 
 	private void formatTime(final SpannableStringBuilder builder,
-			final Event event, final WidgetPreferences prefs) {
+			final Event event, final WidgetInfo prefs) {
 		final Formatter formatter = new Formatter(builder);
 
 		final boolean isStartToday = (todayStart <= event.startMillis && event.startMillis <= tomorrowStart);
@@ -413,13 +411,13 @@ public final class WidgetService extends IntentService {
 
 	private void appendDay(final Formatter formatter,
 			final SpannableStringBuilder builder, final long time,
-			final Time day, final WidgetPreferences prefs) {
-		final boolean tomorrowYesterday = prefs.isTommorowYesterday();
+			final Time day, final WidgetInfo info) {
+		final boolean tomorrowYesterday = info.tomorowYesterday;
 		final long specialStart = tomorrowYesterday ? yesterdayStart
 				: todayStart;
 		final long specialEnd = tomorrowYesterday ? dayAfterTomorrowStart
 				: tomorrowStart;
-		final boolean weekday = prefs.isWeekday();
+		final boolean weekday = info.weekday;
 		final long weekEnd = weekday ? oneWeekFromNow : tomorrowStart;
 
 		if (specialStart <= time && time < specialEnd) {
