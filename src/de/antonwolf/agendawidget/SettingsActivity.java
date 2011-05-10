@@ -148,6 +148,14 @@ public class SettingsActivity extends PreferenceActivity {
 				.setSummaryOff(R.string.settings_tommorow_yesterday_no);
 		display.addPreference(tomorrowYesterday);
 
+		final CheckBoxPreference endTime = new CheckBoxPreference(this);
+		endTime.setDefaultValue(info.endTimeDefault);
+		endTime.setKey(info.endTimeKey);
+		endTime.setTitle(R.string.settings_end_time);
+		endTime.setSummaryOn(R.string.settings_end_time_yes);
+		endTime.setSummaryOff(R.string.settings_end_time_no);
+		display.addPreference(endTime);
+
 		final CheckBoxPreference calendarColor = new CheckBoxPreference(this);
 		calendarColor.setDefaultValue(info.calendarColorDefault);
 		calendarColor.setKey(info.calendarColorKey);

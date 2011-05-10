@@ -353,7 +353,7 @@ public final class WidgetService extends IntentService {
 	}
 
 	private void formatTime(final SpannableStringBuilder builder,
-			final Event event, final WidgetInfo prefs) {
+			final Event event, final WidgetInfo info) {
 		final Formatter formatter = new Formatter(builder);
 
 		final boolean isStartToday = (todayStart <= event.startMillis && event.startMillis <= tomorrowStart);
@@ -365,21 +365,21 @@ public final class WidgetService extends IntentService {
 		if (event.allDay) {
 			if (showStartDay)
 				appendDay(formatter, builder, event.startMillis,
-						event.startTime, prefs);
+						event.startTime, info);
 
 			if (event.startDay != event.endDay) {
 				builder.append('-');
 				appendDay(formatter, builder, event.endMillis, event.endTime,
-						prefs);
+						info);
 			}
 			return;
 		}
 
 		// events with no duration
-		if (event.startMillis == event.endMillis) {
+		if (!info.endTime || event.startMillis == event.endMillis) {
 			if (showStartDay) {
 				appendDay(formatter, builder, event.startMillis,
-						event.startTime, prefs);
+						event.startTime, info);
 				builder.append(' ');
 			}
 			appendHour(formatter, builder, event.startMillis);
@@ -389,14 +389,14 @@ public final class WidgetService extends IntentService {
 		// events with duration
 		if (showStartDay) {
 			appendDay(formatter, builder, event.startMillis, event.startTime,
-					prefs);
+					info);
 			builder.append(' ');
 		}
 		appendHour(formatter, builder, event.startMillis);
 		builder.append('-');
 
 		if (Math.abs(event.endMillis - event.startMillis) > DAY_IN_MILLIS) {
-			appendDay(formatter, builder, event.endMillis, event.endTime, prefs);
+			appendDay(formatter, builder, event.endMillis, event.endTime, info);
 			builder.append(' ');
 		}
 		appendHour(formatter, builder, event.endMillis);

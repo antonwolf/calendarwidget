@@ -107,6 +107,10 @@
 	<string name="settings_weekday_yes">Wochentag für die nächsten sieben Tage anzeigen.
 	</string>
 	<string name="settings_weekday_no">Immer volles Datum verwenden.</string>
+	
+	<string name="settings_end_time">Endzeiten anzeigen</string>
+	<string name="settings_end_time_yes">Wenn sinnvoll, wird das Ende von Ereignissen angezeigt.</string>
+	<string name="settings_end_time_no">Das Ende von Ereignissen wird nie angezeigt.</string>
 
 	<string name="settings_calendars">Kalender</string>
 	<string name="settings_calendars_show">Ereignisse im Kalender \"%s\" anzeigen.</string>

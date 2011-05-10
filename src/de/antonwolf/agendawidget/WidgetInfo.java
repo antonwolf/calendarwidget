@@ -40,7 +40,7 @@ public final class WidgetInfo {
 	public final int widgetId;
 
 	public final String birthdays;
-	public final String birthdaysDefault = BIRTHDAY_SPECIAL;
+	public final String birthdaysDefault;
 	public final String birthdaysKey;
 
 	public final String lines;
@@ -67,16 +67,16 @@ public final class WidgetInfo {
 	public final boolean weekdayDefault = true;
 	public final String weekdayKey;
 
+	public final boolean endTime;
+	public final boolean endTimeDefault;
+	public final String endTimeKey;
+
 	public final Map<Integer, CalendarPreferences> calendars;
 
 	public WidgetInfo(int widgetId, Context context) {
 		this.widgetId = widgetId;
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
-
-		birthdaysKey = widgetId + "birthdays";
-		birthdays = prefs.getString(birthdaysKey, birthdaysDefault);
-
 		AppWidgetManager manager = AppWidgetManager.getInstance(context);
 		AppWidgetProviderInfo widgetInfo = manager.getAppWidgetInfo(widgetId);
 
@@ -84,7 +84,14 @@ public final class WidgetInfo {
 				.getSystemService(Context.WINDOW_SERVICE);
 		DisplayMetrics metrics = new DisplayMetrics();
 		winManager.getDefaultDisplay().getMetrics(metrics);
+
 		int heightInCells = (int) (widgetInfo.minHeight / metrics.density + 2) / 74;
+		int widthInCells = (int) (widgetInfo.minWidth / metrics.density + 2) / 74;
+
+		birthdaysKey = widgetId + "birthdays";
+		birthdaysDefault = widthInCells > 2 ? BIRTHDAY_SPECIAL
+				: BIRTHDAY_NORMAL;
+		birthdays = prefs.getString(birthdaysKey, birthdaysDefault);
 
 		int linesInt = 5 + (int) ((heightInCells - 1) * 5.9);
 		linesDefault = Integer.toString(linesInt);
@@ -107,6 +114,10 @@ public final class WidgetInfo {
 
 		weekdayKey = widgetId + "weekday";
 		weekday = prefs.getBoolean(weekdayKey, weekdayDefault);
+
+		endTimeKey = widgetId + "endTime";
+		endTimeDefault = widthInCells > 2;
+		endTime = prefs.getBoolean(endTimeKey, endTimeDefault);
 
 		Map<Integer, CalendarPreferences> calendars = null;
 		Cursor cursor = null;
