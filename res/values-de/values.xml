@@ -65,12 +65,13 @@
 		<item>24 Zeilen</item>
 		<item>25 Zeilen</item>
 	</string-array>
-	
+
 	<string name="settings_display_size">Schriftgröße</string>
-	<string name="settings_display_size_summary">Die Schriftgröße ist %s%%.</string>
-	
+	<string name="settings_display_size_summary">Die Schriftgröße ist bei %s Prozent.</string>
+
 	<string name="settings_display_opacity">Transparenz des Hintergrunds</string>
-	<string name="settings_display_opacity_summary">Der Hintergrund des Widgets ist zu %s%% deckend.</string>
+	<string name="settings_display_opacity_summary">Der Hintergrund des Widgets ist zu %s Prozent deckend.
+	</string>
 	<string-array name="settings_display_opacity_entries">
 		<item>0% deckend (völlig transparent)</item>
 		<item>20% deckend</item>
@@ -107,10 +108,12 @@
 	<string name="settings_weekday_yes">Wochentag für die nächsten sieben Tage anzeigen.
 	</string>
 	<string name="settings_weekday_no">Immer volles Datum verwenden.</string>
-	
+
 	<string name="settings_end_time">Endzeiten anzeigen</string>
-	<string name="settings_end_time_yes">Wenn sinnvoll, wird das Ende von Ereignissen angezeigt.</string>
-	<string name="settings_end_time_no">Das Ende von Ereignissen wird nie angezeigt.</string>
+	<string name="settings_end_time_yes">Wenn sinnvoll, wird das Ende von Ereignissen
+		angezeigt.</string>
+	<string name="settings_end_time_no">Das Ende von Ereignissen wird nie angezeigt.
+	</string>
 
 	<string name="settings_calendars">Kalender</string>
 	<string name="settings_calendars_show">Ereignisse im Kalender \"%s\" anzeigen.</string>

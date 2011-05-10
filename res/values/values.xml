@@ -68,7 +68,7 @@
 	</string-array>
 	
 	<string name="settings_display_size">Font size</string>
-	<string name="settings_display_size_summary">Font size is %s%%.</string>
+	<string name="settings_display_size_summary">Font size is %s percent.</string>
 	<string-array name="settings_display_size_entries">
 		<item>50%</item>
 		<item>75%</item>
@@ -80,7 +80,7 @@
 	</string-array>
 	
 	<string name="settings_display_opacity">Background opacity</string>
-	<string name="settings_display_opacity_summary">The widget\'s background is %s%% opaque.</string>
+	<string name="settings_display_opacity_summary">The widget\'s background is %s percent opaque.</string>
 	<string-array name="settings_display_opacity_entries">
 		<item>0% opaque (fully transparent)</item>
 		<item>20% opaque</item>
