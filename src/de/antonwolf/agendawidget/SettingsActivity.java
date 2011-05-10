@@ -64,6 +64,26 @@ public class SettingsActivity extends PreferenceActivity {
 		lines.setOnPreferenceChangeListener(linesChanged);
 		display.addPreference(lines);
 
+		final ListPreference size = new ListPreference(this);
+		size.setTitle(R.string.settings_display_size);
+		size.setKey(info.sizeKey);
+		size.setEntries(R.array.settings_display_size_entries);
+		size.setEntryValues(new String[] { "50", "75", "100", "125", "150",
+				"200", "250" });
+		size.setDefaultValue(info.sizeDefault);
+		final OnPreferenceChangeListener sizeChanged = new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(final Preference pref,
+					final Object newValue) {
+				pref.setSummary(getResources().getString(
+						R.string.settings_display_size_summary, newValue));
+				return true;
+			}
+		};
+		sizeChanged.onPreferenceChange(size, info.size);
+		size.setOnPreferenceChangeListener(sizeChanged);
+		display.addPreference(size);
+
 		final ListPreference opacity = new ListPreference(this);
 		opacity.setTitle(R.string.settings_display_opacity);
 		opacity.setKey(info.opacityKey);

@@ -67,7 +67,7 @@ public final class WidgetInfo {
 
 	public WidgetInfo(int widgetId, Context context) {
 		this.widgetId = widgetId;
-		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		final SharedPreferences prefs = PreferenceManager
 
 		birthdaysKey = widgetId + "birthdays";
 		birthdays = prefs.getString(birthdaysKey, birthdaysDefault);
@@ -85,6 +85,9 @@ public final class WidgetInfo {
 		linesDefault = Integer.toString(linesInt);
 		linesKey = widgetId + "lines";
 		lines = prefs.getString(linesKey, linesDefault);
+
+		sizeKey = widgetId + "size";
+		size = prefs.getString(sizeKey, sizeDefault);
 
 		opacityKey = widgetId + "opacity";
 		opacity = prefs.getString(opacityKey, opacityDefault);

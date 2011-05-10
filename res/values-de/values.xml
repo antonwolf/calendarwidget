@@ -65,7 +65,10 @@
 		<item>24 Zeilen</item>
 		<item>25 Zeilen</item>
 	</string-array>
-
+	
+	<string name="settings_display_size">Schriftgröße</string>
+	<string name="settings_display_size_summary">Die Schriftgröße ist %s%%.</string>
+	
 	<string name="settings_display_opacity">Transparenz des Hintergrunds</string>
 	<string name="settings_display_opacity_summary">Der Hintergrund des Widgets ist zu %s%% deckend.</string>
 	<string-array name="settings_display_opacity_entries">

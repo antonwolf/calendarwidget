@@ -310,7 +310,7 @@ public final class WidgetService extends IntentService {
 	}
 
 	private CharSequence formatEventText(final Event event,
-			final boolean showColor, final WidgetInfo prefs) {
+			final boolean showColor, final WidgetInfo info) {
 		if (event == null)
 			return "";
 
@@ -327,7 +327,7 @@ public final class WidgetService extends IntentService {
 		}
 
 		final int timeStartPos = builder.length();
-		formatTime(builder, event, prefs);
+		formatTime(builder, event, info);
 		builder.append(' ');
 		final int timeEndPos = builder.length();
 		builder.setSpan(new ForegroundColorSpan(DATETIME_COLOR), timeStartPos,
@@ -345,6 +345,10 @@ public final class WidgetService extends IntentService {
 					titleEndPos, builder.length(),
 					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
+
+		final float size = Integer.parseInt(info.size) / 100f;
+		builder.setSpan(new RelativeSizeSpan(size), 0, builder.length(), 0);
+
 		return builder;
 	}
 
