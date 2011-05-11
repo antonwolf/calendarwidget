@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="format_yesterday">ieri</string>
+	<string name="format_today">oggi</string>
+	<string name="format_tomorrow">domani</string>
+	<string name="app_name">Widget Calendario di Anton</string>
+
+	<string name="label_4x1">Widget Calendario di Anton (4x1)</string>
+	<string name="label_4x2">Widget Calendario di Anton (4x2)</string>
+	<string name="label_4x3">Widget Calendario di Anton (4x3)</string>
+	<string name="label_4x4">Widget Calendario di Anton (4x4)</string>
+	<string name="label_3x1">Widget Calendario di Anton (3x1)</string>
+	<string name="label_3x2">Widget Calendario di Anton (3x2)</string>
+	<string name="label_3x3">Widget Calendario di Anton (3x3)</string>
+	<string name="label_2x1">Widget Calendario di Anton (2x1)</string>
+
+	<string-array name="format_day_of_week">
+		<item>Dom</item>
+		<item>Lun</item>
+		<item>Mar</item>
+		<item>Mer</item>
+		<item>Gio</item>
+		<item>Ven</item>
+		<item>Sab</item>
+	</string-array>
+
+	<string name="open_calendar">Aprire il calendario</string>
+	<string name="settings">Impostazioni</string>
+	<string name="settings_description">Configurare il Widget Calendario di Anton</string>
+
+	<string-array name="birthday_patterns">
+		<item>(.+)\'s Birthday</item>
+	</string-array>
+
+	<string name="settings_display">Rappresentanza</string>
+	<string name="settings_display_lines">Numero di rige</string>
+	<string name="settings_display_lines_summary">Visualizzare %s righe.</string>
+
+	<string-array name="settings_display_lines_entries">
+		<item>3 righe</item>
+		<item>4 righe</item>
+		<item>5 righe</item>
+		<item>6 righe</item>
+		<item>7 righe</item>
+		<item>8 righe</item>
+		<item>9 righe</item>
+		<item>10 righe</item>
+		<item>11 righe</item>
+		<item>12 righe</item>
+		<item>13 righe</item>
+		<item>14 righe</item>
+		<item>15 righe</item>
+		<item>16 righe</item>
+		<item>17 righe</item>
+		<item>18 righe</item>
+		<item>19 righe</item>
+		<item>20 righe</item>
+		<item>21 righe</item>
+		<item>22 righe</item>
+		<item>23 righe</item>
+		<item>24 righe</item>
+		<item>25 righe</item>
+	</string-array>
+
+	<string name="settings_display_size">Grandezza del testo</string>
+	<string name="settings_display_size_summary">La dimensione del testo è %s per cento.</string>
+
+	<string name="settings_display_opacity">Trasparenza dello sfondo</string>
+	<string name="settings_display_opacity_summary">Lo sfondo del widget è di %s per cento opaco.
+	</string>
+	<string-array name="settings_display_opacity_entries">
+		<item>0% opaco (completamente trasparente)</item>
+		<item>20% opaco</item>
+		<item>40% opaco</item>
+		<item>60% opaco (di default)</item>
+		<item>80% opaco</item>
+		<item>100% opaco (completamente opaco)</item>
+	</string-array>
+
+	<string name="settings_birthdays">Compleanni</string>
+	<string-array name="settings_birthdays_summaries">
+		<item>Visualizzare gli eventi che sono riconosciuti come compleanni
+			separatamente.</item>
+		<item>Visualizzare gli eventi che sono riconosciuti come compleanni
+			come eventi normali.</item>
+		<item>Occoltare gli eventi che sono riconosciuti come compleanni.
+		</item>
+	</string-array>
+	<string-array name="settings_birthdays_entries">
+		<item>Visualizzare separatamente</item>
+		<item>Visualizzare come evento normale</item>
+		<item>Occoltare</item>
+	</string-array>
+
+	<string name="settings_calendar_color">Mostrare il colore del calendario</string>
+	<string name="settings_calendar_color_show">Mostrare il colore del calendario vicino agli
+		eventi.</string>
+	<string name="settings_calendar_color_hide">Non visualizzare il colore del calendario.</string>
+
+	<string name="settings_tommorow_yesterday">\"Domani\" e \"Ieri\"</string>
+	<string name="settings_tommorow_yesterday_yes">Contrassegnare eventi di domani e di ieri come
+		tali.</string>
+	<string name="settings_tommorow_yesterday_no">Trattare domani e ieri come ogni altro giorno.
+	</string>
+
+	<string name="settings_weekday">Nome del giorno</string>
+	<string name="settings_weekday_yes">Visualizzare nome del giorno per i prossimi sette
+		giorni.
+	</string>
+	<string name="settings_weekday_no">Sempre visualizzare data piena.</string>
+
+	<string name="settings_end_time">Ora di fine</string>
+	<string name="settings_end_time_yes">Visualizzare la fine degli eventi se sensato.
+	</string>
+	<string name="settings_end_time_no">Non visualizzare la fine degli eventi.
+	</string>
+
+	<string name="settings_calendars">Calendari</string>
+	<string name="settings_calendars_show">Visualizzare gli eventi in calendario \"%s\".
+	</string>
+	<string name="settings_calendars_hide">Occolatare gli eventi in calendario \"%s\".
+	</string>
+</resources>

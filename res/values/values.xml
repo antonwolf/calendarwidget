@@ -92,8 +92,10 @@
 	
 	<string name="settings_birthdays">Birthdays</string>
 	<string-array name="settings_birthdays_summaries">
-		<item>Events that are recognized as birthdays are displayed separately.</item>
-		<item>Events that are recognized as birthdays are displayed as normal events.</item>
+		<item>Display events that are recognized as birthdays separately.
+		</item>
+		<item>Display eveets that are recognized as birthdays as normal
+			events.</item>
 		<item>Hide events that are recognized as birthdays.</item>
 	</string-array>
 	<string-array name="settings_birthdays_entries">
@@ -104,8 +106,8 @@
 	
 	<string name="settings_calendar_color">Show calendar color</string>
 	<string name="settings_calendar_color_show">Display color next to events.</string>
-	<string name="settings_calendar_color_hide">Calendar color is not displayed.</string>
-	
+	<string name="settings_calendar_color_hide">Do not display calendar color.</string>
+
 	<string name="settings_tommorow_yesterday">\"tomorrow\" and \"yesterday\"</string>
 	<string name="settings_tommorow_yesterday_yes">Special display for tomorrow and yesterday.</string>
 	<string name="settings_tommorow_yesterday_no">Treat tomorrow and yesterday like any other day.</string>
@@ -113,10 +115,11 @@
 	<string name="settings_weekday">Weekday names</string>
 	<string name="settings_weekday_yes">Display weekday name for the next seven days.</string>
 	<string name="settings_weekday_no">Always display full date.</string>
-	
+
 	<string name="settings_end_time">Display end time</string>
-	<string name="settings_end_time_yes">Event end times are displayed where applicable.</string>
-	<string name="settings_end_time_no">Event end times are never displayed.</string>
+	<string name="settings_end_time_yes">Display event end times where applicable.
+	</string>
+	<string name="settings_end_time_no">Never display event end times.</string>
 
 	<string name="settings_calendars">Calendars</string>
 	<string name="settings_calendars_show">Show events in calendar \"%s\".</string>

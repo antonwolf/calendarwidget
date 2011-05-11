@@ -110,9 +110,8 @@
 	<string name="settings_weekday_no">Immer volles Datum verwenden.</string>
 
 	<string name="settings_end_time">Endzeiten anzeigen</string>
-	<string name="settings_end_time_yes">Wenn sinnvoll, wird das Ende von Ereignissen
-		angezeigt.</string>
-	<string name="settings_end_time_no">Das Ende von Ereignissen wird nie angezeigt.
+	<string name="settings_end_time_yes">Ende von Ereignissen anzeigen, wenn sinnvoll.</string>
+	<string name="settings_end_time_no">Ende von Ereignissen nie angezeigen.
 	</string>
 
 	<string name="settings_calendars">Kalender</string>
