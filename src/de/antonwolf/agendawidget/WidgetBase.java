@@ -39,7 +39,7 @@ import android.util.Log;
  * 
  *         Base class for each widget
  */
-public abstract class WidgetBase extends AppWidgetProvider {
+abstract class WidgetBase extends AppWidgetProvider {
 	private ContentObserver calendarInstancesObserver;
 	static final String TAG = "AgendaWidget";
 

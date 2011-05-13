@@ -22,5 +22,5 @@
 
 package de.antonwolf.agendawidget;
 
-public class Widget2x1 extends WidgetBase {
+public final class Widget2x1 extends WidgetBase {
 }
