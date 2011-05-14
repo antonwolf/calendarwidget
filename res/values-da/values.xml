@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This translation has been created by Claus Ørskov. Thank you very much! -->
+<resources>
+	<string name="format_yesterday">i går</string>
+	<string name="format_today">idag</string>
+	<string name="format_tomorrow">i morgen</string>
+	<string name="app_name">Antons kalender-widget</string>
+
+	<string name="label_4x1">Antons kalender-widget (4x1)</string>
+	<string name="label_4x2">Antons kalender-widget (4x2)</string>
+	<string name="label_4x3">Antons kalender-widget (4x3)</string>
+	<string name="label_4x4">Antons kalender-widget (4x4)</string>
+	<string name="label_3x1">Antons kalender-widget (3x1)</string>
+	<string name="label_3x2">Antons kalender-widget (3x2)</string>
+	<string name="label_3x3">Antons kalender-widget (3x3)</string>
+	<string name="label_2x1">Antons kalender-widget (2x1)</string>
+
+	<string-array name="format_day_of_week">
+		<item>S</item>
+		<item>M</item>
+		<item>Ti</item>
+		<item>O</item>
+		<item>To</item>
+		<item>F</item>
+		<item>L</item>
+	</string-array>
+
+	<string name="open_calendar">Åben kalender</string>
+	<string name="settings">Indstillinger</string>
+	<string name="settings_description">Konfigurer Antons kalender-widget</string>
+
+	<string-array name="birthday_patterns">
+		<item>(.+)\'s fødselsdag</item>
+		<item>(.+)s fødselsdag</item>
+		<item>(.+) har fødselsdag</item>
+	</string-array>
+
+	<string name="settings_display">Visning</string>
+	<string name="settings_display_lines">Antal linjer</string>
+	<string name="settings_display_lines_summary">Viser %s linjer på widget.</string>
+
+	<string-array name="settings_display_lines_entries">
+		<item>3 linjer</item>
+		<item>4 linjer</item>
+		<item>5 linjer</item>
+		<item>6 linjer</item>
+		<item>7 linjer</item>
+		<item>8 linjer</item>
+		<item>9 linjer</item>
+		<item>10 linjer</item>
+		<item>11 linjer</item>
+		<item>12 linjer</item>
+		<item>13 linjer</item>
+		<item>14 linjer</item>
+		<item>15 linjer</item>
+		<item>16 linjer</item>
+		<item>17 linjer</item>
+		<item>18 linjer</item>
+		<item>19 linjer</item>
+		<item>20 linjer</item>
+		<item>21 linjer</item>
+		<item>22 linjer</item>
+		<item>23 linjer</item>
+		<item>24 linjer</item>
+		<item>25 linjer</item>
+	</string-array>
+
+	<string name="settings_display_size">Skriftstørrelse</string>
+	<string name="settings_display_size_summary">Skriftstørrelsen er %s procent.</string>
+
+	<string name="settings_display_opacity">Gennemsigtighed</string>
+	<string name="settings_display_opacity_summary">Baggrunden er %s skjult gennem widget.
+        </string>
+	<string-array name="settings_display_opacity_entries">
+		<item>0% dækkende (fuldt transparent)</item>
+		<item>20% dækkende</item>
+		<item>40% dækkende</item>
+		<item>60% dækkende (standard)</item>
+		<item>80% dækkende</item>
+		<item>100% dækkende (fuldt dækkende)</item>
+	</string-array>
+
+	<string name="settings_birthdays">Fødselsdage</string>
+	<string-array name="settings_birthdays_summaries">
+		<item>Vis begivenheder, som anses for fødselsdage, seperat.</item>
+		<item>Begivenheder, som anses for fødselsdage, vises som normal
+			begivenhed.</item>
+		<item>Skjul begivenheder, der anses for fødselsdage.</item>
+	</string-array>
+	<string-array name="settings_birthdays_entries">
+		<item>Vis seperat</item>
+		<item>Vis som normal begivenhed</item>
+		<item>Skjul</item>
+	</string-array>
+
+	<string name="settings_calendar_color">Vis kalenderfarve</string>
+	<string name="settings_calendar_color_show">Farven vises ved begivenheden.</string>
+	<string name="settings_calendar_color_hide">Kalenderens farve vises ikke.</string>
+
+	<string name="settings_tommorow_yesterday">\"i morgen\" und \"i går\"</string>
+	<string name="settings_tommorow_yesterday_yes">Særlig visning for i morgen og i går.</string>
+	<string name="settings_tommorow_yesterday_no">I morgen og i går vises som andre dage.
+        </string>
+
+	<string name="settings_weekday">Ugedagnavne</string>
+	<string name="settings_weekday_yes">Navnet på ugedagen vises for første syv ugedage.
+	</string>
+	<string name="settings_weekday_no">Vis altid fuld dato.</string>
+
+	<string name="settings_end_time">Vis sluttidspunkt</string>
+	<string name="settings_end_time_yes">Sluttidspunkt vises, hvor det er muligt.</string>
+	<string name="settings_end_time_no">Sluttidspunkt vises ikke.</string>
+
+	<string name="settings_calendars">Kalendere</string>
+	<string name="settings_calendars_show">Vis begivenheder i kalenderen \"%s\".</string>
+	<string name="settings_calendars_hide">Skjul begivenheder i kalenderen \"%s\".</string>
+</resources>
