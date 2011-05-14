@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Anton\'s Calendar Widget</string>
+	
+	<string name="widget_loading">Widget is loading.</string>
 
 	<string name="format_yesterday">yesterday</string>
 	<string name="format_today">today</string>
 	<string name="format_tomorrow">tomorrow</string>
-	<string name="format_this_year">%1$te.%1$tm.</string>
-	<string name="format_other">%1$te.%1$tm.%1$ty</string>
+	<string name="format_date">DOT_DAY_MONTH</string>
 	<bool name="format_24hours">true</bool>
 	<string name="label_4x1">Anton\'s Calendar Widget (4x1)</string>
 	<string name="label_4x2">Anton\'s Calendar Widget (4x2)</string>
@@ -94,7 +95,7 @@
 	<string-array name="settings_birthdays_summaries">
 		<item>Display events that are recognized as birthdays separately.
 		</item>
-		<item>Display eveets that are recognized as birthdays as normal
+		<item>Display events that are recognized as birthdays as normal
 			events.</item>
 		<item>Hide events that are recognized as birthdays.</item>
 	</string-array>
@@ -120,7 +121,19 @@
 	<string name="settings_end_time_yes">Display event end times where applicable.
 	</string>
 	<string name="settings_end_time_no">Never display event end times.</string>
-
+	
+	<string name="settings_date_format">Date format</string>
+	<string name="settings_date_format_summary">Date format is: %s</string>
+	<string-array name="settings_date_format_entries">
+		<item>day.month.year (%1$te.%1$tm.%1$ty)</item>
+		<item>day/month/year (%1$te/%1$tm/%1$ty)</item>
+		<item>month/day/year (%1$tm/%1$te/%1$ty)</item>
+	</string-array>
+	
+	<string name="settings_twentyfour_hours">Use 24-hour format</string>
+	<string name="settings_twentyfour_hours_yes">24-hour format: %1$tk:%1$tM</string>
+	<string name="settings_twentyfour_hours_no">12-hour format: %1$tl:%1$tM%1$tp</string>
+	
 	<string name="settings_calendars">Calendars</string>
 	<string name="settings_calendars_show">Show events in calendar \"%s\".</string>
 	<string name="settings_calendars_hide">Hide events in calendar \"%s\".</string>

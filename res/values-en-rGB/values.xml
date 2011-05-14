@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="format_this_year">%1$te/%1$tm</string>
-    <string name="format_other">%1$te/%1$tm/%1$ty</string>
+    <string name="format_date">SLASH_DAY_MONTH</string>
     
 	<string name="settings_calendar_color">Show calendar colour</string>
 	<string name="settings_calendar_color_show">Display colour next to events</string>

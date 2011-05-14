@@ -403,7 +403,7 @@ public final class WidgetService extends IntentService {
 						event.startTime, info);
 				builder.append(' ');
 			}
-			appendHour(formatter, builder, event.startMillis);
+			appendHour(formatter, builder, event.startMillis, info);
 			return;
 		}
 
@@ -413,22 +413,23 @@ public final class WidgetService extends IntentService {
 					info);
 			builder.append(' ');
 		}
-		appendHour(formatter, builder, event.startMillis);
+		appendHour(formatter, builder, event.startMillis, info);
 		builder.append('-');
 
 		if (Math.abs(event.endMillis - event.startMillis) > DAY_IN_MILLIS) {
 			appendDay(formatter, builder, event.endMillis, event.endTime, info);
 			builder.append(' ');
 		}
-		appendHour(formatter, builder, event.endMillis);
+		appendHour(formatter, builder, event.endMillis, info);
 	}
 
 	private void appendHour(final Formatter formatter,
-			final SpannableStringBuilder builder, final long time) {
-		if (getResources().getBoolean(R.bool.format_24hours))
-			formatter.format("%tk:%<tM", time);
+			final SpannableStringBuilder builder, final long time,
+			WidgetInfo info) {
+		if (info.twentyfourHours)
+			formatter.format("%1$tk:%1$tM", time);
 		else {
-			formatter.format("%tl:%<tM%<tp", time);
+			formatter.format("%1$tl:%1$tM%1$tp", time);
 			int len = builder.length();
 			builder.setSpan(new RelativeSizeSpan(0.7f), len - 2, len, 0);
 		}
@@ -461,12 +462,10 @@ public final class WidgetService extends IntentService {
 		} else if (todayStart <= time && time < weekEnd) // this week?
 			builder.append(getResources().getStringArray(
 					R.array.format_day_of_week)[day.weekDay]);
-		else if (yearStart <= time && time < yearEnd) { // this year?
-			formatter.format(getResources()
-					.getString(R.string.format_this_year), time);
-		} else
-			// other time
-			formatter.format(getResources().getString(R.string.format_other),
-					time);
+		else if (yearStart <= time && time < yearEnd) // this year?
+			formatter.format(info.dateFormat.shortFormat, time);
+		else
+			// not this year
+			formatter.format(info.dateFormat.longFormat, time);
 	}
 }

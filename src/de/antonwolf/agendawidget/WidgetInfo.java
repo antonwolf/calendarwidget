@@ -28,6 +28,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -51,6 +52,20 @@ final class WidgetInfo {
 
 			key = widgetId + "calendar" + calendarId;
 			enabled = prefs.getBoolean(key, enabledDefault);
+		}
+	}
+
+	public enum DateFormat {
+		DOT_DAY_MONTH("%1$te.%1$tm", "%1$te.%1$tm.%1$ty"), SLASH_DAY_MONTH(
+				"%1$te/%1$tm", "%1$te/%1$tm/%1$ty"), SLASH_MONTH_DAY(
+				"%1$tm/%1$te", "%1$tm/%1$te/%1$ty");
+
+		public final String shortFormat;
+		public final String longFormat;
+
+		private DateFormat(String shortFormat, String longFormat) {
+			this.shortFormat = shortFormat;
+			this.longFormat = longFormat;
 		}
 	}
 
@@ -92,22 +107,33 @@ final class WidgetInfo {
 	public final boolean endTimeDefault;
 	public final String endTimeKey;
 
+	public final boolean twentyfourHours;
+	public final boolean twentyfourHoursDefault;
+	public final String twentyfourHoursKey;
+
+	public final DateFormat dateFormat;
+	public final DateFormat dateFormatDefault;
+	public final String dateFormatKey;
+
 	public final Map<Integer, CalendarPreferences> calendars;
 
 	public WidgetInfo(int widgetId, Context context) {
 		this.widgetId = widgetId;
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
-		AppWidgetManager manager = AppWidgetManager.getInstance(context);
-		AppWidgetProviderInfo widgetInfo = manager.getAppWidgetInfo(widgetId);
+		final AppWidgetManager manager = AppWidgetManager.getInstance(context);
+		final AppWidgetProviderInfo widgetInfo = manager
+				.getAppWidgetInfo(widgetId);
 
-		WindowManager winManager = (WindowManager) context
+		final WindowManager winManager = (WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE);
-		DisplayMetrics metrics = new DisplayMetrics();
+		final DisplayMetrics metrics = new DisplayMetrics();
 		winManager.getDefaultDisplay().getMetrics(metrics);
 
-		int heightInCells = (int) (widgetInfo.minHeight / metrics.density + 2) / 74;
-		int widthInCells = (int) (widgetInfo.minWidth / metrics.density + 2) / 74;
+		final int heightInCells = (int) (widgetInfo.minHeight / metrics.density + 2) / 74;
+		final int widthInCells = (int) (widgetInfo.minWidth / metrics.density + 2) / 74;
+
+		final Resources res = context.getResources();
 
 		birthdaysKey = widgetId + "birthdays";
 		birthdaysDefault = widthInCells > 2 ? BIRTHDAY_SPECIAL
@@ -140,14 +166,24 @@ final class WidgetInfo {
 		endTimeDefault = widthInCells > 2;
 		endTime = prefs.getBoolean(endTimeKey, endTimeDefault);
 
-		Map<Integer, CalendarPreferences> calendars = null;
+		twentyfourHoursKey = widgetId + "twentyfourHours";
+		twentyfourHoursDefault = res.getBoolean(R.bool.format_24hours);
+		twentyfourHours = prefs.getBoolean(twentyfourHoursKey,
+				twentyfourHoursDefault);
+
+		dateFormatKey = widgetId + "dateFormat";
+		dateFormatDefault = DateFormat.valueOf(res
+				.getString(R.string.format_date));
+		dateFormat = DateFormat.valueOf(prefs.getString(dateFormatKey,
+				dateFormatDefault.toString()));
+
 		Cursor cursor = null;
 		try {
 			cursor = context.getContentResolver().query(
 					Uri.parse("content://com.android.calendar/calendars"),
 					new String[] { "_id", "displayName", "color" }, null, null,
 					"displayName ASC");
-			calendars = new HashMap<Integer, CalendarPreferences>(
+			this.calendars = new HashMap<Integer, CalendarPreferences>(
 					cursor.getCount());
 
 			while (cursor.moveToNext())
@@ -160,6 +196,5 @@ final class WidgetInfo {
 			if (null != cursor)
 				cursor.close();
 		}
-		this.calendars = calendars;
 	}
 }

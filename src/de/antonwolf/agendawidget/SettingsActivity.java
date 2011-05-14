@@ -22,7 +22,6 @@
 package de.antonwolf.agendawidget;
 
 import java.util.Map.Entry;
-
 import de.antonwolf.agendawidget.WidgetInfo.CalendarPreferences;
 import android.content.Intent;
 import android.net.Uri;
@@ -45,6 +44,10 @@ public final class SettingsActivity extends PreferenceActivity {
 	private static final String[] BIRTHDAY_PREFERENCES = new String[] {
 			WidgetInfo.BIRTHDAY_SPECIAL, WidgetInfo.BIRTHDAY_NORMAL,
 			WidgetInfo.BIRTHDAY_HIDE };
+	private static final String[] DATE_FORMAT_PREFERENCES = new String[] {
+			WidgetInfo.DateFormat.DOT_DAY_MONTH.toString(),
+			WidgetInfo.DateFormat.SLASH_DAY_MONTH.toString(),
+			WidgetInfo.DateFormat.SLASH_MONTH_DAY.toString() };
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -184,6 +187,49 @@ public final class SettingsActivity extends PreferenceActivity {
 		calendarColor.setSummaryOn(R.string.settings_calendar_color_show);
 		calendarColor.setSummaryOff(R.string.settings_calendar_color_hide);
 		display.addPreference(calendarColor);
+
+		final ListPreference dateFormat = new ListPreference(this);
+		dateFormat.setTitle(R.string.settings_date_format);
+		dateFormat.setKey(info.dateFormatKey);
+		final String[] dateFormatEntries = getResources().getStringArray(
+				R.array.settings_date_format_entries);
+		for (int i = 0; i < dateFormatEntries.length; i++)
+			dateFormatEntries[i] = String.format(dateFormatEntries[i],
+					System.currentTimeMillis());
+		dateFormat.setEntries(dateFormatEntries);
+		dateFormat.setEntryValues(DATE_FORMAT_PREFERENCES);
+		dateFormat.setDefaultValue(info.dateFormatDefault);
+		final String dateFormatSummary = getResources().getString(
+				R.string.settings_date_format_summary);
+
+		final OnPreferenceChangeListener dateFormatChanged = new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(final Preference pref,
+					final Object newValue) {
+				final int ordinal = WidgetInfo.DateFormat.valueOf(
+						(String) newValue).ordinal();
+				pref.setSummary(String.format(dateFormatSummary,
+						dateFormatEntries[ordinal]));
+				return true;
+			}
+		};
+		dateFormatChanged.onPreferenceChange(dateFormat, info.dateFormat.toString());
+		dateFormat.setOnPreferenceChangeListener(dateFormatChanged);
+		display.addPreference(dateFormat);
+
+		final CheckBoxPreference twentyfourHours = new CheckBoxPreference(this);
+		twentyfourHours.setDefaultValue(info.twentyfourHoursDefault);
+		twentyfourHours.setKey(info.twentyfourHoursKey);
+		twentyfourHours.setTitle(R.string.settings_twentyfour_hours);
+		twentyfourHours.setSummaryOn(String.format(
+				getResources()
+						.getString(R.string.settings_twentyfour_hours_yes),
+				System.currentTimeMillis()));
+		twentyfourHours.setSummaryOff(String
+				.format(getResources().getString(
+						R.string.settings_twentyfour_hours_no),
+						System.currentTimeMillis()));
+		display.addPreference(twentyfourHours);
 
 		final PreferenceCategory calendars = new PreferenceCategory(this);
 		calendars.setTitle(R.string.settings_calendars);
