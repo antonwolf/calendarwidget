@@ -110,6 +110,18 @@
 	<string name="settings_end_time">Vis sluttidspunkt</string>
 	<string name="settings_end_time_yes">Sluttidspunkt vises, hvor det er muligt.</string>
 	<string name="settings_end_time_no">Sluttidspunkt vises ikke.</string>
+	
+		<string name="settings_date_format">Datoformat</string>
+	<string name="settings_date_format_summary">Datoformatet er: %s</string>
+	<string-array name="settings_date_format_entries">
+		<item>dag.måned.år (%1$te.%1$tm.%1$ty)</item>
+		<item>dag/måned/år (%1$te/%1$tm/%1$ty)</item>
+		<item>måned/dag/år (%1$tm/%1$te/%1$ty)</item>
+	</string-array>
+	
+	<string name="settings_twentyfour_hours">Brug format på 24 timer</string>
+	<string name="settings_twentyfour_hours_yes">Brug format på 24 timer: %1$tk:%1$tM</string>
+	<string name="settings_twentyfour_hours_no">Brug format på 12 timer: %1$tl:%1$tM%1$tp</string>
 
 	<string name="settings_calendars">Kalendere</string>
 	<string name="settings_calendars_show">Vis begivenheder i kalenderen \"%s\".</string>

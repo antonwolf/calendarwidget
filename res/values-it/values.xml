@@ -4,6 +4,8 @@
 	<string name="format_today">oggi</string>
 	<string name="format_tomorrow">domani</string>
 	<string name="app_name">Widget Calendario di Anton</string>
+	
+	<string name="widget_loading">Caricamento...</string>
 
 	<string name="label_4x1">Widget Calendario di Anton (4x1)</string>
 	<string name="label_4x2">Widget Calendario di Anton (4x2)</string>
@@ -112,8 +114,19 @@
 	<string name="settings_end_time">Ora di fine</string>
 	<string name="settings_end_time_yes">Visualizzare la fine degli eventi se sensato.
 	</string>
-	<string name="settings_end_time_no">Non visualizzare la fine degli eventi.
-	</string>
+	<string name="settings_end_time_no">Non visualizzare la fine degli eventi.</string>
+
+	<string name="settings_date_format">Formato data</string>
+	<string name="settings_date_format_summary">Il formato data è: %s</string>
+	<string-array name="settings_date_format_entries">
+		<item>giorno.mese.anno (%1$te.%1$tm.%1$ty)</item>
+		<item>giorno/mese/anno (%1$te/%1$tm/%1$ty)</item>
+		<item>mese/giorno/anno (%1$tm/%1$te/%1$ty)</item>
+	</string-array>
+
+	<string name="settings_twentyfour_hours">Usa formato 24 ore</string>
+	<string name="settings_twentyfour_hours_yes">Usa formato 24 ore: %1$tk:%1$tM</string>
+	<string name="settings_twentyfour_hours_no">Usa formato 12 ore: %1$tl:%1$tM%1$tp</string>
 
 	<string name="settings_calendars">Calendari</string>
 	<string name="settings_calendars_show">Visualizzare gli eventi in calendario \"%s\".

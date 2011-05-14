@@ -4,6 +4,8 @@
 	<string name="format_today">heute</string>
 	<string name="format_tomorrow">morgen</string>
 	<string name="app_name">Antons Kalender-Widget</string>
+	
+	<string name="widget_loading">Lade...</string>
 
 	<string name="label_4x1">Antons Kalender-Widget (4x1)</string>
 	<string name="label_4x2">Antons Kalender-Widget (4x2)</string>
@@ -113,6 +115,18 @@
 	<string name="settings_end_time_yes">Ende von Ereignissen anzeigen, wenn sinnvoll.</string>
 	<string name="settings_end_time_no">Ende von Ereignissen nie angezeigen.
 	</string>
+
+	<string name="settings_date_format">Datumsformat</string>
+	<string name="settings_date_format_summary">Das Datumsformat ist: %s</string>
+	<string-array name="settings_date_format_entries">
+		<item>Tag.Monat.Jahr (%1$te.%1$tm.%1$ty)</item>
+		<item>Tag/Monat/Jahr (%1$te/%1$tm/%1$ty)</item>
+		<item>Monat/Tag/Jahr (%1$tm/%1$te/%1$ty)</item>
+	</string-array>
+
+	<string name="settings_twentyfour_hours">24-Stunden-Format</string>
+	<string name="settings_twentyfour_hours_yes">24-Stunden-Format: %1$tk:%1$tM</string>
+	<string name="settings_twentyfour_hours_no">12-Stunden-Format: %1$tl:%1$tM%1$tp</string>
 
 	<string name="settings_calendars">Kalender</string>
 	<string name="settings_calendars_show">Ereignisse im Kalender \"%s\" anzeigen.</string>

@@ -2,7 +2,7 @@
 <resources>
 	<string name="app_name">Anton\'s Calendar Widget</string>
 	
-	<string name="widget_loading">Widget is loading.</string>
+	<string name="widget_loading">Loading...</string>
 
 	<string name="format_yesterday">yesterday</string>
 	<string name="format_today">today</string>

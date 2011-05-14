@@ -4,6 +4,8 @@
 	<string name="format_today">aujourd\'hui</string>
 	<string name="format_tomorrow">demain</string>
 	<string name="app_name">Widget Agenda par Anton</string>
+	
+	<string name="widget_loading">Chargement...</string>
 
 	<string name="label_4x1">Widget Agenda par Anton (4x1)</string>
 	<string name="label_4x2">Widget Agenda par Anton (4x2)</string>
@@ -112,8 +114,20 @@
 
 	<string name="settings_end_time">Heur de fin</string>
 	<string name="settings_end_time_yes">Afficher la fin si raisonnable.</string>
-	<string name="settings_end_time_no">Ne jemais afficher la fin des événements.
-	</string>
+	<string name="settings_end_time_no">Ne jemais afficher la fin des événements.</string>
+
+
+	<string name="settings_date_format">Format de date</string>
+	<string name="settings_date_format_summary">Le format de date est: %s</string>
+	<string-array name="settings_date_format_entries">
+		<item>jour.mois.an (%1$te.%1$tm.%1$ty)</item>
+		<item>jour/mois/an (%1$te/%1$tm/%1$ty)</item>
+		<item>mois/jour/an (%1$tm/%1$te/%1$ty)</item>
+	</string-array>
+
+	<string name="settings_twentyfour_hours">Format sur 24 h</string>
+	<string name="settings_twentyfour_hours_yes">Format sur 24 h: %1$tk:%1$tM</string>
+	<string name="settings_twentyfour_hours_no">Format sur 12 h: %1$tl:%1$tM%1$tp</string>
 
 	<string name="settings_calendars">Calendriers</string>
 	<string name="settings_calendars_show">Affichier les événemets dans le calendrier «%s».
