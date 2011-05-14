@@ -429,16 +429,18 @@ public final class WidgetService extends IntentService {
 		if (info.twentyfourHours)
 			formatter.format("%1$tk:%1$tM", time);
 		else {
-			formatter.format("%1$tl:%1$tM%1$tp", time);
-			int len = builder.length();
-			builder.setSpan(new RelativeSizeSpan(0.7f), len - 2, len, 0);
+			formatter.format("%1$tl:%1$tM", time);
+			int start = builder.length();
+			formatter.format("%1$tp", time);
+			int end = builder.length();
+			builder.setSpan(new RelativeSizeSpan(0.7f), start, end, 0);
 		}
 	}
 
 	private void appendDay(final Formatter formatter,
 			final SpannableStringBuilder builder, final long time,
 			final Time day, final WidgetInfo info) {
-		final boolean tomorrowYesterday = info.tomorowYesterday;
+		final boolean tomorrowYesterday = info.tomorrowYesterday;
 		final long specialStart = tomorrowYesterday ? yesterdayStart
 				: todayStart;
 		final long specialEnd = tomorrowYesterday ? dayAfterTomorrowStart

@@ -23,11 +23,13 @@ package de.antonwolf.agendawidget;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -36,11 +38,12 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 final class WidgetInfo {
-	public final class CalendarPreferences {
+	public final static class CalendarPreferences {
 		public final int calendarId;
 		public final int color;
 		public final String displayName;
 		public final String key;
+
 		public final boolean enabledDefault = true;
 		public final boolean enabled;
 
@@ -50,7 +53,7 @@ final class WidgetInfo {
 			this.color = color;
 			this.displayName = displayName;
 
-			key = widgetId + "calendar" + calendarId;
+			key = String.format(CALENDARS_KEY, widgetId, calendarId);
 			enabled = prefs.getBoolean(key, enabledDefault);
 		}
 	}
@@ -78,44 +81,55 @@ final class WidgetInfo {
 	public final String birthdays;
 	public final String birthdaysDefault;
 	public final String birthdaysKey;
+	private static final String BIRTHDAYS_KEY = "%dbirthdays";
 
 	public final String lines;
 	public final String linesDefault;
 	public final String linesKey;
+	private static final String LINES_KEY = "%dlines";
 
 	public final String size;
 	public final String sizeDefault = "100";;
 	public final String sizeKey;
+	private static final String SIZE_KEY = "%dsize";
 
 	public final String opacity;
-	public final String opacityDefault = "60";;
+	public final String opacityDefault = "60";
 	public final String opacityKey;
+	private static final String OPACITY_KEY = "%dopacity";
 
 	public final boolean calendarColor;
 	public final boolean calendarColorDefault = true;
 	public final String calendarColorKey;
+	private static final String CALENDAR_COLOR_KEY = "%dcalendarColor";
 
-	public final boolean tomorowYesterday;
-	public final boolean tomorowYesterdayDefault = true;
-	public final String tomorowYesterdayKey;
+	public final boolean tomorrowYesterday;
+	public final boolean tomorrowYesterdayDefault = true;
+	public final String tomorrowYesterdayKey;
+	private static final String TOMORROW_YESTERDAY_KEY = "%dtommorowYesterday";
 
 	public final boolean weekday;
 	public final boolean weekdayDefault = true;
 	public final String weekdayKey;
+	private static final String WEEKDAY_KEY = "%dweekday";
 
 	public final boolean endTime;
 	public final boolean endTimeDefault;
 	public final String endTimeKey;
+	private static final String END_TIME_KEY = "%dendTime";
 
 	public final boolean twentyfourHours;
 	public final boolean twentyfourHoursDefault;
 	public final String twentyfourHoursKey;
+	private static final String TWENTYFOUR_HOURS_KEY = "%dtwentyfourHours";
 
 	public final DateFormat dateFormat;
 	public final DateFormat dateFormatDefault;
 	public final String dateFormatKey;
+	private static final String DATE_FORMAT_KEY = "%ddateFormat";
 
 	public final Map<Integer, CalendarPreferences> calendars;
+	private static final String CALENDARS_KEY = "%dcalendar%d";
 
 	public WidgetInfo(int widgetId, Context context) {
 		this.widgetId = widgetId;
@@ -135,55 +149,62 @@ final class WidgetInfo {
 
 		final Resources res = context.getResources();
 
-		birthdaysKey = widgetId + "birthdays";
+		birthdaysKey = String.format(BIRTHDAYS_KEY, widgetId);
 		birthdaysDefault = widthInCells > 2 ? BIRTHDAY_SPECIAL
 				: BIRTHDAY_NORMAL;
 		birthdays = prefs.getString(birthdaysKey, birthdaysDefault);
 
 		int linesInt = 5 + (int) ((heightInCells - 1) * 5.9);
 		linesDefault = Integer.toString(linesInt);
-		linesKey = widgetId + "lines";
+		linesKey = String.format(LINES_KEY, widgetId);
 		lines = prefs.getString(linesKey, linesDefault);
 
-		sizeKey = widgetId + "size";
+		sizeKey = String.format(SIZE_KEY, widgetId);
 		size = prefs.getString(sizeKey, sizeDefault);
 
-		opacityKey = widgetId + "opacity";
+		opacityKey = String.format(OPACITY_KEY, widgetId);
 		opacity = prefs.getString(opacityKey, opacityDefault);
 
-		calendarColorKey = widgetId + "calendarColor";
+		calendarColorKey = String.format(CALENDAR_COLOR_KEY, widgetId);
 		calendarColor = prefs
 				.getBoolean(calendarColorKey, calendarColorDefault);
 
-		tomorowYesterdayKey = widgetId + "tommorowYesterday";
-		tomorowYesterday = prefs.getBoolean(tomorowYesterdayKey,
-				tomorowYesterdayDefault);
+		tomorrowYesterdayKey = String.format(TOMORROW_YESTERDAY_KEY, widgetId);
+		tomorrowYesterday = prefs.getBoolean(tomorrowYesterdayKey,
+				tomorrowYesterdayDefault);
 
-		weekdayKey = widgetId + "weekday";
+		weekdayKey = String.format(WEEKDAY_KEY, widgetId);
 		weekday = prefs.getBoolean(weekdayKey, weekdayDefault);
 
-		endTimeKey = widgetId + "endTime";
+		endTimeKey = String.format(END_TIME_KEY, widgetId);
 		endTimeDefault = widthInCells > 2;
 		endTime = prefs.getBoolean(endTimeKey, endTimeDefault);
 
-		twentyfourHoursKey = widgetId + "twentyfourHours";
+		twentyfourHoursKey = String.format(TWENTYFOUR_HOURS_KEY, widgetId);
 		twentyfourHoursDefault = res.getBoolean(R.bool.format_24hours);
 		twentyfourHours = prefs.getBoolean(twentyfourHoursKey,
 				twentyfourHoursDefault);
 
-		dateFormatKey = widgetId + "dateFormat";
+		dateFormatKey = String.format(DATE_FORMAT_KEY, widgetId);
 		dateFormatDefault = DateFormat.valueOf(res
 				.getString(R.string.format_date));
 		dateFormat = DateFormat.valueOf(prefs.getString(dateFormatKey,
 				dateFormatDefault.toString()));
 
+		calendars = getCalendars(context, widgetId);
+	}
+
+	private static Map<Integer, CalendarPreferences> getCalendars(
+			Context context, int widgetId) {
 		Cursor cursor = null;
+		final SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(context);
 		try {
 			cursor = context.getContentResolver().query(
 					Uri.parse("content://com.android.calendar/calendars"),
 					new String[] { "_id", "displayName", "color" }, null, null,
 					"displayName ASC");
-			this.calendars = new HashMap<Integer, CalendarPreferences>(
+			final Map<Integer, CalendarPreferences> calendars = new HashMap<Integer, CalendarPreferences>(
 					cursor.getCount());
 
 			while (cursor.moveToNext())
@@ -192,9 +213,31 @@ final class WidgetInfo {
 						new CalendarPreferences(prefs, widgetId, cursor
 								.getInt(0), cursor.getString(1), cursor
 								.getInt(2)));
+			return calendars;
 		} finally {
 			if (null != cursor)
 				cursor.close();
 		}
 	}
+
+	public static void delete(Context context, int widgetId) {
+		Editor editor = PreferenceManager.getDefaultSharedPreferences(context)
+				.edit();
+		editor.remove(String.format(BIRTHDAYS_KEY,widgetId));
+		editor.remove(String.format(LINES_KEY,widgetId));
+		editor.remove(String.format(SIZE_KEY,widgetId));
+		editor.remove(String.format(OPACITY_KEY,widgetId));
+		editor.remove(String.format(CALENDAR_COLOR_KEY,widgetId));
+		editor.remove(String.format(TOMORROW_YESTERDAY_KEY,widgetId));
+		editor.remove(String.format(WEEKDAY_KEY,widgetId));
+		editor.remove(String.format(END_TIME_KEY,widgetId));
+		editor.remove(String.format(TWENTYFOUR_HOURS_KEY,widgetId));
+		editor.remove(String.format(DATE_FORMAT_KEY,widgetId));
+		for (final Entry<Integer, CalendarPreferences> cinfo : getCalendars(
+				context, widgetId).entrySet()) {
+			editor.remove(cinfo.getValue().key);
+		}
+		editor.commit();
+	}
+
 }

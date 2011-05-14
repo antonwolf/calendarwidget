@@ -66,6 +66,12 @@ abstract class WidgetBase extends AppWidgetProvider {
 		Log.d(TAG, "WidgetBase.onDisabled()");
 		unregisterContentObserver(context);
 	}
+	
+	@Override
+	public void onDeleted(Context context, int[] appWidgetIds) {
+		for (final int widgetId : appWidgetIds)
+			WidgetInfo.delete(context, widgetId);
+	}
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {

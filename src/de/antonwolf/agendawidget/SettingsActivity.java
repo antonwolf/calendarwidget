@@ -163,8 +163,8 @@ public final class SettingsActivity extends PreferenceActivity {
 
 		final CheckBoxPreference tomorrowYesterday = new CheckBoxPreference(
 				this);
-		tomorrowYesterday.setDefaultValue(info.tomorowYesterdayDefault);
-		tomorrowYesterday.setKey(info.tomorowYesterdayKey);
+		tomorrowYesterday.setDefaultValue(info.tomorrowYesterdayDefault);
+		tomorrowYesterday.setKey(info.tomorrowYesterdayKey);
 		tomorrowYesterday.setTitle(R.string.settings_tommorow_yesterday);
 		tomorrowYesterday
 				.setSummaryOn(R.string.settings_tommorow_yesterday_yes);
