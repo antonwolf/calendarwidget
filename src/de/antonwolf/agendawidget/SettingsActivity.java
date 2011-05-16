@@ -47,7 +47,8 @@ public final class SettingsActivity extends PreferenceActivity {
 	private static final String[] DATE_FORMAT_PREFERENCES = new String[] {
 			WidgetInfo.DateFormat.DOT_DAY_MONTH.toString(),
 			WidgetInfo.DateFormat.SLASH_DAY_MONTH.toString(),
-			WidgetInfo.DateFormat.SLASH_MONTH_DAY.toString() };
+			WidgetInfo.DateFormat.SLASH_MONTH_DAY.toString(),
+			WidgetInfo.DateFormat.SLASH_YEAR_MONTH_DAY.toString() };
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {

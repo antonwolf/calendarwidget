@@ -121,7 +121,8 @@
 	<string-array name="settings_date_format_entries">
 		<item>giorno.mese.anno (%1$te.%1$tm.%1$ty)</item>
 		<item>giorno/mese/anno (%1$te/%1$tm/%1$ty)</item>
-		<item>mese/giorno/anno (%1$tm/%1$te/%1$ty)</item>
+		<item>mese/giorno/anno (%1$tm/%1$td/%1$ty)</item>
+		<item>anno/mese/giorno (%1$ty/%1$tm/%1$td)</item>
 	</string-array>
 
 	<string name="settings_twentyfour_hours">Usa formato 24 ore</string>

@@ -127,7 +127,8 @@
 	<string-array name="settings_date_format_entries">
 		<item>day.month.year (%1$te.%1$tm.%1$ty)</item>
 		<item>day/month/year (%1$te/%1$tm/%1$ty)</item>
-		<item>month/day/year (%1$tm/%1$te/%1$ty)</item>
+		<item>month/day/year (%1$tm/%1$td/%1$ty)</item>
+		<item>year/month/day (%1$ty/%1$tm/%1$td)</item>
 	</string-array>
 	
 	<string name="settings_twentyfour_hours">Use 24-hour format</string>

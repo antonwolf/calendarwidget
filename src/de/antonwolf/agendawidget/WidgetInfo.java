@@ -61,7 +61,8 @@ final class WidgetInfo {
 	public enum DateFormat {
 		DOT_DAY_MONTH("%1$te.%1$tm", "%1$te.%1$tm.%1$ty"), SLASH_DAY_MONTH(
 				"%1$te/%1$tm", "%1$te/%1$tm/%1$ty"), SLASH_MONTH_DAY(
-				"%1$tm/%1$te", "%1$tm/%1$te/%1$ty");
+				"%1$tm/%1$td", "%1$tm/%1$td/%1$ty"), SLASH_YEAR_MONTH_DAY(
+				"%1$tm/%1$td", "%1$ty/%1$tm/%1$td");
 
 		public final String shortFormat;
 		public final String longFormat;
@@ -223,16 +224,16 @@ final class WidgetInfo {
 	public static void delete(Context context, int widgetId) {
 		Editor editor = PreferenceManager.getDefaultSharedPreferences(context)
 				.edit();
-		editor.remove(String.format(BIRTHDAYS_KEY,widgetId));
-		editor.remove(String.format(LINES_KEY,widgetId));
-		editor.remove(String.format(SIZE_KEY,widgetId));
-		editor.remove(String.format(OPACITY_KEY,widgetId));
-		editor.remove(String.format(CALENDAR_COLOR_KEY,widgetId));
-		editor.remove(String.format(TOMORROW_YESTERDAY_KEY,widgetId));
-		editor.remove(String.format(WEEKDAY_KEY,widgetId));
-		editor.remove(String.format(END_TIME_KEY,widgetId));
-		editor.remove(String.format(TWENTYFOUR_HOURS_KEY,widgetId));
-		editor.remove(String.format(DATE_FORMAT_KEY,widgetId));
+		editor.remove(String.format(BIRTHDAYS_KEY, widgetId));
+		editor.remove(String.format(LINES_KEY, widgetId));
+		editor.remove(String.format(SIZE_KEY, widgetId));
+		editor.remove(String.format(OPACITY_KEY, widgetId));
+		editor.remove(String.format(CALENDAR_COLOR_KEY, widgetId));
+		editor.remove(String.format(TOMORROW_YESTERDAY_KEY, widgetId));
+		editor.remove(String.format(WEEKDAY_KEY, widgetId));
+		editor.remove(String.format(END_TIME_KEY, widgetId));
+		editor.remove(String.format(TWENTYFOUR_HOURS_KEY, widgetId));
+		editor.remove(String.format(DATE_FORMAT_KEY, widgetId));
 		for (final Entry<Integer, CalendarPreferences> cinfo : getCalendars(
 				context, widgetId).entrySet()) {
 			editor.remove(cinfo.getValue().key);

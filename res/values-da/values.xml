@@ -4,6 +4,7 @@
 	<string name="format_yesterday">i går</string>
 	<string name="format_today">idag</string>
 	<string name="format_tomorrow">i morgen</string>
+	<string name="format_date">SLASH_YEAR_MONTH_DAY</string>
 	<string name="app_name">Antons kalender-widget</string>
 
 	<string name="label_4x1">Antons kalender-widget (4x1)</string>
@@ -97,7 +98,7 @@
 	<string name="settings_calendar_color_show">Farven vises ved begivenheden.</string>
 	<string name="settings_calendar_color_hide">Kalenderens farve vises ikke.</string>
 
-	<string name="settings_tommorow_yesterday">\"i morgen\" und \"i går\"</string>
+	<string name="settings_tommorow_yesterday">\"i morgen\" og \"i går\"</string>
 	<string name="settings_tommorow_yesterday_yes">Særlig visning for i morgen og i går.</string>
 	<string name="settings_tommorow_yesterday_no">I morgen og i går vises som andre dage.
         </string>
@@ -116,12 +117,13 @@
 	<string-array name="settings_date_format_entries">
 		<item>dag.måned.år (%1$te.%1$tm.%1$ty)</item>
 		<item>dag/måned/år (%1$te/%1$tm/%1$ty)</item>
-		<item>måned/dag/år (%1$tm/%1$te/%1$ty)</item>
+		<item>måned/dag/år (%1$tm/%1$td/%1$ty)</item>
+		<item>år/måned/dag (%1$ty/%1$tm/%1$td)</item>
 	</string-array>
 	
-	<string name="settings_twentyfour_hours">Brug format på 24 timer</string>
-	<string name="settings_twentyfour_hours_yes">Brug format på 24 timer: %1$tk:%1$tM</string>
-	<string name="settings_twentyfour_hours_no">Brug format på 12 timer: %1$tl:%1$tM%1$tp</string>
+	<string name="settings_twentyfour_hours">Brug 24-timers format</string>
+	<string name="settings_twentyfour_hours_yes">Brug 24-timers format: %1$tk:%1$tM</string>
+	<string name="settings_twentyfour_hours_no">Brug 12-timers format: %1$tl:%1$tM%1$tp</string>
 
 	<string name="settings_calendars">Kalendere</string>
 	<string name="settings_calendars_show">Vis begivenheder i kalenderen \"%s\".</string>

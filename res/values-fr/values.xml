@@ -122,7 +122,8 @@
 	<string-array name="settings_date_format_entries">
 		<item>jour.mois.an (%1$te.%1$tm.%1$ty)</item>
 		<item>jour/mois/an (%1$te/%1$tm/%1$ty)</item>
-		<item>mois/jour/an (%1$tm/%1$te/%1$ty)</item>
+		<item>mois/jour/an (%1$tm/%1$td/%1$ty)</item>
+		<item>an/mois/jour (%1$ty/%1$tm/%1$td)</item>
 	</string-array>
 
 	<string name="settings_twentyfour_hours">Format sur 24 h</string>
