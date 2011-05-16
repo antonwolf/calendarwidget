@@ -199,7 +199,7 @@ public final class SettingsActivity extends PreferenceActivity {
 					System.currentTimeMillis());
 		dateFormat.setEntries(dateFormatEntries);
 		dateFormat.setEntryValues(DATE_FORMAT_PREFERENCES);
-		dateFormat.setDefaultValue(info.dateFormatDefault);
+		dateFormat.setDefaultValue(info.dateFormatDefault.toString());
 		final String dateFormatSummary = getResources().getString(
 				R.string.settings_date_format_summary);
 
