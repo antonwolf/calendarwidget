@@ -33,6 +33,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
@@ -201,10 +202,16 @@ final class WidgetInfo {
 		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
 		try {
-			cursor = context.getContentResolver().query(
-					Uri.parse("content://com.android.calendar/calendars"),
-					new String[] { "_id", "displayName", "color" }, null, null,
-					"displayName ASC");
+			if (Build.VERSION.SDK_INT < 14)
+				cursor = context.getContentResolver().query(
+						Uri.parse("content://com.android.calendar/calendars"),
+						new String[] { "_id", "displayName", "color" }, null, null,
+						"displayName ASC");
+			else
+				cursor = context.getContentResolver().query(
+						Uri.parse("content://com.android.calendar/calendars"),
+						new String[] { "_id", "calendar_displayName", "calendar_color" }, null, null,
+						"displayName ASC");
 			final Map<Integer, CalendarPreferences> calendars = new HashMap<Integer, CalendarPreferences>(
 					cursor.getCount());
 
