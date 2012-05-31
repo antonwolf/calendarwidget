@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="widget_loading">Cargando...</string>
+    <string name="widget_loading">Cargando&#8230;</string>
     <string name="format_yesterday">ayer</string>
     <string name="format_today">hoy</string>
     <string name="format_tomorrow">mañana</string>

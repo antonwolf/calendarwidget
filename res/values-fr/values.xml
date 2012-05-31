@@ -5,7 +5,7 @@
 	<string name="format_tomorrow">demain</string>
 	<string name="app_name">Widget Agenda par Anton</string>
 	
-	<string name="widget_loading">Chargement...</string>
+	<string name="widget_loading">Chargement&#8230;</string>
 
 	<string name="label_4x1">Widget Agenda par Anton (4x1)</string>
 	<string name="label_4x2">Widget Agenda par Anton (4x2)</string>
