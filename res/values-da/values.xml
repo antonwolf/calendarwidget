@@ -30,12 +30,6 @@
 	<string name="settings">Indstillinger</string>
 	<string name="settings_description">Konfigurer Antons kalender-widget</string>
 
-	<string-array name="birthday_patterns">
-		<item>(.+)\'s fødselsdag</item>
-		<item>(.+)s fødselsdag</item>
-		<item>(.+) har fødselsdag</item>
-	</string-array>
-
 	<string name="settings_display">Visning</string>
 	<string name="settings_display_lines">Antal linjer</string>
 	<string name="settings_display_lines_summary">Viser %s linjer på widget.</string>

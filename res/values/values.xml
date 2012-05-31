@@ -37,6 +37,14 @@
 	<string-array name="birthday_patterns">
 		<item>(.+)\'s Birthday</item>
 		<item>(.+)\'s birthday</item>
+        <item>(.+)\ (cumpleaños)</item>
+		<item>(.+)s Geburtstag</item>
+		<item>(.+)\\. Geburtstag</item>
+		<item>Geburtstag von (.+)</item>
+		<item>(.+) hat Geburtstag</item>
+		<item>(.+)\'s fødselsdag</item>
+		<item>(.+)s fødselsdag</item>
+		<item>(.+) har fødselsdag</item>
 	</string-array>
 
 	<string name="settings_display">Display</string>

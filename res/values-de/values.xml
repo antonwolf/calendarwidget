@@ -30,14 +30,6 @@
 	<string name="settings">Einstellungen</string>
 	<string name="settings_description">Antons Kalender-Widget konfigurieren</string>
 
-	<string-array name="birthday_patterns">
-		<item>(.+)\'s Birthday</item>
-		<item>(.+)s Geburtstag</item>
-		<item>(.+)\\. Geburtstag</item>
-		<item>Geburtstag von (.+)</item>
-		<item>(.+) hat Geburtstag</item>
-	</string-array>
-
 	<string name="settings_display">Anzeige</string>
 	<string name="settings_display_lines">Zeilenzahl</string>
 	<string name="settings_display_lines_summary">Zeige %s Zeilen an.</string>

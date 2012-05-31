@@ -30,10 +30,6 @@
 	<string name="settings">Paramètres</string>
 	<string name="settings_description">Configuration du Widget Agenda par Anton</string>
 
-	<string-array name="birthday_patterns">
-		<item>(.+)\'s Birthday</item>
-	</string-array>
-
 	<string name="settings_display">Affichage</string>
 	<string name="settings_display_lines">Nombre des lignes</string>
 	<string name="settings_display_lines_summary">Afficher %s lignes.</string>

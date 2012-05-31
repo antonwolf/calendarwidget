@@ -30,10 +30,6 @@
 	<string name="settings">Impostazioni</string>
 	<string name="settings_description">Configurare il Widget Calendario di Anton</string>
 
-	<string-array name="birthday_patterns">
-		<item>(.+)\'s Birthday</item>
-	</string-array>
-
 	<string name="settings_display">Rappresentanza</string>
 	<string name="settings_display_lines">Numero di rige</string>
 	<string name="settings_display_lines_summary">Visualizzare %s righe.</string>
