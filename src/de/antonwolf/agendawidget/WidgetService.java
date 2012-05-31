@@ -37,6 +37,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateUtils;
@@ -91,9 +92,6 @@ public final class WidgetService extends IntentService {
 	private final static String CURSOR_FORMAT = "content://com.android.calendar/instances/when/%1$s/%2$s";
 	private final static long SEARCH_DURATION = 2 * DateUtils.YEAR_IN_MILLIS;
 	private final static String CURSOR_SORT = "begin ASC, end DESC, title ASC";
-	private final static String[] CURSOR_PROJECTION = new String[] { "title",
-			"color", "eventLocation", "allDay", "startDay", "endDay", "end",
-			"hasAlarm", "calendar_id", "begin" };
 	private final static int COL_TITLE = 0;
 	private final static int COL_COLOR = 1;
 	private final static int COL_LOCATION = 2;
@@ -297,9 +295,21 @@ public final class WidgetService extends IntentService {
 	private Cursor getCursor() {
 		final long start = todayStart - 1000 * 60 * 60 * 24;
 		final long end = start + SEARCH_DURATION;
+		
+		final String[] projection;
+		
+		if (Build.VERSION.SDK_INT < 14)
+			projection = new String[] { "title",
+			"color", "eventLocation", "allDay", "startDay", "endDay", "end",
+			"hasAlarm", "calendar_id", "begin" };
+		else
+			projection = new String[] { "title",
+				"calendar_color", "eventLocation", "allDay", "startDay", "endDay", "end",
+				"hasAlarm", "calendar_id", "begin" };
+		
 		final String uriString = String.format(CURSOR_FORMAT, start, end);
 		return getContentResolver().query(Uri.parse(uriString),
-				CURSOR_PROJECTION, null, null, CURSOR_SORT);
+				projection, null, null, CURSOR_SORT);
 	}
 
 	private void computeTimeRanges() {

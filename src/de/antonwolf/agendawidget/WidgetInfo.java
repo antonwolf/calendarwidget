@@ -211,7 +211,7 @@ final class WidgetInfo {
 				cursor = context.getContentResolver().query(
 						Uri.parse("content://com.android.calendar/calendars"),
 						new String[] { "_id", "calendar_displayName", "calendar_color" }, null, null,
-						"displayName ASC");
+						"calendar_displayName ASC");
 			final Map<Integer, CalendarPreferences> calendars = new HashMap<Integer, CalendarPreferences>(
 					cursor.getCount());
 
