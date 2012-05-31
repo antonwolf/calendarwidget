@@ -7,14 +7,14 @@
 	
 	<string name="widget_loading">Chargement&#8230;</string>
 
-	<string name="label_4x1">Widget Agenda par Anton (4x1)</string>
-	<string name="label_4x2">Widget Agenda par Anton (4x2)</string>
-	<string name="label_4x3">Widget Agenda par Anton (4x3)</string>
-	<string name="label_4x4">Widget Agenda par Anton (4x4)</string>
-	<string name="label_3x1">Widget Agenda par Anton (3x1)</string>
-	<string name="label_3x2">Widget Agenda par Anton (3x2)</string>
-	<string name="label_3x3">Widget Agenda par Anton (3x3)</string>
-	<string name="label_2x1">Widget Agenda par Anton (2x1)</string>
+	<string name="label_4x1">Agenda par Anton (4x1)</string>
+	<string name="label_4x2">Agenda par Anton (4x2)</string>
+	<string name="label_4x3">Agenda par Anton (4x3)</string>
+	<string name="label_4x4">Agenda par Anton (4x4)</string>
+	<string name="label_3x1">Agenda par Anton (3x1)</string>
+	<string name="label_3x2">Agenda par Anton (3x2)</string>
+	<string name="label_3x3">Agenda par Anton (3x3)</string>
+	<string name="label_2x1">Agenda par Anton (2x1)</string>
 
 	<string-array name="format_day_of_week">
 		<item>Di</item>

@@ -7,14 +7,14 @@
 	
 	<string name="widget_loading">Lade&#8230;</string>
 
-	<string name="label_4x1">Antons Kalender-Widget (4x1)</string>
-	<string name="label_4x2">Antons Kalender-Widget (4x2)</string>
-	<string name="label_4x3">Antons Kalender-Widget (4x3)</string>
-	<string name="label_4x4">Antons Kalender-Widget (4x4)</string>
-	<string name="label_3x1">Antons Kalender-Widget (3x1)</string>
-	<string name="label_3x2">Antons Kalender-Widget (3x2)</string>
-	<string name="label_3x3">Antons Kalender-Widget (3x3)</string>
-	<string name="label_2x1">Antons Kalender-Widget (2x1)</string>
+	<string name="label_4x1">Antons Kalender (4x1)</string>
+	<string name="label_4x2">Antons Kalender (4x2)</string>
+	<string name="label_4x3">Antons Kalender (4x3)</string>
+	<string name="label_4x4">Antons Kalender (4x4)</string>
+	<string name="label_3x1">Antons Kalender (3x1)</string>
+	<string name="label_3x2">Antons Kalender (3x2)</string>
+	<string name="label_3x3">Antons Kalender (3x3)</string>
+	<string name="label_2x1">Antons Kalender (2x1)</string>
 
 	<string-array name="format_day_of_week">
 		<item>So</item>
