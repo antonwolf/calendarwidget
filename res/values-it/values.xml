@@ -68,16 +68,9 @@
 	<string name="settings_display_size_summary">La dimensione del testo è %s per cento.</string>
 
 	<string name="settings_display_opacity">Trasparenza dello sfondo</string>
-	<string name="settings_display_opacity_summary">Lo sfondo del widget è di %s per cento opaco.
+	<string name="settings_display_opacity_summary">Lo sfondo del widget è di %d per cento opaco.
 	</string>
-	<string-array name="settings_display_opacity_entries">
-		<item>0% opaco (completamente trasparente)</item>
-		<item>20% opaco</item>
-		<item>40% opaco</item>
-		<item>60% opaco (di default)</item>
-		<item>80% opaco</item>
-		<item>100% opaco (completamente opaco)</item>
-	</string-array>
+	<string name="settings_display_opacity_dialog">%d%% opaco</string>
 
 	<string name="settings_birthdays">Compleanni</string>
 	<string-array name="settings_birthdays_summaries">

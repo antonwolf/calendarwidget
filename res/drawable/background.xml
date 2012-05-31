@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:maxLevel="0">
+		<shape android:shape="rectangle">
+			<solid android:color="#00000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="5">
+		<shape android:shape="rectangle">
+			<solid android:color="#0C000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="10">
+		<shape android:shape="rectangle">
+			<solid android:color="#19000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="15">
+		<shape android:shape="rectangle">
+			<solid android:color="#26000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="20">
+		<shape android:shape="rectangle">
+			<solid android:color="#33000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="25">
+		<shape android:shape="rectangle">
+			<solid android:color="#3F000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="30">
+		<shape android:shape="rectangle">
+			<solid android:color="#4C000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="35">
+		<shape android:shape="rectangle">
+			<solid android:color="#59000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="40">
+		<shape android:shape="rectangle">
+			<solid android:color="#66000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="45">
+		<shape android:shape="rectangle">
+			<solid android:color="#72000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="50">
+		<shape android:shape="rectangle">
+			<solid android:color="#7F000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="55">
+		<shape android:shape="rectangle">
+			<solid android:color="#8C000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="60">
+		<shape android:shape="rectangle">
+			<solid android:color="#99000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="65">
+		<shape android:shape="rectangle">
+			<solid android:color="#A5000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="70">
+		<shape android:shape="rectangle">
+			<solid android:color="#B2000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="75">
+		<shape android:shape="rectangle">
+			<solid android:color="#BF000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+		<item android:maxLevel="80">
+		<shape android:shape="rectangle">
+			<solid android:color="#CC000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="85">
+		<shape android:shape="rectangle">
+			<solid android:color="#D8000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="90">
+		<shape android:shape="rectangle">
+			<solid android:color="#E5000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="95">
+		<shape android:shape="rectangle">
+			<solid android:color="#F2000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+	<item android:maxLevel="100">
+		<shape android:shape="rectangle">
+			<solid android:color="#FF000000" />
+			<corners android:radius="@dimen/widget_corners" />
+		</shape>
+	</item>
+</level-list>

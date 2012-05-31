@@ -95,10 +95,14 @@ final class WidgetInfo {
 	public final String sizeKey;
 	private static final String SIZE_KEY = "%dsize";
 
-	public final String opacity;
-	public final String opacityDefault = "60";
+	public final float opacity;
+	public final float opacityDefault = 0.6f;
 	public final String opacityKey;
-	private static final String OPACITY_KEY = "%dopacity";
+	private static final String OPACITY_KEY = "%dopacityFloat";
+	
+	// DELETE SOMETIME
+	public final String oldOpacityDefault = "60";
+	private static final String OLD_OPACITY_KEY = "%dopacity";
 
 	public final boolean calendarColor;
 	public final boolean calendarColorDefault = true;
@@ -165,7 +169,9 @@ final class WidgetInfo {
 		size = prefs.getString(sizeKey, sizeDefault);
 
 		opacityKey = String.format(OPACITY_KEY, widgetId);
-		opacity = prefs.getString(opacityKey, opacityDefault);
+        final String oldOpacityKey = String.format(OLD_OPACITY_KEY, widgetId);
+        opacity = prefs.getFloat(opacityKey, Float.parseFloat(prefs.getString(
+                        oldOpacityKey, oldOpacityDefault)) / 100f);
 
 		calendarColorKey = String.format(CALENDAR_COLOR_KEY, widgetId);
 		calendarColor = prefs

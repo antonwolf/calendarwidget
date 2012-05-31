@@ -9,46 +9,50 @@ package de.antonwolf.agendawidget;
 
 public final class R {
     public static final class array {
-        public static final int birthday_patterns=0x7f080001;
-        public static final int format_day_of_week=0x7f080000;
-        public static final int settings_birthdays_entries=0x7f080006;
-        public static final int settings_birthdays_summaries=0x7f080005;
-        public static final int settings_date_format_entries=0x7f080007;
-        public static final int settings_display_lines_entries=0x7f080002;
-        public static final int settings_display_opacity_entries=0x7f080004;
-        public static final int settings_display_size_entries=0x7f080003;
+        public static final int birthday_patterns=0x7f090001;
+        public static final int format_day_of_week=0x7f090000;
+        public static final int settings_birthdays_entries=0x7f090005;
+        public static final int settings_birthdays_summaries=0x7f090004;
+        public static final int settings_date_format_entries=0x7f090006;
+        public static final int settings_display_lines_entries=0x7f090002;
+        public static final int settings_display_size_entries=0x7f090003;
     }
     public static final class attr {
     }
     public static final class bool {
-        public static final int format_24hours=0x7f070000;
-        public static final int format_this_week_remove_dot=0x7f070001;
+        public static final int format_24hours=0x7f080000;
+        public static final int format_this_week_remove_dot=0x7f080001;
+    }
+    public static final class dimen {
+        public static final int widget_corners=0x7f070000;
     }
     public static final class drawable {
         public static final int alert=0x7f020000;
-        public static final int background_0=0x7f020001;
-        public static final int background_100=0x7f020002;
-        public static final int background_20=0x7f020003;
-        public static final int background_40=0x7f020004;
-        public static final int background_60=0x7f020005;
-        public static final int background_80=0x7f020006;
-        public static final int calendar=0x7f020007;
-        public static final int icon=0x7f020008;
+        public static final int background=0x7f020001;
+        public static final int calendar=0x7f020002;
+        public static final int checkerboard=0x7f020003;
+        public static final int checkerboard_bitmap=0x7f020004;
+        public static final int icon=0x7f020005;
     }
     public static final class id {
-        public static final int birthday1_text=0x7f090000;
-        public static final int birthday2_text=0x7f090001;
-        public static final int event_alarm=0x7f090003;
-        public static final int event_text=0x7f090002;
-        public static final int open_calendar=0x7f090004;
-        public static final int open_settings=0x7f090005;
-        public static final int widget=0x7f090006;
+        public static final int background=0x7f0a0009;
+        public static final int bar=0x7f0a0008;
+        public static final int birthday1_text=0x7f0a0000;
+        public static final int birthday2_text=0x7f0a0001;
+        public static final int checkerboard=0x7f0a0006;
+        public static final int event_alarm=0x7f0a0003;
+        public static final int event_text=0x7f0a0002;
+        public static final int open_calendar=0x7f0a0004;
+        public static final int open_settings=0x7f0a0005;
+        public static final int value=0x7f0a0007;
+        public static final int widget=0x7f0a000a;
     }
     public static final class layout {
         public static final int birthdays=0x7f030000;
         public static final int event=0x7f030001;
         public static final int pick_action=0x7f030002;
-        public static final int widget=0x7f030003;
+        public static final int preference_opacity=0x7f030003;
+        public static final int widget=0x7f030004;
     }
     public static final class string {
         public static final int app_name=0x7f060000;
@@ -66,35 +70,36 @@ public final class R {
         public static final int label_4x4=0x7f060009;
         public static final int open_calendar=0x7f06000e;
         public static final int settings=0x7f06000f;
-        public static final int settings_birthdays=0x7f060018;
-        public static final int settings_calendar_color=0x7f060019;
-        public static final int settings_calendar_color_hide=0x7f06001b;
-        public static final int settings_calendar_color_show=0x7f06001a;
-        public static final int settings_calendars=0x7f06002a;
-        public static final int settings_calendars_hide=0x7f06002c;
-        public static final int settings_calendars_show=0x7f06002b;
-        public static final int settings_date_format=0x7f060025;
-        public static final int settings_date_format_summary=0x7f060026;
+        public static final int settings_birthdays=0x7f060019;
+        public static final int settings_calendar_color=0x7f06001a;
+        public static final int settings_calendar_color_hide=0x7f06001c;
+        public static final int settings_calendar_color_show=0x7f06001b;
+        public static final int settings_calendars=0x7f06002b;
+        public static final int settings_calendars_hide=0x7f06002d;
+        public static final int settings_calendars_show=0x7f06002c;
+        public static final int settings_date_format=0x7f060026;
+        public static final int settings_date_format_summary=0x7f060027;
         public static final int settings_description=0x7f060010;
         public static final int settings_display=0x7f060011;
         public static final int settings_display_lines=0x7f060012;
         public static final int settings_display_lines_summary=0x7f060013;
         public static final int settings_display_opacity=0x7f060016;
+        public static final int settings_display_opacity_dialog=0x7f060018;
         public static final int settings_display_opacity_summary=0x7f060017;
         public static final int settings_display_size=0x7f060014;
         public static final int settings_display_size_summary=0x7f060015;
-        public static final int settings_end_time=0x7f060022;
-        public static final int settings_end_time_no=0x7f060024;
-        public static final int settings_end_time_yes=0x7f060023;
-        public static final int settings_tommorow_yesterday=0x7f06001c;
-        public static final int settings_tommorow_yesterday_no=0x7f06001e;
-        public static final int settings_tommorow_yesterday_yes=0x7f06001d;
-        public static final int settings_twentyfour_hours=0x7f060027;
-        public static final int settings_twentyfour_hours_no=0x7f060029;
-        public static final int settings_twentyfour_hours_yes=0x7f060028;
-        public static final int settings_weekday=0x7f06001f;
-        public static final int settings_weekday_no=0x7f060021;
-        public static final int settings_weekday_yes=0x7f060020;
+        public static final int settings_end_time=0x7f060023;
+        public static final int settings_end_time_no=0x7f060025;
+        public static final int settings_end_time_yes=0x7f060024;
+        public static final int settings_tommorow_yesterday=0x7f06001d;
+        public static final int settings_tommorow_yesterday_no=0x7f06001f;
+        public static final int settings_tommorow_yesterday_yes=0x7f06001e;
+        public static final int settings_twentyfour_hours=0x7f060028;
+        public static final int settings_twentyfour_hours_no=0x7f06002a;
+        public static final int settings_twentyfour_hours_yes=0x7f060029;
+        public static final int settings_weekday=0x7f060020;
+        public static final int settings_weekday_no=0x7f060022;
+        public static final int settings_weekday_yes=0x7f060021;
         public static final int widget_loading=0x7f060001;
     }
     public static final class style {

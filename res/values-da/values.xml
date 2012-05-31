@@ -70,16 +70,9 @@
 	<string name="settings_display_size_summary">Skriftstørrelsen er %s procent.</string>
 
 	<string name="settings_display_opacity">Gennemsigtighed</string>
-	<string name="settings_display_opacity_summary">Baggrunden er %s skjult gennem widget.
+	<string name="settings_display_opacity_summary">Baggrunden er %d%% skjult gennem widget.
         </string>
-	<string-array name="settings_display_opacity_entries">
-		<item>0% dækkende (fuldt transparent)</item>
-		<item>20% dækkende</item>
-		<item>40% dækkende</item>
-		<item>60% dækkende (standard)</item>
-		<item>80% dækkende</item>
-		<item>100% dækkende (fuldt dækkende)</item>
-	</string-array>
+    <string name="settings_display_opacity_dialog">%d%% dækkende</string>
 
 	<string name="settings_birthdays">Fødselsdage</string>
 	<string-array name="settings_birthdays_summaries">

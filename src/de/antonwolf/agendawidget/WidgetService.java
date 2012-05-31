@@ -110,10 +110,6 @@ public final class WidgetService extends IntentService {
 	private final static long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
 
 	private final static Pattern IS_EMPTY_PATTERN = Pattern.compile("^\\s*$");
-	private final static int[] BACKGROUNDS = new int[] {
-			R.drawable.background_0, R.drawable.background_20,
-			R.drawable.background_40, R.drawable.background_60,
-			R.drawable.background_80, R.drawable.background_100 };
 	private final static int DATETIME_COLOR = 0xb8ffffff;
 
 	public WidgetService() {
@@ -200,9 +196,8 @@ public final class WidgetService extends IntentService {
 			widget.addView(R.id.widget, view);
 		}
 
-		final int opacityIndex = Integer.parseInt(info.opacity) / 20;
-		final int background = BACKGROUNDS[opacityIndex];
-		widget.setInt(R.id.widget, "setBackgroundResource", background);
+		final int opacityPercent = (int) (100 * info.opacity);
+        widget.setInt(R.id.background, "setImageLevel", opacityPercent);
 
 		manager.updateAppWidget(widgetId, widget);
 		scheduleNextUpdate(agendaEvents, intent);
