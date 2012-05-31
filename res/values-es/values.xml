@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="widget_loading">Cargando...</string>
+    <string name="format_yesterday">ayer</string>
+    <string name="format_today">hoy</string>
+    <string name="format_tomorrow">mañana</string>
+    <string name="open_calendar">Abrir calendario</string>
+    <string name="settings">Configurar</string>
+    <string name="settings_description">Anton\'s Calendar Widget</string>
+
+    <string-array name="format_day_of_week">
+        <item>Do</item>
+        <item>Lu</item>
+        <item>Ma</item>
+        <item>Mi</item>
+        <item>Ju</item>
+        <item>Vi</item>
+        <item>Sa</item>
+    </string-array>
+    <string-array name="birthday_patterns">
+        <item>(.+)\ (cumpleaños)</item>
+    </string-array>
+
+    <string name="settings_display">Visualización</string>
+    <string name="settings_display_lines">Líneas</string>
+    <string name="settings_display_lines_summary">Muestra %s líneas en el widget.</string>
+
+    <string-array name="settings_display_lines_entries">
+        <item>3 líneas</item>
+        <item>4 líneas</item>
+        <item>5 líneas</item>
+        <item>6 líneas</item>
+        <item>7 líneas</item>
+        <item>8 líneas</item>
+        <item>9 líneas</item>
+        <item>10 líneas</item>
+        <item>11 líneas</item>
+        <item>12 líneas</item>
+        <item>13 líneas</item>
+        <item>14 líneas</item>
+        <item>15 líneas</item>
+        <item>16 líneas</item>
+        <item>17 líneas</item>
+        <item>18 líneas</item>
+        <item>19 líneas</item>
+        <item>20 líneas</item>
+        <item>21 líneas</item>
+        <item>22 líneas</item>
+        <item>23 líneas</item>
+        <item>24 líneas</item>
+        <item>25 líneas</item>
+    </string-array>
+
+    <string name="settings_display_size">Font size</string>
+    <string name="settings_display_size_summary">%s por ciento.</string>
+
+    <string-array name="settings_display_size_entries">
+        <item>50%</item>
+        <item>75%</item>
+        <item>100%</item>
+        <item>125%</item>
+        <item>150%</item>
+        <item>200%</item>
+        <item>250%</item>
+    </string-array>
+
+    <string name="settings_display_opacity">Opacidad del fondo</string>
+    <string name="settings_display_opacity_summary">%d por ciento.</string>
+    <string name="settings_display_opacity_dialog">%d%% opaco</string>
+    <string name="settings_birthdays">Cumpleaños</string>
+
+    <string-array name="settings_birthdays_summaries">
+        <item>Muestra los cumpleaños por separado.</item>
+        <item>Muestra los cumpleaños como eventos normales.</item>
+        <item>Oculta los cumpleaños.</item>
+    </string-array>
+    <string-array name="settings_birthdays_entries">
+        <item>Mostrar por separado</item>
+        <item>Mostrar como eventos normales</item>
+        <item>Ocultar</item>
+    </string-array>
+
+    <string name="settings_calendar_color">Color del calendario</string>
+    <string name="settings_calendar_color_show">Muestra el color del calendario junto al evento.</string>
+    <string name="settings_calendar_color_hide">Oculta el color del calendario.</string>
+    <string name="settings_tommorow_yesterday">\"Ayer\" y \"Mañana\"</string>
+    <string name="settings_tommorow_yesterday_yes">Muestra \"ayer\" y \"mañana\"</string>
+    <string name="settings_tommorow_yesterday_no">Oculta \"ayer\" y \"mañana\"</string>
+    <string name="settings_weekday">Día de la semana</string>
+    <string name="settings_weekday_yes">Muestra el día de la semana de los próximos 7 días.</string>
+    <string name="settings_weekday_no">Oculta el día de la semana.</string>
+    <string name="settings_end_time">Finalización del evento</string>
+    <string name="settings_end_time_yes">Muestra la hora de finalización.</string>
+    <string name="settings_end_time_no">Oculta la hora de finalización.</string>
+    <string name="settings_date_format">Formato de fecha</string>
+    <string name="settings_date_format_summary">%s</string>
+
+    <string-array name="settings_date_format_entries">
+        <item>día.mes.año (%1$te.%1$tm.%1$ty)</item>
+        <item>día/mes/año (%1$te/%1$tm/%1$ty)</item>
+        <item>mes/día/año (%1$tm/%1$td/%1$ty)</item>
+        <item>año/mes/día (%1$ty/%1$tm/%1$td)</item>
+    </string-array>
+
+    <string name="settings_twentyfour_hours">Formato de hora</string>
+    <string name="settings_twentyfour_hours_yes">24 horas (%1$tk:%1$tM)</string>
+    <string name="settings_twentyfour_hours_no">12 horas (%1$tl:%1$tM%1$tp)</string>
+    <string name="settings_calendars">Calendarios</string>
+    <string name="settings_calendars_show">Muestra los eventos del calendario \"%s\"</string>
+    <string name="settings_calendars_hide">Oculta los eventos del calendario \"%s\"</string>
+</resources>
